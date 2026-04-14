@@ -1,7 +1,3 @@
-import { signalStore, withState, withMethods, withComputed, withHooks, patchState } from '@ngrx/signals';
-import { withDevtools, withGlitchTracking } from '@angular-architects/ngrx-toolkit';
-
-
 export interface User {
   id: number;
   first_name: string;

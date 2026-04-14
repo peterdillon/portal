@@ -20,7 +20,6 @@
     </button>
   </mat-toolbar>
 
- 
   @if (store.error()) {
     <div class="error-message">
       <mat-icon>error</mat-icon>
@@ -59,7 +58,6 @@
         <h6>
           <mat-checkbox  class="custom-chk" (click)="toggleSelectAll()" 
             [matTooltip]="store.areAllGroupUsersSelected() ? 'Deselect all' : 'Select all'">
-            <!-- <mat-icon>{{ store.areAllGroupUsersSelected() ? 'deselect' : 'select_all' }}</mat-icon> -->
           </mat-checkbox> 
           Users in {{ store.selectedGroup()?.name }}
         </h6>
@@ -81,7 +79,6 @@
                 <p>No users in group</p>
               </div>
             </div>
-
           }
         </div>
       }
@@ -106,7 +103,6 @@
       <h6>Available Users</h6>
       <div class="scrollable-list">
         <mat-list>
-          
         @for (user of store.availableUsers(); track user.id) {
           <mat-list-item>
             <mat-checkbox [checked]="store.selectedUserIds().includes(user.id)"

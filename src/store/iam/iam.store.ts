@@ -183,7 +183,6 @@ export const IAMStore = signalStore(
     };
   }),
 
-// ✅ Define selectedGroup first
   withComputed((store) => ({
     selectedGroup: computed(() => {
       const id = store.selectedGroupId();
@@ -191,7 +190,6 @@ export const IAMStore = signalStore(
     }),
   })),
 
-  // ✅ All other computed signals after
   withComputed((store) => ({
     availableUsers: computed(() => {
       const selectedGroup = store.selectedGroup();
@@ -210,7 +208,6 @@ export const IAMStore = signalStore(
     }),
   })),
 
-  // ✅ withHooks last
   withHooks({
     onInit(store) {
       (store as any).loadData();
