@@ -1,0 +1,31 @@
+.product-detail-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .page-title {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+}
+
+.mat-mdc-card-content {
+    display: block;
+    padding: 0 0;
+}
+
+.detail-card{
+  padding: 1rem !important;
+}
+mat-card-actions {
+  padding: 0;
+}

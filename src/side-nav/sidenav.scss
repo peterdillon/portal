@@ -1,0 +1,40 @@
+.mat-mdc-nav-list .mat-mdc-list-item {
+  border-radius: 0px;
+}
+
+h2 {
+  margin:  1.5rem 0 1rem 1.2rem;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 300;
+}
+
+.example-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.example-radio-group {
+  display: block;
+  border: 1px solid #555;
+  margin: 20px;
+  padding: 10px;
+}
+
+.main-toggle {
+  position: fixed;
+  top: .8rem;
+  left: 10rem;
+  z-index: 99999;
+}
+
+.active-link {
+  background: rgba(pink, .2);
+}
+
+.mat-mdc-list-item::before {
+  display: none;
+}   

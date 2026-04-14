@@ -1,0 +1,15 @@
+<mat-sidenav #sidenav mode="side" opened [autoFocus]="false">
+  <h2>Navigation Menu</h2>
+  <mat-nav-list>
+    @for (item of navigationData(); track item.path) {
+      <a 
+        mat-list-item 
+        [routerLink]="[item.path]" 
+        routerLinkActive="active-link"
+        (click)="closeSidenav()">
+        <span matListItemTitle>{{ item.name }}</span>
+        <span matListItemLine>Secondary title</span>
+      </a>
+    }
+  </mat-nav-list>
+</mat-sidenav>

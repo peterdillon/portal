@@ -1,1 +1,117 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'sass:map';
+@use '@angular/material' as mat;
+@use '_theme-colors' as theme;
+
+@include mat.core();
+
+// Reset defaults
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+// ===== LIGHT THEME (Default) =====
+html {
+  @include mat.all-component-themes(theme.$light-theme);
+  @include mat.system-level-typography(theme.$light-theme);
+  @include mat.typography-hierarchy(theme.$light-theme);
+  @include mat.color-variants-backwards-compatibility(theme.$light-theme);
+  
+  // Explicit light mode colors
+  background-color: #fef7ff;
+  color: #1d1a23;
+}
+
+body {
+  background-color: #fef7ff;
+  color: #1d1a23;
+}
+
+// ===== DARK THEME =====
+html.dark-theme {
+  @include mat.all-component-themes(theme.$dark-theme);
+  @include mat.color-variants-backwards-compatibility(theme.$dark-theme);
+  
+  // Explicit dark mode colors
+  background-color: #15121a !important;
+  color: #e7e0ec !important;
+}
+
+html.dark-theme body {
+  background-color: #15121a !important;
+  color: #e7e0ec !important;
+}
+
+// Ensure app root fills the space
+app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+// Fallback for any content areas
+html.dark-theme {
+  background-color: #15121a !important;
+  
+  mat-card,
+  mat-dialog-container {
+    background-color: #322f38 !important;
+  }
+}
+
+// Light theme toolbar
+html mat-toolbar {
+  background-color: mat.get-theme-color(theme.$light-theme, primary) !important;
+  color: mat.get-theme-color(theme.$light-theme, on-primary) !important;
+}
+
+// Dark theme toolbar
+html.dark-theme mat-toolbar {
+  background-color: mat.get-theme-color(theme.$dark-theme, primary) !important;
+  color: mat.get-theme-color(theme.$dark-theme, on-primary) !important;
+}
+
+// Light theme toolbar icons
+mat-toolbar [mat-icon-button] mat-icon {
+  color: mat.get-theme-color(theme.$light-theme, on-primary) !important;
+}
+
+// Dark theme toolbar icons
+html.dark-theme mat-toolbar [mat-icon-button] mat-icon {
+  color: mat.get-theme-color(theme.$dark-theme, on-primary) !important;
+}
+
+// Badge styling
+.mat-badge-content {
+  background-color: #ccc !important;
+  color: black !important;
+  font-weight: 600;
+}
+
+html.dark-theme .mat-badge-content {
+  background-color: black !important;
+  color: #ccc !important;
+  font-weight: 600;
+}
+
+ 
+html, body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  color-scheme: light dark;
+}
+
+.centered {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.mdc-button ~ .mdc-button,
+  mat-icon-button {
+    margin-left: 0.5rem;
+  } 

@@ -1,0 +1,47 @@
+
+.mat-mdc-table {
+   background-color: rgba(orange, .01);
+}
+
+button {
+  margin-right: 0.5rem;
+}
+
+input {
+  padding: .5rem;
+}
+
+.tb-ct { 
+  width: 1200px;
+  margin: 1rem auto;
+}
+
+.mat-column-select {
+  flex: 0 0 50px;
+  min-width: 50px;
+}
+
+.mat-column-position {
+  flex: 0 0 80px;
+  min-width: 80px;
+}
+
+.mat-column-name {
+  flex: 0 0 200px;
+  min-width: 200px;
+}
+
+.mat-column-weight {
+  flex: 0 0 120px;
+  min-width: 120px;
+}
+
+.mat-column-symbol {
+  flex: 0 0 100px;
+  min-width: 100px;
+}
+
+.mat-column-actions {
+  flex: 0 0 120px;
+  min-width: 120px;
+}   

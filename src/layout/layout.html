@@ -1,0 +1,30 @@
+<mat-sidenav-container class="container" fullscreen>
+  
+  <mat-sidenav 
+    [opened]="sidenavService.isOpen$()"
+    (closed)="sidenavService.close()">
+     <sidenav-mode-example></sidenav-mode-example>
+  </mat-sidenav>
+
+  <!-- Main Content -->
+  <mat-sidenav-content>
+     <div class="content-wrapper"> <!-- wrapper for sticky footer -->
+
+
+       <app-top-toolbar></app-top-toolbar>
+
+        
+      
+
+      <main class="content">
+          <router-outlet></router-outlet>
+      </main>
+
+      <mat-toolbar class="footer" color="primary">
+        <span class="copy">&copy;2026 Golden Route Operations</span>
+        <ng-content select="[footer]"></ng-content>
+      </mat-toolbar>
+    </div>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>   

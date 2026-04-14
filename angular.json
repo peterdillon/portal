@@ -27,7 +27,8 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/assets"
             ],
             "styles": [
               "src/styles.scss"
@@ -58,6 +59,9 @@
           "defaultConfiguration": "production"
         },
         "serve": {
+          "options": {
+            "hmr": false
+          },
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
