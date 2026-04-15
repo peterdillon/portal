@@ -1,0 +1,44 @@
+[
+  {
+    "id": "NYC-HQ",
+    "name": "New York Headquarters",
+    "displayName": "NYC HQ",
+    "location": "100 Broadway, New York, NY 10005",
+    "siteGroups": ["Northeast Operations"]
+  },
+  {
+    "id": "BOS-MAIN",
+    "name": "Boston Office",
+    "displayName": "Boston Office",
+    "location": "500 Atlantic Ave, Boston, MA 02110",
+    "siteGroups": ["Northeast Operations"]
+  },
+  {
+    "id": "PHL-DC",
+    "name": "Philadelphia Data Center",
+    "displayName": "Philly DC",
+    "location": "2000 Market St, Philadelphia, PA 19103",
+    "siteGroups": ["Northeast Operations", "Core Infrastructure"]
+  },
+  {
+    "id": "ASH-DC",
+    "name": "Ashburn Data Center",
+    "displayName": "Ashburn DC",
+    "location": "440 Terry Ave N, Ashburn, VA 20147",
+    "siteGroups": ["Core Infrastructure"]
+  },
+  {
+    "id": "DAL-DC",
+    "name": "Dallas Data Center",
+    "displayName": "Dallas DC",
+    "location": "1950 N Stemmons Fwy, Dallas, TX 75207",
+    "siteGroups": ["Core Infrastructure"]
+  },
+  {
+    "id": "CHI-OLD",
+    "name": "Chicago Legacy Office",
+    "displayName": "Chicago Old Office",
+    "location": "300 W Adams St, Chicago, IL 60606",
+    "siteGroups": ["Decommissioning"]
+  }
+]   

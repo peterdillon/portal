@@ -1,0 +1,32 @@
+[
+  {
+    "id": "usr-1001",
+    "name": "alice.johnson",
+    "displayName": "Alice Johnson",
+    "email": "alice.johnson@company.com",
+    "phone": "+1-212-555-0198",
+    "employeeName": "Alice Johnson",
+    "employeeNumber": "EMP-2023-001",
+    "permissions": ["site.read", "site.write", "user.read", "config.read", "config.write"]
+  },
+  {
+    "id": "usr-1002",
+    "name": "bob.smith",
+    "displayName": "Bob Smith",
+    "email": "bob.smith@company.com",
+    "phone": "+1-617-555-0145",
+    "employeeName": "Bob Smith",
+    "employeeNumber": "EMP-2023-002",
+    "permissions": ["site.read", "user.read", "audit.read"]
+  },
+  {
+    "id": "usr-1003",
+    "name": "carol.davis",
+    "displayName": "Carol Davis",
+    "email": "carol.davis@company.com",
+    "phone": "+1-214-555-0123",
+    "employeeName": "Carol Davis",
+    "employeeNumber": "EMP-2024-001",
+    "permissions": ["site.read", "site.write", "site.delete", "user.read", "user.write", "user.delete", "config.read", "config.write", "audit.read", "billing.read"]
+  }
+]

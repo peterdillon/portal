@@ -5,7 +5,7 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root'
 })
 export class SidenavService {
-  private isOpen = signal(true);
+  private isOpen = signal(false);
   isOpen$ = this.isOpen.asReadonly();
 
   toggle() { this.isOpen.update(value => !value); }

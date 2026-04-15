@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Site Manager",
+    "permissions": ["site.read", "site.write", "site.delete", "user.read", "config.read"]
+  },
+  {
+    "name": "User Admin",
+    "permissions": ["user.read", "user.write", "user.delete", "config.write", "audit.read"]
+  },
+  {
+    "name": "Auditor",
+    "permissions": ["site.read", "user.read", "audit.read", "billing.read"]
+  }
+]

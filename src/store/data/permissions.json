@@ -1,0 +1,12 @@
+[
+  "site.read",
+  "site.write",
+  "site.delete",
+  "user.read",
+  "user.write",
+  "user.delete",
+  "config.read",
+  "config.write",
+  "audit.read",
+  "billing.read"
+]

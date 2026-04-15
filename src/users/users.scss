@@ -1,0 +1,80 @@
+
+.mat-toolbar {
+  background-color: transparent !important;
+  color: white !important;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 1rem;
+  padding-left: 0;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+.custom-chk {
+  height: 30px;
+} 
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.two-column-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.button-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+    padding: 1rem;
+  button {
+    width: 8rem;
+    margin: 1rem 0;
+  }
+}
+
+.scrollable-list {
+  flex: 1;
+  min-height: 0;
+  height: 25rem;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  &.problem {
+        height: 24.1rem;
+  }
+}
+
+.flex-ct {
+  display: flex;
+  flex-flow: row-wrap;
+}
+
+.flex-item {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  height: 10rem;
+  width: 100%;
+  p {
+    width: 100%;
+    text-align: center;
+  }
+}

@@ -1,0 +1,29 @@
+[
+  {
+    "id": "sg-001",
+    "details": "Primary operational sites in the Northeast region.",
+    "sites": ["NYC-HQ", "BOS-MAIN", "PHL-DC"],
+    "displayName": "Northeast Operations",
+    "siteGroupType": "Regional",
+    "siteCount": 3,
+    "isDisabled": false
+  },
+  {
+    "id": "sg-002",
+    "details": "Data centers and backup facilities.",
+    "sites": ["ASH-DC", "DAL-DC"],
+    "displayName": "Core Infrastructure",
+    "siteGroupType": "Infrastructure",
+    "siteCount": 2,
+    "isDisabled": false
+  },
+  {
+    "id": "sg-003",
+    "details": "Inactive sites pending decommissioning.",
+    "sites": ["CHI-OLD"],
+    "displayName": "Decommissioning",
+    "siteGroupType": "Inactive",
+    "siteCount": 1,
+    "isDisabled": true
+  }
+]   

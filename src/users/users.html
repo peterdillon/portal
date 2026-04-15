@@ -1,0 +1,52 @@
+<div class="two-column-layout mat-typography">
+  <div class="column">
+    <h6>All users</h6>
+    <mat-selection-list class="scrollable-list problem">
+      @for (user of store['userEntities'](); track user.id) {
+        <mat-list-option [value]="user.id">
+          <span matListItemTitle>{{ user.displayName }}</span>
+          <span matListItemLine>Permissions: {{ user.permissions.join(', ')  }}</span>
+        </mat-list-option>
+      } @empty {
+        <p class="empty-state">No users found.</p>
+      }
+    </mat-selection-list>
+  </div>
+  <div class="column">
+    <h6>Create New User</h6>
+    <form [formGroup]="userForm" (ngSubmit)="onCreateUser()">
+        <div class="form-grid">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" placeholder="Name">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Display Name</mat-label>
+        <input matInput formControlName="displayName" placeholder="Display Name">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" placeholder="Email">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Phone</mat-label>
+        <input matInput formControlName="phone" placeholder="Phone">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Employee Name</mat-label>
+        <input matInput formControlName="employeeName" placeholder="Employee Name">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Employee Number</mat-label>
+        <input matInput formControlName="employeeNumber" placeholder="Employee Number">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Permissions</mat-label>
+        <textarea matInput formControlName="permissions" placeholder="Permissions (comma-separated)"></textarea>
+      </mat-form-field>
+        </div>
+
+      <button mat-button matButton="filled" type="submit" [disabled]="userForm.invalid">Add User</button>
+    </form>
+  </div>
+</div>   
