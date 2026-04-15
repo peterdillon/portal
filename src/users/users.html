@@ -1,11 +1,11 @@
 <div class="two-column-layout mat-typography">
   <div class="column">
-    <h6>All users</h6>
+    <h6>All Users</h6>
     <mat-selection-list class="scrollable-list problem">
       @for (user of store['userEntities'](); track user.id) {
         <mat-list-option [value]="user.id">
           <span matListItemTitle>{{ user.displayName }}</span>
-          <span matListItemLine>Permissions: {{ user.permissions.join(', ')  }}</span>
+          <span matListItemLine><span [style.color]="themeService.getSecondaryColor()">Permissions:</span> {{ user.permissions.join(', ')  }}</span>
         </mat-list-option>
       } @empty {
         <p class="empty-state">No users found.</p>

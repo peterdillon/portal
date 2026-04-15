@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
-@use '_theme-colors' as theme;
+@use './theme/theme-colors' as theme;
 
 @include mat.core();
 
@@ -19,6 +19,38 @@ html {
   @include mat.typography-hierarchy(theme.$light-theme);
   @include mat.color-variants-backwards-compatibility(theme.$light-theme);
   
+  // Extract theme colors and expose as CSS variables
+  --primary-color: #{mat.get-theme-color(theme.$light-theme, primary)};
+  --on-primary-color: #{mat.get-theme-color(theme.$light-theme, on-primary)};
+  --primary-container: #{mat.get-theme-color(theme.$light-theme, primary-container)};
+  --on-primary-container: #{mat.get-theme-color(theme.$light-theme, on-primary-container)};
+  
+  --secondary-color: #{mat.get-theme-color(theme.$light-theme, secondary)};
+  --on-secondary-color: #{mat.get-theme-color(theme.$light-theme, on-secondary)};
+  --secondary-container: #{mat.get-theme-color(theme.$light-theme, secondary-container)};
+  --on-secondary-container: #{mat.get-theme-color(theme.$light-theme, on-secondary-container)};
+  
+  --tertiary-color: #{mat.get-theme-color(theme.$light-theme, tertiary)};
+  --on-tertiary-color: #{mat.get-theme-color(theme.$light-theme, on-tertiary)};
+  --tertiary-container: #{mat.get-theme-color(theme.$light-theme, tertiary-container)};
+  --on-tertiary-container: #{mat.get-theme-color(theme.$light-theme, on-tertiary-container)};
+  
+  --error-color: #{mat.get-theme-color(theme.$light-theme, error)};
+  --on-error-color: #{mat.get-theme-color(theme.$light-theme, on-error)};
+  --error-container: #{mat.get-theme-color(theme.$light-theme, error-container)};
+  --on-error-container: #{mat.get-theme-color(theme.$light-theme, on-error-container)};
+  
+  --background-color: #{mat.get-theme-color(theme.$light-theme, background)};
+  --on-background-color: #{mat.get-theme-color(theme.$light-theme, on-background)};
+  
+  --surface-color: #{mat.get-theme-color(theme.$light-theme, surface)};
+  --on-surface-color: #{mat.get-theme-color(theme.$light-theme, on-surface)};
+  --surface-variant: #{mat.get-theme-color(theme.$light-theme, surface-variant)};
+  --on-surface-variant: #{mat.get-theme-color(theme.$light-theme, on-surface-variant)};
+  
+  --outline-color: #{mat.get-theme-color(theme.$light-theme, outline)};
+  --outline-variant: #{mat.get-theme-color(theme.$light-theme, outline-variant)};
+  
   // Explicit light mode colors
   background-color: #fef7ff;
   color: #1d1a23;
@@ -33,6 +65,38 @@ body {
 html.dark-theme {
   @include mat.all-component-themes(theme.$dark-theme);
   @include mat.color-variants-backwards-compatibility(theme.$dark-theme);
+  
+  // Extract dark theme colors and expose as CSS variables
+  --primary-color: #{mat.get-theme-color(theme.$dark-theme, primary)};
+  --on-primary-color: #{mat.get-theme-color(theme.$dark-theme, on-primary)};
+  --primary-container: #{mat.get-theme-color(theme.$dark-theme, primary-container)};
+  --on-primary-container: #{mat.get-theme-color(theme.$dark-theme, on-primary-container)};
+  
+  --secondary-color: #{mat.get-theme-color(theme.$dark-theme, secondary)};
+  --on-secondary-color: #{mat.get-theme-color(theme.$dark-theme, on-secondary)};
+  --secondary-container: #{mat.get-theme-color(theme.$dark-theme, secondary-container)};
+  --on-secondary-container: #{mat.get-theme-color(theme.$dark-theme, on-secondary-container)};
+  
+  --tertiary-color: #{mat.get-theme-color(theme.$dark-theme, tertiary)};
+  --on-tertiary-color: #{mat.get-theme-color(theme.$dark-theme, on-tertiary)};
+  --tertiary-container: #{mat.get-theme-color(theme.$dark-theme, tertiary-container)};
+  --on-tertiary-container: #{mat.get-theme-color(theme.$dark-theme, on-tertiary-container)};
+  
+  --error-color: #{mat.get-theme-color(theme.$dark-theme, error)};
+  --on-error-color: #{mat.get-theme-color(theme.$dark-theme, on-error)};
+  --error-container: #{mat.get-theme-color(theme.$dark-theme, error-container)};
+  --on-error-container: #{mat.get-theme-color(theme.$dark-theme, on-error-container)};
+  
+  --background-color: #{mat.get-theme-color(theme.$dark-theme, background)};
+  --on-background-color: #{mat.get-theme-color(theme.$dark-theme, on-background)};
+  
+  --surface-color: #{mat.get-theme-color(theme.$dark-theme, surface)};
+  --on-surface-color: #{mat.get-theme-color(theme.$dark-theme, on-surface)};
+  --surface-variant: #{mat.get-theme-color(theme.$dark-theme, surface-variant)};
+  --on-surface-variant: #{mat.get-theme-color(theme.$dark-theme, on-surface-variant)};
+  
+  --outline-color: #{mat.get-theme-color(theme.$dark-theme, outline)};
+  --outline-variant: #{mat.get-theme-color(theme.$dark-theme, outline-variant)};
   
   // Explicit dark mode colors
   background-color: #15121a !important;
@@ -63,24 +127,24 @@ html.dark-theme {
 
 // Light theme toolbar
 html mat-toolbar {
-  background-color: mat.get-theme-color(theme.$light-theme, primary) !important;
-  color: mat.get-theme-color(theme.$light-theme, on-primary) !important;
+  background-color: var(--primary-color) !important;
+  color: var(--on-primary-color) !important;
 }
 
 // Dark theme toolbar
 html.dark-theme mat-toolbar {
-  background-color: mat.get-theme-color(theme.$dark-theme, primary) !important;
-  color: mat.get-theme-color(theme.$dark-theme, on-primary) !important;
+  background-color: var(--primary-color) !important;
+  color: var(--on-primary-color) !important;
 }
 
 // Light theme toolbar icons
 mat-toolbar [mat-icon-button] mat-icon {
-  color: mat.get-theme-color(theme.$light-theme, on-primary) !important;
+  color: var(--on-primary-color) !important;
 }
 
 // Dark theme toolbar icons
 html.dark-theme mat-toolbar [mat-icon-button] mat-icon {
-  color: mat.get-theme-color(theme.$dark-theme, on-primary) !important;
+  color: var(--on-primary-color) !important;
 }
 
 // Badge styling
@@ -95,7 +159,6 @@ html.dark-theme .mat-badge-content {
   color: #ccc !important;
   font-weight: 600;
 }
-
  
 html, body {
   min-height: 100%;
@@ -111,7 +174,6 @@ html, body {
   align-items: center;
 }
 
-.mdc-button ~ .mdc-button,
-  mat-icon-button {
-    margin-left: 0.5rem;
-  } 
+.mdc-button ~ .mdc-button, mat-icon-button {
+  margin-left: 0.5rem;
+}

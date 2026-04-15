@@ -15,6 +15,10 @@ h6 {
   height: 30px;
 } 
 
+.color {
+  color: var(--primary-color);
+}
+
 .example-spacer {
   flex: 1 1 auto;
 }
@@ -53,13 +57,10 @@ h6 {
 .scrollable-list {
   flex: 1;
   min-height: 0;
-  height: 25rem;
+  height: 35rem;
   overflow-y: auto;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
-  &.problem {
-        height: 24.1rem;
-  }
 }
 
 .flex-ct {
