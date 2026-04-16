@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { FormsModule } from '@angular/forms';
 import { MatSelectionList } from '@angular/material/list';
@@ -7,22 +7,27 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
-import { IAMStore } from '../store/iam/iam.store';
+import { GroupManagerStore } from '../store/group-manager/group-manager.store';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-iam',
   imports: [
-    FormsModule, CommonModule, MatListModule, MatSelectionList, MatButtonModule, MatIconModule,
-    MatCheckboxModule, MatDividerModule, MatTooltip, MatToolbarModule
+    FormsModule, CommonModule, MatListModule, MatSelectionList, MatButtonModule,
+    MatIconModule,  MatCheckboxModule, MatDividerModule, MatTooltip, 
+    MatToolbarModule
   ],
-  templateUrl: './iam.html',
-  styleUrl: './iam.scss',
+  templateUrl: './group-manager.html',
+  styleUrl: './group-manager.scss',
 })
-export class Iam {
+export class GroupManager implements OnInit {
 
-  readonly store = inject(IAMStore);
+  readonly store = inject(GroupManagerStore);
+
+  ngOnInit() {
+    this.store.loadGroups();
+  }
 
   onGroupSelected(groupId: number) {
     this.store.selectGroup(groupId);

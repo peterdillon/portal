@@ -1,3 +1,4 @@
+// iam.model.ts
 export interface User {
   id: number;
   first_name: string;
@@ -9,16 +10,16 @@ export interface Group {
   name: string;
   address: string;
   email: string;
-  users: User[]; // Array of user objects in this group
+  users: User[];
 }
 
-export interface IAMState {
+export interface GroupManagerState {
   groups: Group[];
-  allUsers: User[]; // All available users for assignment
+  allUsers: User[];
   selectedGroupId: number | null;
-  selectedUserIds: number[]; // Users selected for bulk operations
+  selectedUserIds: number[];
   isLoading: boolean;
   isSaving: boolean;
   error: string | null;
-  modifiedGroupIds: Set<number>; // Track which groups have been modified
+  modifiedGroupIds: Set<number>;
 }

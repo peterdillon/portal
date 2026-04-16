@@ -1,0 +1,282 @@
+[
+  {
+    "id": 1,
+    "name": "Caesars Palace",
+    "address": "Address 1",
+    "email": "caesars.palace@example.com",
+    "users": [
+      {
+        "id": 1,
+        "first_name": "James",
+        "last_name": "Smith"
+      },
+      {
+        "id": 2,
+        "first_name": "Mary",
+        "last_name": "Johnson"
+      },
+      {
+        "id": 3,
+        "first_name": "Robert",
+        "last_name": "Williams"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "The Bellagio",
+    "address": "Address 2",
+    "email": "bellagio@example.com",
+    "users": [
+      {
+        "id": 4,
+        "first_name": "Patricia",
+        "last_name": "Brown"
+      },
+      {
+        "id": 5,
+        "first_name": "John",
+        "last_name": "Davis"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Circus Circus",
+    "address": "Address 3",
+    "email": "circus.circus@example.com",
+    "users": [
+      {
+        "id": 6,
+        "first_name": "Michael",
+        "last_name": "Miller"
+      },
+      {
+        "id": 7,
+        "first_name": "Jennifer",
+        "last_name": "Wilson"
+      },
+      {
+        "id": 8,
+        "first_name": "William",
+        "last_name": "Moore"
+      },
+      {
+        "id": 9,
+        "first_name": "Linda",
+        "last_name": "Taylor"
+      },
+      {
+        "id": 10,
+        "first_name": "David",
+        "last_name": "Anderson"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "The Venetian",
+    "address": "Address 4",
+    "email": "venetian@example.com",
+    "users": [
+      {
+        "id": 11,
+        "first_name": "Elizabeth",
+        "last_name": "Thomas"
+      },
+      {
+        "id": 12,
+        "first_name": "Richard",
+        "last_name": "Jackson"
+      },
+      {
+        "id": 13,
+        "first_name": "Charles",
+        "last_name": "White"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Cosmopolitan",
+    "address": "Address 5",
+    "email": "cosmopolitan@example.com",
+    "users": [
+      {
+        "id": 14,
+        "first_name": "Joseph",
+        "last_name": "Harris"
+      },
+      {
+        "id": 15,
+        "first_name": "Barbara",
+        "last_name": "Martin"
+      },
+      {
+        "id": 16,
+        "first_name": "Thomas",
+        "last_name": "Thompson"
+      },
+      {
+        "id": 17,
+        "first_name": "Dorothy",
+        "last_name": "Garcia"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "QuantumLeap Technologies",
+    "address": "Address 6",
+    "email": "quantumleap@example.com",
+    "users": [
+      {
+        "id": 18,
+        "first_name": "Christopher",
+        "last_name": "Martinez"
+      },
+      {
+        "id": 19,
+        "first_name": "Lisa",
+        "last_name": "Robinson"
+      },
+      {
+        "id": 20,
+        "first_name": "Daniel",
+        "last_name": "Clark"
+      },
+      {
+        "id": 21,
+        "first_name": "Nancy",
+        "last_name": "Rodriguez"
+      },
+      {
+        "id": 22,
+        "first_name": "Matthew",
+        "last_name": "Lewis"
+      },
+      {
+        "id": 23,
+        "first_name": "Karen",
+        "last_name": "Lee"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "CyberForge Solutions",
+    "address": "Address 7",
+    "email": "cyberforge@example.com",
+    "users": [
+      {
+        "id": 24,
+        "first_name": "Anthony",
+        "last_name": "Walker"
+      },
+      {
+        "id": 25,
+        "first_name": "Betty",
+        "last_name": "Hall"
+      },
+      {
+        "id": 26,
+        "first_name": "Mark",
+        "last_name": "Allen"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "DataNexus Analytics",
+    "address": "Address 8",
+    "email": "datanexus@example.com",
+    "users": [
+      {
+        "id": 27,
+        "first_name": "Steven",
+        "last_name": "Young"
+      },
+      {
+        "id": 28,
+        "first_name": "Sandra",
+        "last_name": "Hernandez"
+      },
+      {
+        "id": 29,
+        "first_name": "Paul",
+        "last_name": "King"
+      },
+      {
+        "id": 30,
+        "first_name": "Ashley",
+        "last_name": "Wright"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "The High Dive",
+    "address": "Address 9",
+    "email": "high.dive@example.com",
+    "users": [
+      {
+        "id": 31,
+        "first_name": "Andrew",
+        "last_name": "Lopez"
+      },
+      {
+        "id": 32,
+        "first_name": "Donna",
+        "last_name": "Hill"
+      },
+      {
+        "id": 33,
+        "first_name": "Joshua",
+        "last_name": "Scott"
+      },
+      {
+        "id": 34,
+        "first_name": "Michelle",
+        "last_name": "Green"
+      },
+      {
+        "id": 35,
+        "first_name": "Kenneth",
+        "last_name": "Adams"
+      },
+      {
+        "id": 36,
+        "first_name": "Carol",
+        "last_name": "Baker"
+      },
+      {
+        "id": 37,
+        "first_name": "Kevin",
+        "last_name": "Gonzalez"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "PixelPerfect Design",
+    "address": "Address 10",
+    "email": "pixelperfect@example.com",
+    "users": [
+      {
+        "id": 38,
+        "first_name": "Brian",
+        "last_name": "Nelson"
+      },
+      {
+        "id": 39,
+        "first_name": "Ruth",
+        "last_name": "Carter"
+      },
+      {
+        "id": 40,
+        "first_name": "Ronald",
+        "last_name": "Mitchell"
+      }
+    ]
+  }
+]   

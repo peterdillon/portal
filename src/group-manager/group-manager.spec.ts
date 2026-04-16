@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Iam } from './iam';
+import { GroupManager } from './group-manager';
 
 describe('Iam', () => {
-  let component: Iam;
-  let fixture: ComponentFixture<Iam>;
+  let component: GroupManager;
+  let fixture: ComponentFixture<GroupManager>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Iam],
+      imports: [GroupManager],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Iam);
+    fixture = TestBed.createComponent(GroupManager);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

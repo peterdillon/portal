@@ -107,7 +107,7 @@
           <mat-list-item>
             <mat-checkbox [checked]="store.selectedUserIds().includes(user.id)"
                           (change)="onUserToggled(user.id)">
-              {{ user.first_name }} {{ user.last_name }}
+              {{ user.id }} {{ user.last_name }}, {{ user.first_name }}
             </mat-checkbox>
           </mat-list-item>
         } @empty {

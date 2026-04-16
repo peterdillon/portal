@@ -1,18 +1,14 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+// users.store.ts
+import { inject } from '@angular/core';
 import { signalStore, withState, withMethods, type, patchState } from '@ngrx/signals';
 import { withEntities, addEntities, prependEntity } from '@ngrx/signals/entities';
-import { User } from './user.model';
 import { withDevtools, withGlitchTracking } from '@angular-architects/ngrx-toolkit';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, tap, switchMap } from 'rxjs';
+import { pipe, switchMap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
+import { User } from '../../models/user.model';
+import { UsersService } from '../../services/user.service';
 
-@Injectable({ providedIn: 'root' })
-export class UsersService {
-  private http = inject(HttpClient);
-  readonly users$ = this.http.get<User[]>('/assets/users.json');
-}
 const userEntityConfig = { entity: type<User>(), collection: 'user' };
 
 export const UsersStore = signalStore(

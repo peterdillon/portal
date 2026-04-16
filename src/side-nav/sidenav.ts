@@ -19,7 +19,7 @@ export class SidenavModeExample {
   private sidenavService = inject(SidenavService);
   navigationData = signal([
     { name: 'Products', path: '/products', subTitle: 'Electronic Gaming Machines' },
-    { name: 'IAM', path: '/iam', subTitle: 'Identity & Access Management' },
+    { name: 'Group Manager', path: '/group-manager', subTitle: 'Group Management' },
     { name: 'Users', path: '/users', subTitle: 'Users & Permission Management' },
     { name: 'Table', path: '/page-two', subTitle: 'An example table' },
     { name: 'Dialog', path: '/dialog-example', subTitle: 'An example dialog' },

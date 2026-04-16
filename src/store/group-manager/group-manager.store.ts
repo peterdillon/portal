@@ -2,16 +2,16 @@ import { signalStore, withState, withMethods, withComputed, withHooks, patchStat
 import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { switchMap, of, tap } from 'rxjs';
+import { pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { computed } from '@angular/core';
 import { withDevtools, withGlitchTracking } from '@angular-architects/ngrx-toolkit';
-import { User, Group, IAMState } from './iam.model';
+import { User, Group, GroupManagerState } from '../../models/group-manager.model';
 
-export const IAMStore = signalStore(
+export const GroupManagerStore = signalStore(
   { providedIn: 'root' },
   withDevtools('iam-store', withGlitchTracking()),
-  withState<IAMState>({
+  withState<GroupManagerState>({
     groups: [],
     allUsers: [],
     selectedGroupId: null,
@@ -26,30 +26,45 @@ export const IAMStore = signalStore(
     const http = inject(HttpClient);
 
     return {
-      // Load initial data
-      loadData: rxMethod<void>(
-        switchMap(() => {
-          patchState(store, { isLoading: true, error: null });
-          // In a real app, these would be separate API calls
-          return of(null).pipe(
-            tap(() => {
-              const dummyUsers = generateDummyUsers(40);
-              const dummyGroups = generateDummyGroups(40);
+
+      loadGroups: rxMethod<void>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true, error: null })),
+          switchMap(() => http.get<Group[]>('assets/group-data.json')),
+          tapResponse({
+            next: (groups) => {
+              // Extract all unique users from groups
+              const userMap = new Map<number, User>();
+              groups.forEach(group => {
+                group.users.forEach(user => {
+                  if (!userMap.has(user.id)) {
+                    userMap.set(user.id, user);
+                  }
+                });
+              });
+              const allUsers = Array.from(userMap.values());
+
               patchState(store, {
-                allUsers: dummyUsers,
-                groups: dummyGroups,
+                groups,
+                allUsers,
                 isLoading: false,
               });
-            })
-          );
-        })
+            },
+            error: (err) => {
+              const message = err instanceof Error ? err.message : 'Failed to load groups';
+              console.error('Failed to load groups', err);
+              patchState(store, {
+                error: message,
+                isLoading: false,
+              });
+            },
+            finalize: () => console.log('Groups loading complete'),
+          })
+        )
       ),
 
-       isUserSelected: (userId: number) =>
-        computed(() => store.selectedUserIds().includes(userId)),
+      isUserSelected: (userId: number) => computed(() => store.selectedUserIds().includes(userId)),
 
-
-      // Select a group
       selectGroup: (groupId: number | null) => {
         patchState(store, {
           selectedGroupId: groupId,
@@ -57,7 +72,6 @@ export const IAMStore = signalStore(
         });
       },
 
-      // Toggle user selection for bulk operations
       toggleUserSelection: (userId: number) => {
         patchState(store, {
           selectedUserIds: store.selectedUserIds().includes(userId)
@@ -66,7 +80,6 @@ export const IAMStore = signalStore(
         });
       },
 
-      // Select all users in current group
       selectAllUsersInGroup: () => {
         const groupId = store.selectedGroupId();
         if (!groupId) return;
@@ -78,12 +91,10 @@ export const IAMStore = signalStore(
         patchState(store, { selectedUserIds: userIds });
       },
 
-      // Deselect all users
       deselectAllUsers: () => {
         patchState(store, { selectedUserIds: [] });
       },
 
-      // Add selected users to the selected group
       addUsersToGroup: () => {
         const groupId = store.selectedGroupId();
         const userIds = store.selectedUserIds();
@@ -113,7 +124,6 @@ export const IAMStore = signalStore(
         });
       },
 
-      // Remove selected users from the selected group
       removeUsersFromGroup: () => {
         const groupId = store.selectedGroupId();
         const userIds = store.selectedUserIds();
@@ -135,7 +145,6 @@ export const IAMStore = signalStore(
         });
       },
 
-      // Save all changes to backend
       saveChanges: rxMethod<void>(
         switchMap(() => {
           patchState(store, { isSaving: true, error: null });
@@ -145,38 +154,27 @@ export const IAMStore = signalStore(
             .filter((g) => store.modifiedGroupIds().has(g.id));
 
           // In a real app, send to backend
-          return of(modifiedGroups).pipe(
-            tapResponse({
-              next: () => {
-                patchState(store, {
-                  modifiedGroupIds: new Set(),
-                  isSaving: false,
-                });
-              },
-              error: (err) => {
-                const message =
-                  err instanceof Error ? err.message : 'Unknown error';
-                patchState(store, {
-                  error: message,
-                  isSaving: false,
-                });
-              },
-            })
-          );
+          return new Promise<void>((resolve) => {
+            setTimeout(() => resolve(), 500); // Simulate network delay
+          }).then(() => {
+            patchState(store, {
+              modifiedGroupIds: new Set(),
+              isSaving: false,
+            });
+          });
         })
       ),
 
-      // Discard all changes and reload
       discardChanges: () => {
         patchState(store, {
           modifiedGroupIds: new Set(),
           selectedUserIds: [],
           selectedGroupId: null,
         });
-        (store as any).loadData();
+        // Reload groups from JSON
+        (store as any).loadGroups();
       },
 
-      // Clear error message
       clearError: () => {
         patchState(store, { error: null });
       },
@@ -210,39 +208,7 @@ export const IAMStore = signalStore(
 
   withHooks({
     onInit(store) {
-      (store as any).loadData();
+      (store as any).loadGroups();
     },
   })
 );
-
-// ============ DUMMY DATA GENERATORS ============
-
-function generateDummyUsers(count: number): User[] {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i + 1,
-    first_name: `User${i + 1}`,
-    last_name: `LastName${i + 1}`,
-  }));
-}
-
-function generateDummyGroups(count: number): Group[] {
-  const allUsers = generateDummyUsers(40);
-  
-  return Array.from({ length: count }, (_, i) => {
-    // Assign some users to each group (1-10 users per group)
-    const usersPerGroup = Math.floor(Math.random() * 10) + 1;
-    const startIdx = (i * usersPerGroup) % 40;
-    const groupUsers = Array.from({ length: usersPerGroup }, (_, j) => {
-      const idx = (startIdx + j) % 40;
-      return allUsers[idx];
-    });
-
-    return {
-      id: i + 1,
-      name: `Group ${i + 1}`,
-      address: `Address ${i + 1}`,
-      email: `group${i + 1}@example.com`,
-      users: groupUsers,
-    };
-  });
-}
