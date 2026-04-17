@@ -1,3 +1,4 @@
+// group-manager.ts
 import { Component, inject, OnInit } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { FormsModule } from '@angular/forms';
@@ -10,19 +11,21 @@ import { MatDividerModule } from '@angular/material/divider';
 import { GroupManagerStore } from '../store/group-manager/group-manager.store';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { Spinner } from '../spinner/spinner';
+import { ThemeService } from '../theme/theme.service';
 
 @Component({
   selector: 'app-iam',
   imports: [
     FormsModule, CommonModule, MatListModule, MatSelectionList, MatButtonModule,
-    MatIconModule,  MatCheckboxModule, MatDividerModule, MatTooltip, 
-    MatToolbarModule
+    MatIconModule, MatCheckboxModule, MatDividerModule, MatTooltip, 
+    MatToolbarModule, Spinner
   ],
   templateUrl: './group-manager.html',
   styleUrl: './group-manager.scss',
 })
 export class GroupManager implements OnInit {
-
+  themeService = inject(ThemeService);
   readonly store = inject(GroupManagerStore);
 
   ngOnInit() {
@@ -33,8 +36,8 @@ export class GroupManager implements OnInit {
     this.store.selectGroup(groupId);
   }
 
-  onUserToggled(userId: number) {
-    this.store.toggleUserSelection(userId);
+  onUserToggled(userId: string | number) {
+    this.store.toggleUserSelection(String(userId));
   }
 
   addUsersToGroup() {

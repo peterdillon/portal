@@ -7,4 +7,5 @@ export interface User {
   employeeName: string;
   employeeNumber: string;
   permissions: string[];
+  groupId: string;
 }

@@ -7,26 +7,106 @@
     "phone": "+1-212-555-0198",
     "employeeName": "Alice Johnson",
     "employeeNumber": "EMP-2023-001",
-    "permissions": ["site.read", "site.write", "user.read", "config.read", "config.write"]
+    "permissions": ["site.read", "site.write", "user.read", "config.read", "config.write"],
+    "groupId": 1
   },
   {
     "id": "usr-1002",
     "name": "bob.smith",
     "displayName": "Bob Smith",
     "email": "bob.smith@company.com",
-    "phone": "+1-617-555-0145",
+    "phone": "+1-212-555-0199",
     "employeeName": "Bob Smith",
     "employeeNumber": "EMP-2023-002",
-    "permissions": ["site.read", "user.read", "audit.read"]
+    "permissions": ["site.read", "user.read"],
+    "groupId": 1
   },
   {
     "id": "usr-1003",
-    "name": "carol.davis",
-    "displayName": "Carol Davis",
-    "email": "carol.davis@company.com",
-    "phone": "+1-214-555-0123",
-    "employeeName": "Carol Davis",
-    "employeeNumber": "EMP-2024-001",
-    "permissions": ["site.read", "site.write", "site.delete", "user.read", "user.write", "user.delete", "config.read", "config.write", "audit.read", "billing.read"]
+    "name": "carol.williams",
+    "displayName": "Carol Williams",
+    "email": "carol.williams@company.com",
+    "phone": "+1-212-555-0200",
+    "employeeName": "Carol Williams",
+    "employeeNumber": "EMP-2023-003",
+    "permissions": ["site.read", "site.write"],
+    "groupId": 2
+  },
+  {
+    "id": "usr-1004",
+    "name": "david.brown",
+    "displayName": "David Brown",
+    "email": "david.brown@company.com",
+    "phone": "+1-212-555-0201",
+    "employeeName": "David Brown",
+    "employeeNumber": "EMP-2023-004",
+    "permissions": ["site.read"],
+    "groupId": 2
+  },
+  {
+    "id": "usr-1005",
+    "name": "emma.davis",
+    "displayName": "Emma Davis",
+    "email": "emma.davis@company.com",
+    "phone": "+1-212-555-0202",
+    "employeeName": "Emma Davis",
+    "employeeNumber": "EMP-2023-005",
+    "permissions": ["site.read", "site.write", "user.read", "user.write"],
+    "groupId": 3
+  },
+  {
+    "id": "usr-1006",
+    "name": "frank.miller",
+    "displayName": "Frank Miller",
+    "email": "frank.miller@company.com",
+    "phone": "+1-212-555-0203",
+    "employeeName": "Frank Miller",
+    "employeeNumber": "EMP-2023-006",
+    "permissions": ["site.read"],
+    "groupId": 3
+  },
+  {
+    "id": "usr-1007",
+    "name": "grace.wilson",
+    "displayName": "Grace Wilson",
+    "email": "grace.wilson@company.com",
+    "phone": "+1-212-555-0204",
+    "employeeName": "Grace Wilson",
+    "employeeNumber": "EMP-2023-007",
+    "permissions": ["site.read", "site.write"],
+    "groupId": 4
+  },
+  {
+    "id": "usr-1008",
+    "name": "henry.moore",
+    "displayName": "Henry Moore",
+    "email": "henry.moore@company.com",
+    "phone": "+1-212-555-0205",
+    "employeeName": "Henry Moore",
+    "employeeNumber": "EMP-2023-008",
+    "permissions": ["site.read"],
+    "groupId": 5
+  },
+  {
+    "id": "usr-1009",
+    "name": "iris.taylor",
+    "displayName": "Iris Taylor",
+    "email": "iris.taylor@company.com",
+    "phone": "+1-212-555-0206",
+    "employeeName": "Iris Taylor",
+    "employeeNumber": "EMP-2023-009",
+    "permissions": ["site.read", "site.write", "user.read"],
+    "groupId": 0
+  },
+  {
+    "id": "usr-1010",
+    "name": "jack.anderson",
+    "displayName": "Jack Anderson",
+    "email": "jack.anderson@company.com",
+    "phone": "+1-212-555-0207",
+    "employeeName": "Jack Anderson",
+    "employeeNumber": "EMP-2023-010",
+    "permissions": ["site.read"],
+    "groupId": 6
   }
 ]

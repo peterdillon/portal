@@ -1,14 +1,43 @@
 
 .mat-toolbar {
   background-color: transparent !important;
-  color: white !important;
   border-bottom: 1px solid #ccc;
   margin-bottom: 1rem;
   padding-left: 0;
 }
 
+// -------------------
+
+.button-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modified-indicator,
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0; /* Prevents the element from shrinking */
+}
+
+// -------------------
+
+.empty-state {
+  margin: 1.22rem 0 0 3.5rem;
+}
+
 h6 {
-  font-size: 1rem;
+  font-size: 1rem !important;
+}
+
+.has-edits {
+  color: orange;
+}
+
+.has-edits.hidden {
+  visibility: hidden;
+  color: transparent;
 }
 
 .custom-chk {
@@ -49,6 +78,7 @@ h6 {
   flex: 1;
   min-height: 0;
   height: 25rem;
+  width: 30rem;;
   overflow-y: auto;
   border: 1px solid #e0e0e0;
   border-radius: 4px;

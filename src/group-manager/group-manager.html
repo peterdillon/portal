@@ -1,18 +1,23 @@
 <div class="iam-container mat-typography">
 
   <mat-toolbar>
-    <span>Groups & Users Management</span>
-    <span class="example-spacer"></span>
-    <button mat-raised-button color="primary" 
-      (click)="saveChanges()" 
-      [disabled]="!store.hasChanges() || store.isSaving()">
-      <mat-icon>save</mat-icon>
-      Save Changes
-      @if (store.hasChanges()) {
-        <span class="change-count">
-          ({{ store.modifiedGroupCount() }} group{{ store.modifiedGroupCount() > 1 ? 's' : '' }})
-        </span>
-      }
+    <span [style.color]="themeService.getTertiaryColor()">Groups & Users Management</span>
+    <span class="example-spacer"></span>    
+    <button mat-button matButton="filled" 
+      class="custom-button" 
+        (click)="saveChanges()" 
+        [disabled]="!store.hasChanges() || store.isSaving()">
+      <span class="button-content">
+        @if (store.isLoading() || store.isSaving()) {
+          <spinner class="modified-indicator loading-spinner"></spinner>
+        } @else {
+          <mat-icon class="modified-indicator">save</mat-icon>
+        }
+        Save Changes
+        @if (store.hasChanges()) {
+          <span class="change-count">({{ store.modifiedGroupCount() }})</span>
+        }
+      </span>
     </button>
     <button mat-raised-button (click)="discardChanges()" [disabled]="!store.hasChanges()">
       <mat-icon>close</mat-icon>
@@ -41,11 +46,17 @@
         (selectionChange)="onGroupSelected($event.options[0]?.value)">
         @for (group of store.groups(); track group.id) {
           <mat-list-option [value]="group.id" [selected]="store.selectedGroupId() === group.id">
-            <span matListItemTitle>{{ group.name }}</span>
-            <span matListItemLine>{{ group.users.length }} users</span>
-            @if (store.modifiedGroupIds().has(group.id)) {
-              <mat-icon matListItemMeta class="modified-indicator" title="Unsaved changes">edit</mat-icon>
+            @if (!store.modifiedGroupIds().has(group.id)) {
+              <mat-icon matListItemIcon 
+                class="has-edits" 
+                [class.hidden]="!store.modifiedGroupIds().has(group.id)">edit</mat-icon>
+                
+            } @else {
+              <mat-icon matListItemIcon class="has-edits" title="Unsaved changes">edit</mat-icon>
             }
+            <span matListItemTitle>{{ group.name }}</span>
+            <span matListItemLine>{{ group.address }}</span>
+            
           </mat-list-option>
         } @empty {
           <p class="empty-state">No groups found.</p>
@@ -54,34 +65,37 @@
     </div>
 
     <div class="column">
-      @if (store.selectedGroupId()) {
+      
         <h6>
           <mat-checkbox  class="custom-chk" (click)="toggleSelectAll()" 
             [matTooltip]="store.areAllGroupUsersSelected() ? 'Deselect all' : 'Select all'">
           </mat-checkbox> 
-          Users in {{ store.selectedGroup()?.name }}
+          Users in: {{ store.selectedGroup() ? store.selectedGroup()!.name : '...' }}
         </h6>
 
         <div class="scrollable-list">
-          @for (user of store.groupUsers(); track user.id) {
-            <mat-list>
-              <mat-list-item>
-                <mat-checkbox 
-                  [checked]="store.selectedUserIds().includes(user.id)"
-                  (change)="onUserToggled(user.id)">
-                  {{ user.first_name }} {{ user.last_name }}
-                </mat-checkbox>
-              </mat-list-item>
-            </mat-list>
-          } @empty {
-            <div class="flex-ct">
-              <div class="flex-item">
-                <p>No users in group</p>
+          @if (store.selectedGroupId()) {
+            @for (user of store.groupUsers(); track user.id) {
+              <mat-list>
+                <mat-list-item lines="2">
+                  <mat-checkbox 
+                    [checked]="store.selectedUserIds().includes(user.id)"
+                    (change)="onUserToggled(user.id)">
+                    <span matListItemTitle>{{ user.displayName }} ({{ user.groupId }})</span>
+                    <span matListItemLine>{{ user.id }}</span>
+                  </mat-checkbox>
+                </mat-list-item>
+              </mat-list>
+            } @empty {
+              <div class="flex-ct">
+                <div class="flex-item">
+                  <p>No users in group</p>
+                </div>
               </div>
-            </div>
+            }
           }
         </div>
-      }
+      
     </div>
 
     <div class="button-column">
@@ -104,25 +118,17 @@
       <div class="scrollable-list">
         <mat-list>
         @for (user of store.availableUsers(); track user.id) {
-          <mat-list-item>
+          <mat-list-item lines="2">
             <mat-checkbox [checked]="store.selectedUserIds().includes(user.id)"
                           (change)="onUserToggled(user.id)">
-              {{ user.id }} {{ user.last_name }}, {{ user.first_name }}
+              <span matListItemTitle>{{ user.displayName }} ({{ user.groupId }})</span>
+              <span matListItemLine>{{ user.id }}</span>
             </mat-checkbox>
           </mat-list-item>
         } @empty {
-          <h6>All users assigned</h6>
+          <p class="empty-state">All users assigned</p>
         }
       </mat-list>
     </div>
   </div>
-
-  @if (store.isLoading() || store.isSaving()) {
-    <div class="loading-overlay">
-      <div class="spinner">
-        <mat-icon class="spin">schedule</mat-icon>
-        <p>{{ store.isLoading() ? 'Loading...' : 'Saving...' }}</p>
-      </div>
-    </div>
-  }
 </div>

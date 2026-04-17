@@ -7,13 +7,13 @@ import { tapResponse } from '@ngrx/operators';
 import { computed } from '@angular/core';
 import { withDevtools, withGlitchTracking } from '@angular-architects/ngrx-toolkit';
 import { User, Group, GroupManagerState } from '../../models/group-manager.model';
+import { UsersStore } from '../users/users.store';
 
 export const GroupManagerStore = signalStore(
   { providedIn: 'root' },
-  withDevtools('iam-store', withGlitchTracking()),
+  withDevtools('group-manager-store', withGlitchTracking()),
   withState<GroupManagerState>({
     groups: [],
-    allUsers: [],
     selectedGroupId: null,
     selectedUserIds: [],
     isLoading: false,
@@ -24,29 +24,20 @@ export const GroupManagerStore = signalStore(
 
   withMethods((store) => {
     const http = inject(HttpClient);
+    const usersStore = inject(UsersStore);
+    const findUserById = (id: string) => usersStore['userEntities']().find(u => u.id === id);
 
     return {
 
+      // Load groups from JSON file
       loadGroups: rxMethod<void>(
         pipe(
           tap(() => patchState(store, { isLoading: true, error: null })),
           switchMap(() => http.get<Group[]>('assets/group-data.json')),
           tapResponse({
             next: (groups) => {
-              // Extract all unique users from groups
-              const userMap = new Map<number, User>();
-              groups.forEach(group => {
-                group.users.forEach(user => {
-                  if (!userMap.has(user.id)) {
-                    userMap.set(user.id, user);
-                  }
-                });
-              });
-              const allUsers = Array.from(userMap.values());
-
               patchState(store, {
                 groups,
-                allUsers,
                 isLoading: false,
               });
             },
@@ -63,7 +54,7 @@ export const GroupManagerStore = signalStore(
         )
       ),
 
-      isUserSelected: (userId: number) => computed(() => store.selectedUserIds().includes(userId)),
+      isUserSelected: (userId: string) => computed(() => store.selectedUserIds().includes(userId)),
 
       selectGroup: (groupId: number | null) => {
         patchState(store, {
@@ -72,7 +63,7 @@ export const GroupManagerStore = signalStore(
         });
       },
 
-      toggleUserSelection: (userId: number) => {
+      toggleUserSelection: (userId: string) => {
         patchState(store, {
           selectedUserIds: store.selectedUserIds().includes(userId)
             ? store.selectedUserIds().filter((id) => id !== userId)
@@ -82,12 +73,10 @@ export const GroupManagerStore = signalStore(
 
       selectAllUsersInGroup: () => {
         const groupId = store.selectedGroupId();
-        if (!groupId) return;
+        if (groupId == null) return;
 
-        const group = store.groups().find((g) => g.id === groupId);
-        if (!group) return;
-
-        const userIds = group.users.map((u) => u.id);
+        const groupUsers = (store as any).groupUsers();
+        const userIds = groupUsers.map((u: { id: any; }) => u.id);
         patchState(store, { selectedUserIds: userIds });
       },
 
@@ -99,26 +88,17 @@ export const GroupManagerStore = signalStore(
         const groupId = store.selectedGroupId();
         const userIds = store.selectedUserIds();
 
-        if (!groupId || userIds.length === 0) return;
+        if (groupId == null || userIds.length === 0) return;
+
+        // Update users in UsersStore with new groupId
+        userIds.forEach(userId => {
+          const user = findUserById(userId);
+          if (user && Number(user.groupId) !== groupId) {
+            usersStore.updateUser({ ...user, groupId: String(groupId) });
+          }
+        });
 
         patchState(store, {
-          groups: store.groups().map((group) => {
-            if (group.id === groupId) {
-              // Add users that aren't already in the group
-              const existingUserIds = new Set(group.users.map((u) => u.id));
-              const usersToAdd = store
-                .allUsers()
-                .filter(
-                  (u) => userIds.includes(u.id) && !existingUserIds.has(u.id)
-                );
-
-              return {
-                ...group,
-                users: [...group.users, ...usersToAdd],
-              };
-            }
-            return group;
-          }),
           modifiedGroupIds: new Set([...store.modifiedGroupIds(), groupId]),
           selectedUserIds: [], // Clear selection after adding
         });
@@ -128,41 +108,47 @@ export const GroupManagerStore = signalStore(
         const groupId = store.selectedGroupId();
         const userIds = store.selectedUserIds();
 
-        if (!groupId || userIds.length === 0) return;
+        if (groupId == null || userIds.length === 0) return;
+
+        // Remove users by setting their groupId to 0
+        userIds.forEach(userId => {
+          const user = findUserById(userId);
+          if (user) {
+            usersStore.updateUser({ ...user, groupId: '0' });
+          }
+        });
 
         patchState(store, {
-          groups: store.groups().map((group) => {
-            if (group.id === groupId) {
-              return {
-                ...group,
-                users: group.users.filter((u) => !userIds.includes(u.id)),
-              };
-            }
-            return group;
-          }),
           modifiedGroupIds: new Set([...store.modifiedGroupIds(), groupId]),
           selectedUserIds: [], // Clear selection after removing
         });
       },
 
       saveChanges: rxMethod<void>(
-        switchMap(() => {
-          patchState(store, { isSaving: true, error: null });
-
-          const modifiedGroups = store
-            .groups()
-            .filter((g) => store.modifiedGroupIds().has(g.id));
-
-          // In a real app, send to backend
-          return new Promise<void>((resolve) => {
-            setTimeout(() => resolve(), 500); // Simulate network delay
-          }).then(() => {
-            patchState(store, {
-              modifiedGroupIds: new Set(),
-              isSaving: false,
+        pipe(
+          tap(() => patchState(store, { isSaving: true, error: null })),
+          switchMap(() => {
+            // In a real app, send modified users to backend
+            return new Promise<void>((resolve) => {
+              setTimeout(() => resolve(), 500); // Simulate network delay
             });
-          });
-        })
+          }),
+          tapResponse({
+            next: () => {
+              patchState(store, {
+                modifiedGroupIds: new Set(),
+                isSaving: false,
+              });
+            },
+            error: (err) => {
+              const message = err instanceof Error ? err.message : 'Unknown error';
+              patchState(store, {
+                error: message,
+                isSaving: false,
+              });
+            },
+          })
+        )
       ),
 
       discardChanges: () => {
@@ -181,33 +167,60 @@ export const GroupManagerStore = signalStore(
     };
   }),
 
-  withComputed((store) => ({
-    selectedGroup: computed(() => {
-      const id = store.selectedGroupId();
-      return id ? store.groups().find(g => g.id === id) || null : null;
-    }),
-  })),
 
-  withComputed((store) => ({
-    availableUsers: computed(() => {
-      const selectedGroup = store.selectedGroup();
-      if (!selectedGroup) return store.allUsers();
-      const groupUserIds = new Set(selectedGroup.users.map(u => u.id));
-      return store.allUsers().filter(u => !groupUserIds.has(u.id));
+// First, define allUsers
+withComputed((store) => {
+  const usersStore = inject(UsersStore);
+  return {
+    allUsers: computed(() => {
+      return usersStore['userEntities']() as User[];
     }),
-    groupUsers: computed(() => store.selectedGroup()?.users || []),
-    hasChanges: computed(() => store.modifiedGroupIds().size > 0),
-    modifiedGroupCount: computed(() => store.modifiedGroupIds().size),
-    areAllGroupUsersSelected: computed(() => {
-      const selectedGroup = store.selectedGroup();
-      const selectedIds = store.selectedUserIds();
-      return !!selectedGroup?.users.length &&
-        selectedGroup.users.every(u => selectedIds.includes(u.id));
-    }),
-  })),
+  };
+}),
+
+// Then, define signals that depend on allUsers
+withComputed((store) => {
+  const selectedGroup = computed(() => {
+    const id = store.selectedGroupId();
+    return id ? store.groups().find(g => g.id === id) || null : null;
+  });
+
+  const groupUsers = computed(() => {
+    const groupId = store.selectedGroupId();
+    if (groupId == null) return [];
+    return store.allUsers().filter(user => Number(user.groupId) === groupId);
+  });
+
+  const availableUsers = computed(() => {
+    const groupId = store.selectedGroupId();
+    if (groupId == null) return store.allUsers();
+    return store.allUsers().filter(user => Number(user.groupId) !== groupId);
+  });
+
+  const hasChanges = computed(() => store.modifiedGroupIds().size > 0);
+  const modifiedGroupCount = computed(() => store.modifiedGroupIds().size);
+
+  const areAllGroupUsersSelected = computed(() => {
+    const gu = groupUsers();
+    const selectedIds = store.selectedUserIds();
+    return !!gu.length && gu.every(u => selectedIds.includes(u.id));
+  });
+
+  return {
+    selectedGroup,
+    groupUsers,
+    availableUsers,
+    hasChanges,
+    modifiedGroupCount,
+    areAllGroupUsersSelected,
+  };
+}),   
 
   withHooks({
     onInit(store) {
+      const usersStore = inject(UsersStore);
+      // Load both groups and users on init
+      usersStore.loadUsers();
       (store as any).loadGroups();
     },
   })

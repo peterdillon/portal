@@ -7,7 +7,7 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatAnchor } from "@angular/material/button";
-import { ThemeService } from '../theme/theme.service'
+import { ThemeService } from '../theme/theme.service';
 
 @Component({
   selector: 'app-users',
@@ -36,6 +36,7 @@ export class Users implements OnInit {
     phone: ['123-456-7890'],
     employeeName: ['Golden Route Operations'],
     employeeNumber: ['98761234'],
+    groupId: [8],
     permissions: ['site.delete, site.update']
   });
 
@@ -54,7 +55,8 @@ export class Users implements OnInit {
         phone: formValue.phone,
         employeeName: formValue.employeeName,
         employeeNumber: formValue.employeeNumber,
-        permissions: formValue.permissions ? formValue.permissions.split(',').map((p: string) => p.trim()) : []
+        permissions: formValue.permissions ? formValue.permissions.split(',').map((p: string) => p.trim()) : [],
+        groupId: formValue.groupId,
       };
       this.store.addUser(user);
       this.userForm.reset(this.defaultValues);
