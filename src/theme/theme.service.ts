@@ -50,7 +50,7 @@ export class ThemeService {
     return this.getColorVariable('--tertiary-color');
   }
 
-  getOnTertiaryColor(): string {
+  getOnTertiaryColor(): string {                  
     return this.getColorVariable('--on-tertiary-color');
   }
 
@@ -112,5 +112,9 @@ export class ThemeService {
 
   getOutlineVariant(): string {
     return this.getColorVariable('--outline-variant');
+  }
+
+  getLoaderSpinnerColor(): string {
+    return "#cccccc";
   }
 }

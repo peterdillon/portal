@@ -64,8 +64,14 @@ $_light-tertiary: (
 
 $_light-neutral: (
   0: #000000,
+  4: #0e0b13,
+  6: #131019,
   10: #1d1a23,
+  12: #231f28,
+  17: #2d2a33,
   20: #322f38,
+  22: #37333d,
+  24: #3b3841,
   25: #3d3a43,
   30: #49454f,
   35: #55515b,
@@ -74,8 +80,12 @@ $_light-neutral: (
   60: #948e9a,
   70: #afa9b5,
   80: #cbc4d0,
+  87: #ddd6e2,
   90: #e7e0ec,
+  92: #eee6f3,
+  94: #f2eaf7,
   95: #f6eefb,
+  96: #faf2fd,
   98: #fef7ff,
   99: #fffbff,
   100: #ffffff,
@@ -266,8 +276,9 @@ $light-theme: mat.define-theme((
 // Define Dark Theme
 $dark-theme: mat.define-theme((
   color: (
-    primary: $dark-primary-palette,
-    tertiary: $dark-tertiary-palette,
+    theme-type: dark,
+    primary: $light-primary-palette,
+    tertiary: $light-tertiary-palette,
   )
 ));
 
@@ -308,33 +319,33 @@ $light-outline: map.get($_light-neutral-variant, 50);
 $light-outline-variant: map.get($_light-neutral-variant, 80);
 
 // Dark Theme Token Colors
-$dark-primary: map.get($_dark-primary, 80);
-$dark-on-primary: map.get($_dark-primary, 20);
-$dark-primary-container: map.get($_dark-primary, 30);
-$dark-on-primary-container: map.get($_dark-primary, 90);
+$dark-primary: map.get($_light-primary, 80);
+$dark-on-primary: map.get($_light-primary, 20);
+$dark-primary-container: map.get($_light-primary, 30);
+$dark-on-primary-container: map.get($_light-primary, 90);
 
-$dark-secondary: map.get($_dark-secondary, 80);
-$dark-on-secondary: map.get($_dark-secondary, 20);
-$dark-secondary-container: map.get($_dark-secondary, 30);
-$dark-on-secondary-container: map.get($_dark-secondary, 90);
+$dark-secondary: map.get($_light-secondary, 80);
+$dark-on-secondary: map.get($_light-secondary, 20);
+$dark-secondary-container: map.get($_light-secondary, 30);
+$dark-on-secondary-container: map.get($_light-secondary, 90);
 
-$dark-tertiary: map.get($_dark-tertiary, 80);
-$dark-on-tertiary: map.get($_dark-tertiary, 20);
-$dark-tertiary-container: map.get($_dark-tertiary, 30);
-$dark-on-tertiary-container: map.get($_dark-tertiary, 90);
+$dark-tertiary: map.get($_light-tertiary, 80);
+$dark-on-tertiary: map.get($_light-tertiary, 20);
+$dark-tertiary-container: map.get($_light-tertiary, 30);
+$dark-on-tertiary-container: map.get($_light-tertiary, 90);
 
-$dark-error: map.get($_dark-error, 80);
-$dark-on-error: map.get($_dark-error, 20);
-$dark-error-container: map.get($_dark-error, 30);
-$dark-on-error-container: map.get($_dark-error, 90);
+$dark-error: map.get($_light-error, 80);
+$dark-on-error: map.get($_light-error, 20);
+$dark-error-container: map.get($_light-error, 30);
+$dark-on-error-container: map.get($_light-error, 90);
 
-$dark-background: map.get($_dark-neutral, 10);
-$dark-on-background: map.get($_dark-neutral, 90);
+$dark-background: map.get($_light-neutral, 10);
+$dark-on-background: map.get($_light-neutral, 90);
 
-$dark-surface: map.get($_dark-neutral, 10);
-$dark-on-surface: map.get($_dark-neutral, 90);
-$dark-surface-variant: map.get($_dark-neutral-variant, 30);
-$dark-on-surface-variant: map.get($_dark-neutral-variant, 80);
+$dark-surface: map.get($_light-neutral, 10);
+$dark-on-surface: map.get($_light-neutral, 90);
+$dark-surface-variant: map.get($_light-neutral-variant, 30);
+$dark-on-surface-variant: map.get($_light-neutral-variant, 80);
 
-$dark-outline: map.get($_dark-neutral-variant, 60);
-$dark-outline-variant: map.get($_dark-neutral-variant, 30);
+$dark-outline: map.get($_light-neutral-variant, 60);
+$dark-outline-variant: map.get($_light-neutral-variant, 30);

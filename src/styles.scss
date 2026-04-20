@@ -12,12 +12,20 @@ html, body {
   width: 100%;
 }
 
+html:not(.dark-theme) .mat-mdc-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: #ffffff;
+}
+
 // ===== LIGHT THEME (Default) =====
 html {
   @include mat.all-component-themes(theme.$light-theme);
+  @include mat.system-level-colors(theme.$light-theme);
   @include mat.system-level-typography(theme.$light-theme);
   @include mat.typography-hierarchy(theme.$light-theme);
   @include mat.color-variants-backwards-compatibility(theme.$light-theme);
+
+  --toolbar-primary-color: #{theme.$light-primary};
+  --toolbar-on-primary-color: #{theme.$light-on-primary};
   
   // Extract theme colors and expose as CSS variables
   --primary-color: #{mat.get-theme-color(theme.$light-theme, primary)};
@@ -64,7 +72,11 @@ body {
 // ===== DARK THEME =====
 html.dark-theme {
   @include mat.all-component-themes(theme.$dark-theme);
+  @include mat.system-level-colors(theme.$dark-theme);
   @include mat.color-variants-backwards-compatibility(theme.$dark-theme);
+
+  --toolbar-primary-color: #{theme.$light-primary};
+  --toolbar-on-primary-color: #{theme.$light-on-primary};
   
   // Extract dark theme colors and expose as CSS variables
   --primary-color: #{mat.get-theme-color(theme.$dark-theme, primary)};
@@ -127,24 +139,24 @@ html.dark-theme {
 
 // Light theme toolbar
 html mat-toolbar {
-  background-color: var(--primary-color) !important;
-  color: var(--on-primary-color) !important;
+  background-color: var(--toolbar-primary-color) !important;
+  color: var(--toolbar-on-primary-color) !important;
 }
 
 // Dark theme toolbar
 html.dark-theme mat-toolbar {
-  background-color: var(--primary-color) !important;
-  color: var(--on-primary-color) !important;
+  background-color: var(--toolbar-primary-color) !important;
+  color: var(--toolbar-on-primary-color) !important;
 }
 
 // Light theme toolbar icons
 mat-toolbar [mat-icon-button] mat-icon {
-  color: var(--on-primary-color) !important;
+  color: var(--toolbar-on-primary-color) !important;
 }
 
 // Dark theme toolbar icons
 html.dark-theme mat-toolbar [mat-icon-button] mat-icon {
-  color: var(--on-primary-color) !important;
+  color: var(--toolbar-on-primary-color) !important;
 }
 
 // Badge styling

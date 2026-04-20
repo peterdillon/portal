@@ -2,6 +2,7 @@
 import { Component, inject } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoaderService } from '../../services/loader.service';
+import { ThemeService } from '../../theme/theme.service';
 
 @Component({
   selector: 'app-loader',
@@ -10,7 +11,10 @@ import { LoaderService } from '../../services/loader.service';
   template: `
     @if (loaderService.isLoading()) {
       <div class="overlay">
-        <mat-spinner mode="indeterminate" diameter="50"></mat-spinner>
+        <mat-spinner 
+          mode="indeterminate" 
+          diameter="50" 
+          [style.--mat-progress-spinner-active-indicator-color]="themeService.getLoaderSpinnerColor()"></mat-spinner>
       </div>
     }
   `,
@@ -21,7 +25,7 @@ import { LoaderService } from '../../services/loader.service';
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.7);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -31,4 +35,5 @@ import { LoaderService } from '../../services/loader.service';
 })
 export class LoaderComponent {
   loaderService = inject(LoaderService);
+  themeService = inject(ThemeService);
 }   
