@@ -32,6 +32,11 @@
   .card {
     cursor: pointer;
     transition: all 0.2s ease-out;
+    padding: 0 0 1rem;
+    
+    mat-card-actions {
+      padding-left: 1rem;
+    }
 
     &:hover {
       background: rgba(pink, .2) !important;

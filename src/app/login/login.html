@@ -1,0 +1,31 @@
+<div class="login-container">
+  <form [formRoot]="loginForm">
+    <mat-card>
+      <mat-card-title>Login</mat-card-title>
+      <mat-card-content>
+        <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput [formField]="loginForm.email" type="email">
+                @if (loginForm.email().invalid() && loginForm.email().touched()) {
+                    @for (error of loginForm.email().errors(); track error.kind) {
+                    <mat-error>{{ error.message }}</mat-error>
+                    }
+                }
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput [formField]="loginForm.password" type="password">
+                @if (loginForm.password().invalid() && loginForm.password().touched()) {
+                    @for (error of loginForm.password().errors(); track error.kind) {
+                    <mat-error>{{ error.message }}</mat-error>
+                    }
+                }
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button type="button" [style.backgroundColor]="themeService.getSurfaceVariant()" (click)="logout()">Log Out</button>
+        <button mat-raised-button color="primary" type="submit">Log In</button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</div>

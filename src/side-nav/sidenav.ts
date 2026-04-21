@@ -13,11 +13,12 @@ import { SidenavService } from './sidenav.service';
   styleUrl: 'sidenav.scss',
   imports: [MatListModule, RouterModule, MatSidenavModule, MatButtonModule, MatRadioModule, FormsModule, ReactiveFormsModule, RouterLink],
 })
-export class SidenavModeExample {
+export class SidenavMode {
 
   mode = new FormControl('over' as MatDrawerMode);
   private sidenavService = inject(SidenavService);
   navigationData = signal([
+    { name: 'Login', path: '/login', subTitle: 'Login Page' },
     { name: 'Products', path: '/products', subTitle: 'Electronic Gaming Machines' },
     { name: 'Group Manager', path: '/group-manager', subTitle: 'Group Management' },
     { name: 'Users', path: '/users', subTitle: 'Users & Permission Management' },

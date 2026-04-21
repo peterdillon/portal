@@ -1,0 +1,36 @@
+// auth.guard.ts
+import { CanActivateFn, RedirectCommand, Router, UrlTree } from '@angular/router';
+import { inject } from '@angular/core';
+import { AuthService } from './auth.service';
+
+// Simple guard for any authenticated user
+export const authGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  if (authService.isAuthenticated()) {
+    return true;
+  }
+
+  // Use RedirectCommand for more control
+  const loginUrl = router.parseUrl('/login');
+  return new RedirectCommand(loginUrl, {
+    skipLocationChange: true,
+    info: { returnUrl: router.routerState.snapshot.url }
+  });
+};
+
+// Factory guard for role-based access
+export function requireRole(requiredRole: string): CanActivateFn {
+  return () => {
+    const authService = inject(AuthService);
+    const router = inject(Router);
+
+    const userRole = 'user'; // authService.userRole();
+    if (userRole === requiredRole) {
+      return true;
+    }
+
+    return router.parseUrl('/unauthorized');
+  };
+}   

@@ -14,7 +14,7 @@ export class LoaderInterceptor implements HttpInterceptor {
     const minDuration$ = of(null).pipe(delay(2000)); // Minimum 3s delay
 
     return next.handle(request).pipe(
-      switchMap(event => minDuration$.pipe(switchMap(() => of(event)))),
+      // switchMap(event => minDuration$.pipe(switchMap(() => of(event)))),
       finalize(() => this.loaderService.hide())
     );
   }
