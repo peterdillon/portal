@@ -3,8 +3,7 @@
   "compilerOptions": {
     "outDir": "./out-tsc/app",
     "rootDir": "./src",
-    "types": ["jasmine"],
-    "ignoreDeprecations": "6.0"
+    "types": ["jasmine"]
   },
   "include": [
     "src/**/*.ts"

@@ -3,7 +3,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -16,14 +15,14 @@
     "target": "ES2022",
     "module": "preserve",
     "paths": {
-      "@app/*": ["src/app/*"],
-      "@core/*": ["src/app/core/*"],
-      "@features/*": ["src/*"],
-      "@group-manager/*": ["src/group-manager/*"],
-      "@products/*": ["src/products/*"],
-      "@shared/*": ["src/app/shared/*"],
-      "@users/*": ["src/users/*"],
-      "@styles/*": ["src/app/core/theme/*"]
+      "@app/*": ["./src/app/*"],
+      "@core/*": ["./src/app/core/*"],
+      "@features/*": ["./src/*"],
+      "@group-manager/*": ["./src/group-manager/*"],
+      "@products/*": ["./src/products/*"],
+      "@shared/*": ["./src/app/shared/*"],
+      "@users/*": ["./src/users/*"],
+      "@styles/*": ["./src/app/core/theme/*"]
     }
   },
   "angularCompilerOptions": {
