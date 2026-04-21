@@ -1,7 +1,6 @@
 // login.component.ts
 import { Component, inject, signal } from '@angular/core';
 import { FormField, FormRoot, form, required, SchemaPathTree } from '@angular/forms/signals';
-import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { firstValueFrom } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,7 +23,6 @@ interface LoginData {
 })
 export class LoginComponent {
   private authService = inject(AuthService);
-  private router = inject(Router);
   themeService = inject(ThemeService);
 
   loginModel = signal<LoginData>({ email: '', password: '' });   

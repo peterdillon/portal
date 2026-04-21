@@ -9,6 +9,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-top-toolbar',
@@ -20,6 +21,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class TopToolbar {
 
   sidenavService = inject(SidenavService);
+  authService = inject(AuthService);
 
   toggleDarkMode() {
     document.documentElement.classList.toggle('dark-theme');
@@ -36,4 +38,9 @@ export class TopToolbar {
       document.documentElement.classList.add('dark-theme');
     }
   }
+
+  logout() {
+    this.authService.logout();
+  }
+
 }

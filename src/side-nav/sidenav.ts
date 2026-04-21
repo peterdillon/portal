@@ -17,6 +17,7 @@ export class SidenavMode {
 
   mode = new FormControl('over' as MatDrawerMode);
   private sidenavService = inject(SidenavService);
+  
   navigationData = signal([
     { name: 'Login', path: '/login', subTitle: 'Login Page' },
     { name: 'Products', path: '/products', subTitle: 'Electronic Gaming Machines' },
