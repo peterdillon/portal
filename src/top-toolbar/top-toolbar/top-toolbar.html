@@ -1,0 +1,55 @@
+<mat-toolbar class="app-toolbar">
+  
+    <button mat-icon-button (click)="sidenavService.toggle()" class="menu-button">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <span>Phoenix Portal</span>
+    
+    <span class="example-spacer"></span>
+    
+    <button (click)="toggleDarkMode()" 
+      class="top-nav" 
+      mat-icon-button 
+      aria-label="Toggle Theme"
+      matTooltip="Change theme">
+      <mat-icon>light_mode</mat-icon>
+    </button>
+
+    <button 
+      class="top-nav" 
+      mat-icon-button 
+      aria-label="Messages" 
+      matBadge="4" 
+      matTooltip="Messages">
+      <mat-icon>mail</mat-icon>
+    </button>
+    
+    <button 
+      class="top-nav" 
+      mat-icon-button 
+      aria-label="Support" 
+      matTooltip="Support">
+      <mat-icon>headset_mic</mat-icon>
+    </button>
+    
+    <button 
+      class="top-nav"
+      mat-icon-button 
+      aria-label="User"
+      [matMenuTriggerFor]="user"
+      matTooltip="User Options">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    
+    <mat-menu #user="matMenu">
+      <button mat-menu-item>Settings</button>
+      <button mat-menu-item>Accounts</button>
+      <button mat-menu-item>Assign</button>
+      <button mat-menu-item>Add EGM</button>
+      <button mat-menu-item (click)="logout()">Logout</button>
+    </mat-menu>
+
+    <ng-content select="[toolbar]"></ng-content>
+
+  </mat-toolbar>
