@@ -1,7 +1,7 @@
 // group-manager.service.ts
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { GroupManagerState, Group, User } from '../models/group-manager.model';
+import { Group, GroupManagerState, User } from '@group-manager/group-manager.model';
 
 @Injectable({ providedIn: 'root' })
 export class GroupManagerService {

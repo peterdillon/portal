@@ -8,11 +8,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
-import { GroupManagerStore } from '../store/group-manager/group-manager.store';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Spinner } from '../spinner/spinner';
-import { ThemeService } from '../theme/theme.service';
+import { ThemeService } from '@core/theme/theme.service';
+import { GroupManagerStore } from '@group-manager/group-manager.store';
+import { Spinner } from '@shared/spinner/spinner';
 
 @Component({
   selector: 'app-iam',
@@ -66,3 +66,5 @@ export class GroupManager implements OnInit {
     }
   }
 }
+
+

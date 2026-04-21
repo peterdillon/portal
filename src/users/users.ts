@@ -1,13 +1,13 @@
 // users.ts
 import { Component, inject, OnInit } from '@angular/core';
-import { UsersStore } from '../store/users/users.store';
-import { User } from '../models/user.model';
 import { MatSelectionList, MatListOption, MatListModule } from '@angular/material/list';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatAnchor } from "@angular/material/button";
-import { ThemeService } from '../theme/theme.service';
+import { ThemeService } from '@core/theme/theme.service';
+import { User } from '@users/user.model';
+import { UsersStore } from '@users/users.store';
 
 @Component({
   selector: 'app-users',

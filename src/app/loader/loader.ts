@@ -1,8 +1,8 @@
 // loader.component.ts
 import { Component, inject } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { LoaderService } from '../../services/loader.service';
-import { ThemeService } from '../../theme/theme.service';
+import { LoaderService } from '@core/services/loader.service';
+import { ThemeService } from '@core/theme/theme.service';
 
 @Component({
   selector: 'app-loader',

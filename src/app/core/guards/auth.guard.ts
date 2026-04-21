@@ -1,7 +1,7 @@
 // auth.guard.ts
 import { CanActivateFn, RedirectCommand, Router, UrlTree } from '@angular/router';
 import { inject } from '@angular/core';
-import { AuthService } from './auth.service';
+import { AuthService } from '@core/services/auth.service';
 
 // Simple guard for any authenticated user
 export const authGuard: CanActivateFn = () => {

@@ -3,11 +3,11 @@ import { Component, inject } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
-import { SidenavMode } from '../side-nav/sidenav';
-import { SidenavService } from '../side-nav/sidenav.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
-import { TopToolbar } from '../top-toolbar/top-toolbar/top-toolbar';
+import { SidenavMode } from '@shared/side-nav/sidenav';
+import { SidenavService } from '@shared/side-nav/sidenav.service';
+import { TopToolbar } from '@shared/top-toolbar/top-toolbar';
 
 @Component({
   selector: 'app-layout',

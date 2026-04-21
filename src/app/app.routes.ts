@@ -1,46 +1,43 @@
 import { Routes } from '@angular/router';
-import { PageTwo } from '../page-two/page-two';
-import { DialogOverviewExample } from '../dialog/dialog';
-import { ProductListComponent } from '../products/products';
-import { ProductDetail } from '../product-detail/product-detail';
-import { GroupManager } from '../group-manager/group-manager';
-import { Users } from '../users/users';
-import { authGuard } from '../services/auth.guard';
-import { LoginComponent } from './login/login';
-import { Unauthorized } from './unauthorized/unauthorized/unauthorized';
+import { authGuard } from '@core/guards/auth.guard';
 
 export const routes: Routes = [
   {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'login'
+  },
+  {
     path: 'page-two',
-    component: PageTwo
+    loadComponent: () => import('@features/page-two/page-two').then((m) => m.PageTwo)
   },
   { path: 'unauthorized', 
-    component: Unauthorized 
+    loadComponent: () => import('@app/unauthorized/unauthorized').then((m) => m.Unauthorized)
   },
   {
     path: 'login',
-    component: LoginComponent
+    loadComponent: () => import('@app/login/login').then((m) => m.LoginComponent)
   },
   {
     path: 'products', 
-    component: ProductListComponent,
+    loadComponent: () => import('@products/products').then((m) => m.ProductListComponent),
     canActivate: [authGuard] 
   },
   { path: 'products/:id', 
-    component: ProductDetail
+    loadComponent: () => import('@products/product-detail').then((m) => m.ProductDetail)
   },
   { path: 'group-manager', 
-    component: GroupManager
+    loadComponent: () => import('@group-manager/group-manager').then((m) => m.GroupManager)
   },
   { path: 'users', 
-    component: Users
+    loadComponent: () => import('@users/users').then((m) => m.Users)
   },
   {
     path: 'dialog-example',
-    component: DialogOverviewExample
+    loadComponent: () => import('@features/dialog/dialog').then((m) => m.DialogOverviewExample)
   },
   {
     path: '**',
-    redirectTo: ''
+    redirectTo: 'login'
   }
 ];

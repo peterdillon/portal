@@ -5,8 +5,8 @@ import { withDevtools, withGlitchTracking } from '@angular-architects/ngrx-toolk
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
-import { User } from '../../models/user.model';
-import { UsersService } from '../../services/user.service';
+import { UsersService } from '@core/services/user.service';
+import { User } from '@users/user.model';
 
 const userEntityConfig = { entity: type<User>(), collection: 'user' };
 

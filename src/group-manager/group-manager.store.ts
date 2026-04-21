@@ -6,8 +6,8 @@ import { pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { computed } from '@angular/core';
 import { withDevtools, withGlitchTracking } from '@angular-architects/ngrx-toolkit';
-import { User, Group, GroupManagerState } from '../../models/group-manager.model';
-import { UsersStore } from '../users/users.store';
+import { Group, GroupManagerState, User } from '@group-manager/group-manager.model';
+import { UsersStore } from '@users/users.store';
 
 export const GroupManagerStore = signalStore(
   { providedIn: 'root' },

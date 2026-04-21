@@ -1,13 +1,13 @@
 // login.component.ts
 import { Component, inject, signal } from '@angular/core';
 import { FormField, FormRoot, form, required, SchemaPathTree } from '@angular/forms/signals';
-import { AuthService } from '../../services/auth.service';
 import { firstValueFrom } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCard, MatCardTitle, MatCardContent, MatCardActions } from "@angular/material/card";
 import { MatButtonModule } from '@angular/material/button';
-import { ThemeService } from '../../theme/theme.service';
+import { AuthService } from '@core/services/auth.service';
+import { ThemeService } from '@core/theme/theme.service';
 
 interface LoginData {
   email: string;

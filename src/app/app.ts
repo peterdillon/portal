@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
-import { LayoutComponent } from '../layout/layout';
-import { LoaderComponent } from './loader/loader';
+import { LoaderComponent } from '@app/loader/loader';
+import { LayoutComponent } from '@shared/layout/layout';
 
 @Component({
   selector: 'app-root',
