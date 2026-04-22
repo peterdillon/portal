@@ -26,7 +26,7 @@ export function requireRole(requiredRole: string): CanActivateFn {
     const authService = inject(AuthService);
     const router = inject(Router);
 
-    const userRole = 'user'; // authService.userRole();
+    const userRole = authService.userRole();
     if (userRole === requiredRole) {
       return true;
     }
@@ -34,3 +34,16 @@ export function requireRole(requiredRole: string): CanActivateFn {
     return router.parseUrl('/unauthorized');
   };
 }   
+
+export function requirePermission(requiredPermission: string): CanActivateFn {
+  return () => {
+    const authService = inject(AuthService);
+    const router = inject(Router);
+
+    if (authService.userPermissions().includes(requiredPermission)) {
+      return true;
+    }
+
+    return router.parseUrl('/unauthorized');
+  };
+}

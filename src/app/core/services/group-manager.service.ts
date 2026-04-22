@@ -6,5 +6,5 @@ import { Group, GroupManagerState, User } from '@group-manager/group-manager.mod
 @Injectable({ providedIn: 'root' })
 export class GroupManagerService {
   private http = inject(HttpClient);
-  readonly users$ = this.http.get<Group[]>('/assets/group-data.json');
+  readonly users$ = this.http.get<Group[]>('/assets/iam/group-data.json');
 }

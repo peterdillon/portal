@@ -1,11 +1,19 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDrawerMode, MatSidenavModule } from '@angular/material/sidenav';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { RouterModule, RouterLink } from '@angular/router';
+import { AuthService } from '@core/services/auth.service';
 import { SidenavService } from './sidenav.service';
+
+interface NavigationItem {
+  name: string;
+  path: string;
+  subTitle: string;
+  requiredPermission?: string;
+}
 
 @Component({
   selector: 'sidenav-mode-example',
@@ -17,15 +25,23 @@ export class SidenavMode {
 
   mode = new FormControl('over' as MatDrawerMode);
   private sidenavService = inject(SidenavService);
-  
-  navigationData = signal([
+  private authService = inject(AuthService);
+
+  private navigationItems: NavigationItem[] = [
     { name: 'Login', path: '/login', subTitle: 'Login Page' },
     { name: 'Products', path: '/products', subTitle: 'Electronic Gaming Machines' },
-    { name: 'Group Manager', path: '/group-manager', subTitle: 'Group Management' },
-    { name: 'Users', path: '/users', subTitle: 'Users & Permission Management' },
+    { name: 'Group Manager', path: '/group-manager', subTitle: 'Group Management', requiredPermission: 'site.write' },
+    { name: 'Users', path: '/users', subTitle: 'Users & Permission Management', requiredPermission: 'user.write' },
     { name: 'Table', path: '/page-two', subTitle: 'An example table' },
     { name: 'Dialog', path: '/dialog-example', subTitle: 'An example dialog' },
-  ]);
+  ];
+
+  navigationData = computed(() => {
+    const userPermissions = this.authService.userPermissions();
+
+    return this.navigationItems.filter((item) => !item.requiredPermission || userPermissions.includes(item.requiredPermission));
+  });
+
   closeSidenav() {
     this.sidenavService.close();
   }

@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '@core/guards/auth.guard';
+import { authGuard, requirePermission } from '@core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -27,10 +27,12 @@ export const routes: Routes = [
     loadComponent: () => import('@products/product-detail').then((m) => m.ProductDetail)
   },
   { path: 'group-manager', 
-    loadComponent: () => import('@group-manager/group-manager').then((m) => m.GroupManager)
+    loadComponent: () => import('@group-manager/group-manager').then((m) => m.GroupManager),
+    canActivate: [authGuard, requirePermission('site.write')]
   },
   { path: 'users', 
-    loadComponent: () => import('@users/users').then((m) => m.Users)
+    loadComponent: () => import('@users/users').then((m) => m.Users),
+    canActivate: [authGuard, requirePermission('user.write')]
   },
   {
     path: 'dialog-example',

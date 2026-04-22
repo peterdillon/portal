@@ -1,6 +1,6 @@
 // auth.service.ts
-import { Injectable, signal, computed } from '@angular/core';
-import { jwtDecode } from 'jwt-decode';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
@@ -9,6 +9,12 @@ export interface AuthState {
   token: string | null;
   user: any; // Replace with your User interface
   isAuthenticated: boolean;
+}
+
+interface AuthTokenPayload extends JwtPayload {
+  name?: string;
+  role?: string;
+  permissions?: string[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -23,7 +29,7 @@ export class AuthService {
     const token = this._token();
     if (!token) return null;
     try {
-      return jwtDecode(token);
+      return jwtDecode<AuthTokenPayload>(token);
     } catch {
       return null;
     }
@@ -37,21 +43,19 @@ export class AuthService {
     return !isExpired;
   });
 
-  // Expose user roles or other claims
-  // userRole = computed(() => this._decodedToken()?.role || null);
-  userRole = 'user'; // Placeholder, replace with actual role extraction logic
+  userRole = computed(() => this._decodedToken()?.role ?? null);
+  userPermissions = computed(() => this._decodedToken()?.permissions ?? []);
+  private http = inject(HttpClient);
+  private router = inject(Router);
 
-  constructor(private http: HttpClient, private router: Router) {}
-
- login(credentials: { username: string; password: string }) {
-  return this.http.post<{ token: string }>('/api/login', credentials).pipe(
-    tap((response) => {
-      this.setToken(response.token);
-      this.router.navigate(['/products']);
-    })
-  );
-  // Returns an Observable
-}
+  login(credentials: { username: string; password: string }) {
+    return this.http.post<{ token: string }>('/api/login', credentials).pipe(
+      tap((response) => {
+        this.setToken(response.token);
+        this.router.navigate(['/products']);
+      })
+    );
+  }
 
   logout() {
     this._token.set(null);

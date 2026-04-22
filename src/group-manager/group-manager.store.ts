@@ -33,7 +33,7 @@ export const GroupManagerStore = signalStore(
       loadGroups: rxMethod<void>(
         pipe(
           tap(() => patchState(store, { isLoading: true, error: null })),
-          switchMap(() => http.get<Group[]>('assets/group-data.json')),
+          switchMap(() => http.get<Group[]>('assets/iam/group-data.json')),
           tapResponse({
             next: (groups) => {
               patchState(store, {
@@ -100,7 +100,7 @@ export const GroupManagerStore = signalStore(
 
         patchState(store, {
           modifiedGroupIds: new Set([...store.modifiedGroupIds(), groupId]),
-          selectedUserIds: [], // Clear selection after adding
+          selectedUserIds: [],
         });
       },
 
@@ -110,7 +110,6 @@ export const GroupManagerStore = signalStore(
 
         if (groupId == null || userIds.length === 0) return;
 
-        // Remove users by setting their groupId to 0
         userIds.forEach(userId => {
           const user = findUserById(userId);
           if (user) {
