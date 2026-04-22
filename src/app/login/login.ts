@@ -2,7 +2,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { FormField, FormRoot, form, required, SchemaPathTree } from '@angular/forms/signals';
+import { FormField, FormRoot, email, form, required, SchemaPathTree } from '@angular/forms/signals';
 import { firstValueFrom } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -37,6 +37,7 @@ export class LoginComponent {
   loginModel = signal<LoginData>({ email: '', password: '' });   
   loginForm = form(this.loginModel, (fieldPath: SchemaPathTree<LoginData>) => {
     required(fieldPath.email, { message: 'Email is required' });
+    email(fieldPath.email, { message: 'Enter a valid email address' });
     required(fieldPath.password, { message: 'Password is required' });
     }, {
   submission: {
