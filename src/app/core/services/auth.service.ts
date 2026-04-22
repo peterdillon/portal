@@ -43,6 +43,7 @@ export class AuthService {
     return !isExpired;
   });
 
+  userDisplayName = computed(() => this._decodedToken()?.name ?? this._decodedToken()?.sub ?? null);
   userRole = computed(() => this._decodedToken()?.role ?? null);
   userPermissions = computed(() => this._decodedToken()?.permissions ?? []);
   private http = inject(HttpClient);

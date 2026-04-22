@@ -1,0 +1,38 @@
+.unauthorized-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+    .ct {
+        padding: 3rem;
+        width: 25rem;
+    }
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.mat-icon {
+  width: 3.75rem;
+  height: 3.5rem;
+  font-size: 3.5rem;
+}
+
+mat-card-content {
+  padding: 2rem 2rem 0; /* Add vertical padding and remove horizontal padding */
+}
+
+mat-card-title {
+  padding: 0 2rem 0 1rem; /* Add top and horizontal padding */
+}
+
+mat-card-actions {
+  justify-content: flex-end;
+  padding: 2rem;
+  span {
+    margin-left: auto;
+    margin-right: 1rem;
+  }
+}

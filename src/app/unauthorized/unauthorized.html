@@ -1,1 +1,16 @@
-<p>you are unauthorized </p>
+<div class="unauthorized-container mat-typography">
+    <div class="ct">
+    <mat-card>
+      <mat-card-header>
+        <mat-icon mat-card-avatar color="warn">dnd_forwardslash</mat-icon>
+        <mat-card-title-group>
+            <mat-card-title>You are not authorized to view this content!</mat-card-title>
+        </mat-card-title-group>
+        </mat-card-header>
+      <mat-card-actions>
+        <span>Please login to continue:</span>
+        <button mat-raised-button color="primary" [routerLink]="['/login']">Log In</button>
+      </mat-card-actions>
+    </mat-card>
+    </div>
+</div>

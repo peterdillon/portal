@@ -7,6 +7,10 @@
     <span>Phoenix Portal</span>
     
     <span class="example-spacer"></span>
+
+    @if (authService.userDisplayName(); as displayName) {
+      <span class="user-display-name">{{ displayName }}</span>
+    }
     
     <button (click)="toggleDarkMode()" 
       class="top-nav" 
