@@ -5,21 +5,17 @@
       <mat-card-content>
         <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
-            <input matInput [formField]="loginForm.email" type="email">
-                @if (loginForm.email().invalid() && loginForm.email().touched()) {
-                    @for (error of loginForm.email().errors(); track error.kind) {
-                     <mat-error>{{ error.message }}</mat-error>
-                    }
-                }
+          <input matInput [formField]="loginForm.email" [errorStateMatcher]="loginErrorStateMatcher" type="email" (input)="clearLoginError()">
+            @if (emailErrorMessage(); as errorMessage) {
+              <mat-error>{{ errorMessage }}</mat-error>
+            }
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>Password</mat-label>
-            <input matInput [formField]="loginForm.password" type="password">
-                @if (loginForm.password().invalid() && loginForm.password().touched()) {
-                    @for (error of loginForm.password().errors(); track error.kind) {
-                      <mat-error>{{ error.message }}</mat-error>
-                    }
-                }
+            <input matInput [formField]="loginForm.password" type="password" (input)="clearLoginError()">
+            @if (passwordErrorMessage(); as errorMessage) {
+              <mat-error>{{ errorMessage }}</mat-error>
+            }
         </mat-form-field>
       </mat-card-content>
       <mat-card-actions>

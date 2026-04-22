@@ -1,5 +1,7 @@
 // login.component.ts
 import { Component, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { FormField, FormRoot, form, required, SchemaPathTree } from '@angular/forms/signals';
 import { firstValueFrom } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,6 +26,13 @@ interface LoginData {
 export class LoginComponent {
   private authService = inject(AuthService);
   themeService = inject(ThemeService);
+  loginError = signal<string | null>(null);
+  readonly loginErrorStateMatcher: ErrorStateMatcher = {
+    isErrorState: (control, form) => {
+      const hasControlError = !!control && control.invalid && (control.touched || !!form?.submitted);
+      return hasControlError || this.loginError() !== null;
+    }
+  };
 
   loginModel = signal<LoginData>({ email: '', password: '' });   
   loginForm = form(this.loginModel, (fieldPath: SchemaPathTree<LoginData>) => {
@@ -36,14 +45,48 @@ export class LoginComponent {
         username: form().value().email,
         password: form().value().password
       };
-      // Convert the Observable to a Promise
-      await firstValueFrom(this.authService.login(credentials));
+      this.loginError.set(null);
+
+      try {
+        await firstValueFrom(this.authService.login(credentials));
+      } catch (error) {
+        if (error instanceof HttpErrorResponse && error.status === 401) {
+          this.loginError.set('Email not found');
+          return;
+        }
+
+        throw error;
+      }
     }
   }
 });
 
 logout() {
     this.authService.logout();
+  }
+
+  clearLoginError() {
+    this.loginError.set(null);
+  }
+
+  emailErrorMessage() {
+    if (this.loginError()) {
+      return this.loginError();
+    }
+
+    if (this.loginForm.email().invalid() && this.loginForm.email().touched()) {
+      return this.loginForm.email().errors()[0]?.message ?? null;
+    }
+
+    return null;
+  }
+
+  passwordErrorMessage() {
+    if (this.loginForm.password().invalid() && this.loginForm.password().touched()) {
+      return this.loginForm.password().errors()[0]?.message ?? null;
+    }
+
+    return null;
   }
 
 }   
