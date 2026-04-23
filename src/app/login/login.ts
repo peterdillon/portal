@@ -3,7 +3,6 @@ import { Component, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { FormField, FormRoot, email, form, required, SchemaPathTree } from '@angular/forms/signals';
-import { firstValueFrom } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCard, MatCardTitle, MatCardContent, MatCardActions } from "@angular/material/card";
@@ -49,7 +48,7 @@ export class LoginComponent {
       this.loginError.set(null);
 
       try {
-        await firstValueFrom(this.authService.login(credentials));
+        await this.authService.login(credentials);
       } catch (error) {
         if (error instanceof HttpErrorResponse && error.status === 401) {
           this.loginError.set('Email not found');

@@ -3,7 +3,7 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 export interface AuthState {
   token: string | null;
@@ -49,13 +49,13 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  login(credentials: { username: string; password: string }) {
-    return this.http.post<{ token: string }>('/api/login', credentials).pipe(
-      tap((response) => {
-        this.setToken(response.token);
-        this.router.navigate(['/products']);
-      })
+  async login(credentials: { username: string; password: string }) {
+    const response = await firstValueFrom(
+      this.http.post<{ token: string }>('/api/login', credentials)
     );
+
+    this.setToken(response.token);
+    await this.router.navigate(['/products']);
   }
 
   logout() {
