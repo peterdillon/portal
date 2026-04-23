@@ -6,5 +6,8 @@ import { User } from '@users/user.model';
 @Injectable({ providedIn: 'root' })
 export class UsersService {
   private http = inject(HttpClient);
-  readonly users$ = this.http.get<User[]>('/assets/iam/users.json');
+
+  getUsers() {
+    return this.http.get<User[]>('/assets/iam/users.json');
+  }
 }

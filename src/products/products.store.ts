@@ -2,7 +2,7 @@ import { signalStore, withState, withMethods, patchState, withHooks, withCompute
 import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { switchMap, of } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators'; 
 import { computed } from '@angular/core';
 import { Product } from './product.model';
@@ -34,17 +34,9 @@ export const ProductsStore = signalStore(
           );
         })
       ),
-      selectProduct: rxMethod<number>(
-        switchMap((id) => {
-          patchState(store, { selectedProductId: id, selectedProductLoading: true });
-          return of(null).pipe(
-            tapResponse({
-              next: () => patchState(store, { selectedProductLoading: false }),
-              error: () => patchState(store, { selectedProductLoading: false })
-            })
-          );
-        })
-      )
+      selectProduct: (id: number) => {
+        patchState(store, { selectedProductId: id, selectedProductLoading: false });
+      }
     };
   }),
   withComputed((store) => {

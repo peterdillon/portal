@@ -27,7 +27,7 @@ export const UsersStore = signalStore(
 
     loadUsers: rxMethod<void>(
       pipe(
-        switchMap(() => usersService.users$),
+        switchMap(() => usersService.getUsers()),
         tapResponse({
           next: (users) => patchState(store, addEntities(users, userEntityConfig)),
           error: (err) => console.error('Failed to load users', err),
