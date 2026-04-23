@@ -67,7 +67,11 @@
     <div class="column">
       
         <h6>
-          <mat-checkbox  class="custom-chk" (click)="toggleSelectAll()" 
+          <mat-checkbox  class="custom-chk"
+            [disabled]="!store.selectedGroupId()"
+            [checked]="store.areAllGroupUsersSelected()"
+            [indeterminate]="store.selectedUserIds().length > 0 && !store.areAllGroupUsersSelected()"
+            (change)="toggleSelectAll($event)" 
             [matTooltip]="store.areAllGroupUsersSelected() ? 'Deselect all' : 'Select all'">
           </mat-checkbox> 
           Users in: {{ store.selectedGroup() ? store.selectedGroup()!.name : '...' }}

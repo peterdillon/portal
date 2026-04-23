@@ -16,6 +16,15 @@ html:not(.dark-theme) .mat-mdc-progress-spinner {
   --mdc-circular-progress-active-indicator-color: #ffffff;
 }
 
+input.mat-mdc-input-element:-webkit-autofill,
+input.mat-mdc-input-element:-webkit-autofill:hover,
+input.mat-mdc-input-element:-webkit-autofill:focus,
+input.mat-mdc-input-element:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--mat-card-elevated-container-color, var(--mat-sys-surface-container-low)) inset !important;
+  -webkit-text-fill-color: var(--mat-sys-on-surface) !important;
+  caret-color: var(--mat-sys-on-surface);
+}
+
 // ===== LIGHT THEME (Default) =====
 html {
   @include mat.all-component-themes(theme.$light-theme);
@@ -133,7 +142,8 @@ html.dark-theme {
   
   mat-card,
   mat-dialog-container {
-    background-color: #322f38 !important;
+    background-color: var(--mat-card-elevated-container-color, 
+                      var(--mat-sys-surface-container-low)) !important;
   }
 }
 

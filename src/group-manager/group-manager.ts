@@ -6,7 +6,7 @@ import { MatSelectionList } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -58,11 +58,11 @@ export class GroupManager implements OnInit {
     }
   }
 
-  toggleSelectAll() {
-    if (this.store.areAllGroupUsersSelected()) {
-      this.store.deselectAllUsers();
-    } else {
+  toggleSelectAll(event: MatCheckboxChange) {
+    if (event.checked) {
       this.store.selectAllUsersInGroup();
+    } else {
+      this.store.deselectAllUsers();
     }
   }
 }

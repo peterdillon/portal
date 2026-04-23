@@ -75,8 +75,10 @@ export const GroupManagerStore = signalStore(
         const groupId = store.selectedGroupId();
         if (groupId == null) return;
 
-        const groupUsers = (store as any).groupUsers();
-        const userIds = groupUsers.map((u: { id: any; }) => u.id);
+        const userIds = usersStore['userEntities']()
+          .filter((user) => Number(user.groupId) === groupId)
+          .map((user) => user.id);
+
         patchState(store, { selectedUserIds: userIds });
       },
 
