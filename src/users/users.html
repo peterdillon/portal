@@ -1,10 +1,13 @@
 <div class="two-column-layout mat-typography">
   <div class="column">
     <h6>All Users</h6>
-    <mat-selection-list class="scrollable-list problem">
+    <mat-selection-list class="scrollable-list problem" [multiple]="false" (selectionChange)="onUserSelected($event)">
       @for (user of store['userEntities'](); track user.id) {
-        <mat-list-option [value]="user.id">
-          <span matListItemTitle>{{ user.displayName }}</span>
+        <mat-list-option
+          [value]="user.id"
+          [selected]="selectedUserId() === user.id"
+          [class.user-option-selected]="selectedUserId() === user.id">
+          <span matListItemTitle>{{ user.displayName }}, {{ user.email }}, {{ user.groupId }}, {{ user.employeeNumber }}</span>
           <span matListItemLine><span [style.color]="themeService.getSecondaryColor()">Permissions:</span> {{ user.permissions.join(', ')  }}</span>
         </mat-list-option>
       } @empty {
@@ -13,44 +16,77 @@
     </mat-selection-list>
   </div>
   <div class="column">
-    <h6>Create New User</h6>
-    <form [formGroup]="userForm" (ngSubmit)="onCreateUser()">
+    <h6>{{ isEditMode() ? 'Edit User' : 'Create New User' }}</h6>
+    <form [formRoot]="userForm">
         <div class="form-grid">
       <mat-form-field>
         <mat-label>Name</mat-label>
-        <input matInput formControlName="name" placeholder="Name">
+        <input matInput [formField]="userForm.name" placeholder="Name">
+        @if (getFormFieldError(userForm.name); as errorMessage) {
+          <mat-error>{{ errorMessage }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Display Name</mat-label>
-        <input matInput formControlName="displayName" placeholder="Display Name">
+        <input matInput [formField]="userForm.displayName" placeholder="Display Name">
+        @if (getFormFieldError(userForm.displayName); as errorMessage) {
+          <mat-error>{{ errorMessage }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Email</mat-label>
-        <input matInput formControlName="email" type="email" placeholder="Email">
+        <input matInput [formField]="userForm.email" type="email" placeholder="Email">
+        @if (getFormFieldError(userForm.email); as errorMessage) {
+          <mat-error>{{ errorMessage }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Phone</mat-label>
-        <input matInput formControlName="phone" placeholder="Phone">
+        <input matInput [formField]="userForm.phone" placeholder="Phone">
+        @if (getFormFieldError(userForm.phone); as errorMessage) {
+          <mat-error>{{ errorMessage }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Employee Name</mat-label>
-        <input matInput formControlName="employeeName" placeholder="Employee Name">
+        <input matInput [formField]="userForm.employeeName" placeholder="Employee Name">
+        @if (getFormFieldError(userForm.employeeName); as errorMessage) {
+          <mat-error>{{ errorMessage }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Employee Number</mat-label>
-        <input matInput formControlName="employeeNumber" placeholder="Employee Number">
+        <input matInput [formField]="userForm.employeeNumber" placeholder="Employee Number">
+        @if (getFormFieldError(userForm.employeeNumber); as errorMessage) {
+          <mat-error>{{ errorMessage }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Group ID</mat-label>
-        <input matInput formControlName="groupId" placeholder="Group ID">
+        <input matInput [formField]="userForm.groupId" placeholder="Group ID">
+        @if (getFormFieldError(userForm.groupId); as errorMessage) {
+          <mat-error>{{ errorMessage }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Permissions</mat-label>
-        <textarea matInput formControlName="permissions" placeholder="Permissions (comma-separated)"></textarea>
+        <mat-select [formField]="userForm.permissions" multiple>
+          @for (permission of availablePermissions; track permission) {
+            <mat-option [value]="permission">{{ permission }}</mat-option>
+          }
+        </mat-select>
+        @if (getFormFieldError(userForm.permissions); as errorMessage) {
+          <mat-error>{{ errorMessage }}</mat-error>
+        }
       </mat-form-field>
         </div>
 
-      <button mat-button matButton="filled" type="submit" [disabled]="userForm.invalid">Add User</button>
+      <div class="form-actions">
+        <button mat-button matButton="filled" type="submit">{{ isEditMode() ? 'Save User' : 'Add User' }}</button>
+        @if (isEditMode()) {
+          <button mat-button matButton="filled" type="button" (click)="cancelEdit()">Cancel</button>
+        }
+      </div>
     </form>
   </div>
 </div>   

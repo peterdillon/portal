@@ -9,6 +9,7 @@ import { MatCard, MatCardTitle, MatCardContent, MatCardActions } from "@angular/
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '@core/services/auth.service';
 import { ThemeService } from '@core/theme/theme.service';
+import { getFormFieldError } from '@shared/form-field-error/form-field-error';
 
 interface LoginData {
   email: string;
@@ -24,6 +25,7 @@ interface LoginData {
 })
 export class LoginComponent {
   private authService = inject(AuthService);
+  protected readonly getFormFieldError = getFormFieldError;
   themeService = inject(ThemeService);
   loginError = signal<string | null>(null);
   readonly loginErrorStateMatcher: ErrorStateMatcher = {
@@ -68,25 +70,4 @@ logout() {
   clearLoginError() {
     this.loginError.set(null);
   }
-
-  emailErrorMessage() {
-    if (this.loginError()) {
-      return this.loginError();
-    }
-
-    if (this.loginForm.email().invalid() && this.loginForm.email().touched()) {
-      return this.loginForm.email().errors()[0]?.message ?? null;
-    }
-
-    return null;
-  }
-
-  passwordErrorMessage() {
-    if (this.loginForm.password().invalid() && this.loginForm.password().touched()) {
-      return this.loginForm.password().errors()[0]?.message ?? null;
-    }
-
-    return null;
-  }
-
 }   

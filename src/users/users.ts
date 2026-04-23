@@ -1,65 +1,150 @@
 // users.ts
-import { Component, inject, OnInit } from '@angular/core';
-import { MatSelectionList, MatListOption, MatListModule } from '@angular/material/list';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { MatSelectionList, MatListOption, MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatAnchor } from "@angular/material/button";
+import { FormField, FormRoot, email, form, minLength, required, SchemaPathTree } from '@angular/forms/signals';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { ThemeService } from '@core/theme/theme.service';
+import { getFormFieldError } from '@shared/form-field-error/form-field-error';
 import { User } from '@users/user.model';
 import { UsersStore } from '@users/users.store';
 
+interface UserFormValue {
+  name: string;
+  displayName: string;
+  email: string;
+  phone: string;
+  employeeName: string;
+  employeeNumber: string;
+  groupId: string;
+  permissions: string[];
+}
+
 @Component({
   selector: 'app-users',
-  imports: [
-    MatSelectionList, MatListOption, MatFormField, MatLabel, MatInput,
-    ReactiveFormsModule, MatListModule, MatAnchor
-],
+  imports: [ MatSelectionList, MatListOption, MatFormField, MatLabel, MatInput,
+    FormField, FormRoot, MatListModule, MatButtonModule, MatSelectModule, MatOptionModule
+  ],
   templateUrl: './users.html',
-  styleUrl: './users.scss'
+  styleUrl: './users.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Users implements OnInit {
 
+  protected readonly getFormFieldError = getFormFieldError;
   store = inject(UsersStore);
-  private fb = inject(FormBuilder);
   themeService = inject(ThemeService);
-  defaultValues = { 
-    email: 'pjd@aol.com', 
-    displayName: 'Johann Bach', 
-    name: 'johannes.bach',
-    permissions: 'site.write, site.delete, user.read'
-  };
-  userForm: FormGroup = this.fb.group({
-    name: ['peter.dillon',],
-    displayName: ['Peter Dillon', Validators.required],
-    email: ['pjd@aol.com'],
-    phone: ['123-456-7890'],
-    employeeName: ['Golden Route Operations'],
-    employeeNumber: ['98761234'],
-    groupId: [8],
-    permissions: ['site.delete, site.update']
+  selectedUserId = signal<string | null>(null);
+  readonly availablePermissions = [
+    'site.read',
+    'site.write',
+    'site.delete',
+    'user.read',
+    'user.write',
+    'user.delete',
+    'config.read',
+    'config.write',
+    'audit.read',
+    'billing.read'
+  ];
+  userModel = signal<UserFormValue>(this.createEmptyUserFormValue());
+  userForm = form(this.userModel, (fieldPath: SchemaPathTree<UserFormValue>) => {
+    required(fieldPath.name, { message: 'Name is required' });
+    required(fieldPath.displayName, { message: 'Display name is required' });
+    required(fieldPath.email, { message: 'Email is required' });
+    email(fieldPath.email, { message: 'Enter a valid email address' });
+    required(fieldPath.phone, { message: 'Phone is required' });
+    required(fieldPath.employeeName, { message: 'Employee name is required' });
+    required(fieldPath.employeeNumber, { message: 'Employee number is required' });
+    required(fieldPath.groupId, { message: 'Group ID is required' });
+    minLength(fieldPath.permissions, 1, { message: 'Select at least one permission' });
+  }, {
+    submission: {
+      action: async (form) => {
+        const formValue = form().value();
+        const user: User = {
+          id: this.selectedUserId() ?? `usr-${Date.now()}`,
+          name: formValue.name,
+          displayName: formValue.displayName,
+          email: formValue.email,
+          phone: formValue.phone,
+          employeeName: formValue.employeeName,
+          employeeNumber: formValue.employeeNumber,
+          permissions: formValue.permissions,
+          groupId: formValue.groupId,
+        };
+
+        if (this.isEditMode()) {
+          this.store.updateUser(user);
+        } else {
+          this.store.addUser(user);
+        }
+
+        this.cancelEdit();
+      }
+    }
   });
 
   ngOnInit(): void {
     this.store.loadUsers();
   }
 
-  onCreateUser() {
-    if (this.userForm.valid) {
-      const formValue = this.userForm.value;
-      const user: User = {
-        id: `usr-${Date.now()}`,
-        name: formValue.name,
-        displayName: formValue.displayName,
-        email: formValue.email,
-        phone: formValue.phone,
-        employeeName: formValue.employeeName,
-        employeeNumber: formValue.employeeNumber,
-        permissions: formValue.permissions ? formValue.permissions.split(',').map((p: string) => p.trim()) : [],
-        groupId: formValue.groupId,
-      };
-      this.store.addUser(user);
-      this.userForm.reset(this.defaultValues);
+  isEditMode() {
+    return this.selectedUserId() !== null;
+  }
+
+  cancelEdit() {
+    this.selectedUserId.set(null);
+    this.userForm().reset(this.createEmptyUserFormValue());
+  }
+
+  onUserSelected(event: MatSelectionListChange) {
+    const selectedOption = event.options[0];
+    const selectedUserId = selectedOption?.selected ? String(selectedOption.value) : null;
+
+    this.selectedUserId.set(selectedUserId);
+
+    if (!selectedUserId) {
+      this.userForm().reset(this.createEmptyUserFormValue());
+      return;
     }
+
+    const selectedUser = this.store['userEntities']().find((user) => user.id === selectedUserId);
+    if (!selectedUser) {
+      this.selectedUserId.set(null);
+      this.userForm().reset(this.createEmptyUserFormValue());
+      return;
+    }
+
+    this.userForm().reset(this.toFormValue(selectedUser));
+  }
+
+  private createEmptyUserFormValue(): UserFormValue {
+    return {
+      name: '',
+      displayName: '',
+      email: '',
+      phone: '',
+      employeeName: '',
+      employeeNumber: '',
+      groupId: '',
+      permissions: []
+    };
+  }
+
+  private toFormValue(user: User): UserFormValue {
+    return {
+      name: user.name,
+      displayName: user.displayName,
+      email: user.email,
+      phone: user.phone,
+      employeeName: user.employeeName,
+      employeeNumber: user.employeeNumber,
+      groupId: user.groupId,
+      permissions: [...user.permissions]
+    };
   }
 }   
