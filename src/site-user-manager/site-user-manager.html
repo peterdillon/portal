@@ -43,13 +43,13 @@
         [multiple]="false"
         (selectionChange)="onSiteSelected($event.options[0]?.value)">
         @for (site of store.sites(); track site.id) {
-          <mat-list-option [value]="site.id" [selected]="store.selectedSiteId() === site.id">
+          <mat-list-option [value]="site.id" [selected]="store.activeSelectedSiteId() === site.id">
             @if (!store.modifiedSiteIds().has(site.id)) {
               <mat-icon matListItemIcon class="has-edits" [class.hidden]="!store.modifiedSiteIds().has(site.id)">edit</mat-icon>
             } @else {
               <mat-icon matListItemIcon class="has-edits" title="Unsaved changes">edit</mat-icon>
             }
-            <span matListItemTitle>{{ site.name }} (siteId:{{ site.id }}, Users: {{ siteUserCount(site.id) }})</span>
+            <span matListItemTitle>{{ site.id }}) {{ site.name }}, ({{ siteUserCount(site.id) }} users)</span>
             <span matListItemLine>{{ site.address }}</span>
           </mat-list-option>
         } @empty {
@@ -61,7 +61,7 @@
     <div class="column">
       <h6>
         <mat-checkbox class="custom-chk"
-          [disabled]="!store.selectedSiteId()"
+          [disabled]="!store.hasSelectedSite()"
           [checked]="store.areAllSiteUsersSelected()"
           [indeterminate]="store.selectedUserIds().length > 0 && !store.areAllSiteUsersSelected()"
           (change)="toggleSelectAll($event)"
@@ -71,14 +71,14 @@
       </h6>
 
       <div class="scrollable-list">
-        @if (store.selectedSiteId()) {
+        @if (store.hasSelectedSite()) {
           @for (user of store.siteUsers(); track user.id) {
             <mat-list>
               <mat-list-item lines="2">
                 <mat-checkbox
                   [checked]="store.selectedUserIds().includes(user.id)"
                   (change)="onUserToggled(user.id)">
-                  <span matListItemTitle>{{ user.displayName }} ({{ user.siteId }})</span>
+                  <span matListItemTitle>{{ user.displayName }} (Site {{ user.siteId }})</span>
                   <span matListItemLine>{{ user.id }}</span>
                 </mat-checkbox>
               </mat-list-item>
@@ -110,14 +110,15 @@
     </div>
 
     <div class="available-users">
-      <h6>Available Users</h6>
+      <h6>Available Users @if (!store.hasSelectedSite()) { <span class="empty-state">(select a site first)</span> }</h6>
       <div class="scrollable-list">
         <mat-list>
           @for (user of store.availableUsers(); track user.id) {
             <mat-list-item lines="2">
               <mat-checkbox [checked]="store.selectedUserIds().includes(user.id)"
+                            [disabled]="!store.hasSelectedSite()"
                             (change)="onUserToggled(user.id)">
-                <span matListItemTitle>{{ user.displayName }} ({{ siteName(user.siteId) }} - siteId:{{ user.siteId }})</span>
+                <span matListItemTitle>{{ user.displayName }} ({{ siteName(user.siteId) }}: Site {{ user.siteId }})</span>
                 <span matListItemLine>{{ user.id }}</span>
               </mat-checkbox>
             </mat-list-item>

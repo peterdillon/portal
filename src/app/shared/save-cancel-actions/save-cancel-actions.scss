@@ -14,5 +14,11 @@
 }
 
 .remove-action {
-  color: var(--mat-sys-error, #b3261e);
+  background-color: var(--error-container, var(--mat-sys-error-container, #ffdad6)) !important;
+  color: var(--on-error-container, var(--mat-sys-on-error-container, #410002)) !important;
+}
+
+.remove-action[disabled] {
+  background-color: color-mix(in srgb, var(--error-container, var(--mat-sys-error-container, #ffdad6)) 38%, transparent) !important;
+  color: color-mix(in srgb, var(--on-error-container, var(--mat-sys-on-error-container, #410002)) 38%, transparent) !important;
 }

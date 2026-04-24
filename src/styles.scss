@@ -199,3 +199,12 @@ html, body {
 .mdc-button ~ .mdc-button, mat-icon-button {
   margin-left: 0.5rem;
 }
+
+.permissions-select-panel .select-all-permissions-option .mat-pseudo-checkbox {
+  display: none;
+}
+
+.permissions-select-panel .select-all-permissions-option .select-all-permissions-indicator {
+  display: inline-flex;
+  margin-right: 0.75rem;
+}

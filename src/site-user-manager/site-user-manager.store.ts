@@ -27,15 +27,32 @@ export const SiteUserManagerStore = signalStore(
     error: null,
     modifiedSiteIds: new Set<number>(),
   }),
-  withMethods((store, usersStore = inject(UsersStore)) => {
+  withMethods((store, usersStore = inject(UsersStore), sitesStore = inject(SitesStore)) => {
     const findUserById = (id: string) => usersStore['userEntities']().find((user) => user.id === id);
+    const getActiveSelectedSiteId = () => {
+      const siteId = store.selectedSiteId();
+
+      if (siteId == null) {
+        return null;
+      }
+
+      return sitesStore.sites().some((site) => site.id === siteId) ? siteId : null;
+    };
 
     return {
       selectSite: (siteId: number | null) => {
-        patchState(store, { selectedSiteId: siteId, selectedUserIds: [] });
+        const nextSelectedSiteId = siteId != null && sitesStore.sites().some((site) => site.id === siteId)
+          ? siteId
+          : null;
+
+        patchState(store, { selectedSiteId: nextSelectedSiteId, selectedUserIds: [] });
       },
 
       toggleUserSelection: (userId: string) => {
+        if (getActiveSelectedSiteId() == null) {
+          return;
+        }
+
         patchState(store, {
           selectedUserIds: store.selectedUserIds().includes(userId)
             ? store.selectedUserIds().filter((id) => id !== userId)
@@ -44,7 +61,7 @@ export const SiteUserManagerStore = signalStore(
       },
 
       selectAllUsersInSite: () => {
-        const siteId = store.selectedSiteId();
+        const siteId = getActiveSelectedSiteId();
         if (siteId == null) {
           return;
         }
@@ -61,7 +78,7 @@ export const SiteUserManagerStore = signalStore(
       },
 
       addUsersToSite: () => {
-        const siteId = store.selectedSiteId();
+        const siteId = getActiveSelectedSiteId();
         const userIds = store.selectedUserIds();
 
         if (siteId == null || userIds.length === 0) {
@@ -82,7 +99,7 @@ export const SiteUserManagerStore = signalStore(
       },
 
       removeUsersFromSite: () => {
-        const siteId = store.selectedSiteId();
+        const siteId = getActiveSelectedSiteId();
         const userIds = store.selectedUserIds();
 
         if (siteId == null || userIds.length === 0) {
@@ -139,13 +156,24 @@ export const SiteUserManagerStore = signalStore(
     const usersStore = inject(UsersStore);
 
     const sites = computed(() => sitesStore.sites());
+    const activeModifiedSiteIds = computed(() => {
+      const activeSiteIds = new Set(sites().map((site) => site.id));
+
+      return new Set(
+        [...store.modifiedSiteIds()].filter((siteId) => activeSiteIds.has(siteId))
+      );
+    });
     const allUsers = computed(() => usersStore['userEntities']() as User[]);
-    const selectedSite = computed(() => {
+    const activeSelectedSiteId = computed(() => {
       const siteId = store.selectedSiteId();
+      return siteId != null && sites().some((site) => site.id === siteId) ? siteId : null;
+    });
+    const selectedSite = computed(() => {
+      const siteId = activeSelectedSiteId();
       return siteId == null ? null : sites().find((site) => site.id === siteId) ?? null;
     });
     const siteUsers = computed(() => {
-      const siteId = store.selectedSiteId();
+      const siteId = activeSelectedSiteId();
       if (siteId == null) {
         return [] as User[];
       }
@@ -153,17 +181,17 @@ export const SiteUserManagerStore = signalStore(
       return allUsers().filter((user) => Number(user.siteId) === siteId);
     });
     const availableUsers = computed(() => {
-      const siteId = store.selectedSiteId();
+      const siteId = activeSelectedSiteId();
       if (siteId == null) {
         return allUsers();
       }
 
       return allUsers().filter((user) => Number(user.siteId) !== siteId);
     });
-    const hasChanges = computed(() => store.modifiedSiteIds().size > 0);
-    const modifiedSiteCount = computed(() => store.modifiedSiteIds().size);
+    const hasChanges = computed(() => activeModifiedSiteIds().size > 0);
+    const modifiedSiteCount = computed(() => activeModifiedSiteIds().size);
     const canAddSelectedUsers = computed(() => {
-      const siteId = store.selectedSiteId();
+      const siteId = activeSelectedSiteId();
       if (siteId == null) {
         return false;
       }
@@ -174,7 +202,7 @@ export const SiteUserManagerStore = signalStore(
       });
     });
     const canRemoveSelectedUsers = computed(() => {
-      const siteId = store.selectedSiteId();
+      const siteId = activeSelectedSiteId();
       if (siteId == null) {
         return false;
       }
@@ -189,9 +217,13 @@ export const SiteUserManagerStore = signalStore(
       const users = siteUsers();
       return !!users.length && users.every((user) => selectedIds.includes(user.id));
     });
+    const hasSelectedSite = computed(() => activeSelectedSiteId() !== null);
 
     return {
       sites,
+      activeModifiedSiteIds,
+      activeSelectedSiteId,
+      hasSelectedSite,
       selectedSite,
       siteUsers,
       availableUsers,

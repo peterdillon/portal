@@ -17,65 +17,69 @@
   </div>
   <div class="column">
     <h6>{{ isEditMode() ? 'Edit User' : 'Create New User' }}</h6>
-    <form [formRoot]="userForm">
+    <form [formRoot]="userForm" (submit)="onSubmitAttempt()">
         <div class="form-grid">
-      <mat-form-field>
+      <mat-form-field floatLabel="always">
         <mat-label>Name</mat-label>
-        <input matInput [formField]="userForm.name" placeholder="Name">
-        @if (getFormFieldError(userForm.name); as errorMessage) {
+        <input matInput [formField]="userForm.name">
+        @if (showFieldError(userForm.name); as errorMessage) {
           <mat-error>{{ errorMessage }}</mat-error>
         }
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field floatLabel="always">
         <mat-label>Display Name</mat-label>
-        <input matInput [formField]="userForm.displayName" placeholder="Display Name">
-        @if (getFormFieldError(userForm.displayName); as errorMessage) {
+        <input matInput [formField]="userForm.displayName">
+        @if (showFieldError(userForm.displayName); as errorMessage) {
           <mat-error>{{ errorMessage }}</mat-error>
         }
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field floatLabel="always">
         <mat-label>Email</mat-label>
-        <input matInput [formField]="userForm.email" type="email" placeholder="Email">
-        @if (getFormFieldError(userForm.email); as errorMessage) {
+        <input matInput [formField]="userForm.email" type="email">
+        @if (showFieldError(userForm.email); as errorMessage) {
           <mat-error>{{ errorMessage }}</mat-error>
         }
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field floatLabel="always">
         <mat-label>Phone</mat-label>
-        <input matInput [formField]="userForm.phone" placeholder="Phone">
-        @if (getFormFieldError(userForm.phone); as errorMessage) {
+        <input matInput [formField]="userForm.phone">
+        @if (showFieldError(userForm.phone); as errorMessage) {
           <mat-error>{{ errorMessage }}</mat-error>
         }
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field floatLabel="always">
         <mat-label>Employee Name</mat-label>
-        <input matInput [formField]="userForm.employeeName" placeholder="Employee Name">
-        @if (getFormFieldError(userForm.employeeName); as errorMessage) {
+        <input matInput [formField]="userForm.employeeName">
+        @if (showFieldError(userForm.employeeName); as errorMessage) {
           <mat-error>{{ errorMessage }}</mat-error>
         }
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field floatLabel="always">
         <mat-label>Employee Number</mat-label>
-        <input matInput [formField]="userForm.employeeNumber" placeholder="Employee Number">
-        @if (getFormFieldError(userForm.employeeNumber); as errorMessage) {
+        <input matInput [formField]="userForm.employeeNumber">
+        @if (showFieldError(userForm.employeeNumber); as errorMessage) {
           <mat-error>{{ errorMessage }}</mat-error>
         }
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field floatLabel="always">
         <mat-label>Site ID</mat-label>
-        <input matInput [formField]="userForm.siteId" placeholder="Site ID">
-        @if (getFormFieldError(userForm.siteId); as errorMessage) {
+        <input matInput [formField]="userForm.siteId">
+        @if (showFieldError(userForm.siteId); as errorMessage) {
           <mat-error>{{ errorMessage }}</mat-error>
         }
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field floatLabel="always">
         <mat-label>Permissions</mat-label>
-        <mat-select [formField]="userForm.permissions" multiple>
+        <mat-select [formField]="userForm.permissions" panelClass="permissions-select-panel" multiple (selectionChange)="onPermissionsSelectionChange($event)">
+          <mat-option class="select-all-permissions-option" [value]="selectAllPermissionsValue">
+            <mat-pseudo-checkbox class="select-all-permissions-indicator" [state]="permissionsSelectionState()" appearance="full"></mat-pseudo-checkbox>
+            {{ allPermissionsSelected() ? 'Clear all permissions' : 'Select all permissions' }}
+          </mat-option>
           @for (permission of availablePermissions; track permission) {
             <mat-option [value]="permission">{{ permission }}</mat-option>
           }
         </mat-select>
-        @if (getFormFieldError(userForm.permissions); as errorMessage) {
+        @if (showFieldError(userForm.permissions); as errorMessage) {
           <mat-error>{{ errorMessage }}</mat-error>
         }
       </mat-form-field>
@@ -83,7 +87,7 @@
 
       <app-save-cancel-actions
         [submitLabel]="submitLabel()"
-        [submitDisabled]="userForm().invalid()"
+        [submitDisabled]="false"
         [showCancel]="isEditMode()"
         [showRemove]="isEditMode()"
         [removeLabel]="'Remove User'"

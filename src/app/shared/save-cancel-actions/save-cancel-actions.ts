@@ -13,7 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
       @if (hasSecondaryActions()) {
         <div class="secondary-actions">
           @if (showCancel()) {
-            <button mat-button matButton="filled" type="button" [disabled]="cancelDisabled()" (click)="cancelClicked.emit()">
+            <button mat-button matButton="tonal" type="button" [disabled]="cancelDisabled()" (click)="cancelClicked.emit()">
               {{ cancelLabel() }}
             </button>
           }
@@ -21,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
           @if (showRemove()) {
             <button
               mat-button
+              matButton="filled"
               type="button"
               class="remove-action"
               [disabled]="removeDisabled()"

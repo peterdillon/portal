@@ -4,8 +4,8 @@ import { MatSelectionList, MatListOption, MatListModule, MatSelectionListChange 
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormField, FormRoot, email, form, minLength, required, SchemaPathTree } from '@angular/forms/signals';
-import { MatSelectModule } from '@angular/material/select';
-import { MatOptionModule } from '@angular/material/core';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatOptionModule, MatPseudoCheckboxModule } from '@angular/material/core';
 import { ThemeService } from '@core/theme/theme.service';
 import { getFormFieldError } from '@shared/form-field-error/form-field-error';
 import { SaveCancelActionsComponent } from '@shared/save-cancel-actions/save-cancel-actions';
@@ -23,10 +23,12 @@ interface UserFormValue {
   permissions: string[];
 }
 
+const SELECT_ALL_PERMISSIONS_VALUE = '__select-all-permissions__';
+
 @Component({
   selector: 'app-users',
   imports: [ MatSelectionList, MatListOption, MatFormField, MatLabel, MatInput,
-    FormField, FormRoot, MatListModule, MatSelectModule, MatOptionModule, SaveCancelActionsComponent
+    FormField, FormRoot, MatListModule, MatSelectModule, MatOptionModule, MatPseudoCheckboxModule, SaveCancelActionsComponent
   ],
   templateUrl: './users.html',
   styleUrl: './users.scss',
@@ -38,8 +40,10 @@ export class Users implements OnInit {
   store = inject(UsersStore);
   themeService = inject(ThemeService);
   selectedUserId = signal<string | null>(null);
+  submitAttempted = signal(false);
   readonly isEditMode = computed(() => this.selectedUserId() !== null);
   readonly submitLabel = computed(() => this.isEditMode() ? 'Save User' : 'Add User');
+  readonly selectAllPermissionsValue = SELECT_ALL_PERMISSIONS_VALUE;
   readonly availablePermissions = [
     'site.read',
     'site.write',
@@ -94,8 +98,63 @@ export class Users implements OnInit {
     this.store.initialLoadUsers();
   }
 
+  showFieldError(field: () => { invalid(): boolean; touched(): boolean; errors(): Array<{ message?: string }> }) {
+    const state = field();
+
+    if (state.invalid() && (state.touched() || this.submitAttempted())) {
+      return state.errors()[0]?.message ?? null;
+    }
+
+    return null;
+  }
+
+  onSubmitAttempt() {
+    this.submitAttempted.set(true);
+  }
+
+  onPermissionsSelectionChange(event: MatSelectChange) {
+    const selectedPermissions = event.value as string[];
+
+    if (!selectedPermissions.includes(this.selectAllPermissionsValue)) {
+      return;
+    }
+
+    const allPermissionsSelected = this.availablePermissions.every((permission) =>
+      selectedPermissions.includes(permission)
+    );
+
+    const currentFormValue = this.userForm().value();
+    this.userForm().reset({
+      ...currentFormValue,
+      permissions: allPermissionsSelected ? [] : [...this.availablePermissions],
+    });
+  }
+
+  allPermissionsSelected() {
+    const selectedPermissions = this.userForm().value().permissions;
+    return this.availablePermissions.every((permission) => selectedPermissions.includes(permission));
+  }
+
+  somePermissionsSelected() {
+    const selectedPermissions = this.userForm().value().permissions;
+    return selectedPermissions.length > 0 && !this.allPermissionsSelected();
+  }
+
+  permissionsSelectionState(): 'checked' | 'indeterminate' | 'unchecked' {
+    if (this.allPermissionsSelected()) {
+      return 'checked';
+    }
+
+    if (this.somePermissionsSelected()) {
+      return 'indeterminate';
+    }
+
+    return 'unchecked';
+  }
+
   cancelEdit() {
     this.selectedUserId.set(null);
+    this.submitAttempted.set(false);
     this.userForm().reset(this.createEmptyUserFormValue());
   }
 
@@ -114,6 +173,7 @@ export class Users implements OnInit {
     const selectedUserId = selectedOption?.selected ? String(selectedOption.value) : null;
 
     this.selectedUserId.set(selectedUserId);
+    this.submitAttempted.set(false);
 
     if (!selectedUserId) {
       this.userForm().reset(this.createEmptyUserFormValue());
