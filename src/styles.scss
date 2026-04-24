@@ -19,8 +19,12 @@ html:not(.dark-theme) .mat-mdc-progress-spinner {
 input.mat-mdc-input-element:-webkit-autofill,
 input.mat-mdc-input-element:-webkit-autofill:hover,
 input.mat-mdc-input-element:-webkit-autofill:focus,
-input.mat-mdc-input-element:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px var(--mat-card-elevated-container-color, var(--mat-sys-surface-container-low)) inset !important;
+input.mat-mdc-input-element:-webkit-autofill:active,
+textarea.mat-mdc-input-element:-webkit-autofill,
+textarea.mat-mdc-input-element:-webkit-autofill:hover,
+textarea.mat-mdc-input-element:-webkit-autofill:focus,
+textarea.mat-mdc-input-element:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--mat-sys-surface-container-low, var(--surface-color, var(--mat-sys-surface))) inset !important;
   -webkit-text-fill-color: var(--mat-sys-on-surface) !important;
   caret-color: var(--mat-sys-on-surface);
 }
