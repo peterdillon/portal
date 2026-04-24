@@ -81,12 +81,14 @@
       </mat-form-field>
         </div>
 
-      <div class="form-actions">
-        <button mat-button matButton="filled" type="submit">{{ isEditMode() ? 'Save User' : 'Add User' }}</button>
-        @if (isEditMode()) {
-          <button mat-button matButton="filled" type="button" (click)="cancelEdit()">Cancel</button>
-        }
-      </div>
+      <app-save-cancel-actions
+        [submitLabel]="submitLabel()"
+        [submitDisabled]="userForm().invalid()"
+        [showCancel]="isEditMode()"
+        [showRemove]="isEditMode()"
+        [removeLabel]="'Remove User'"
+        (cancelClicked)="cancelEdit()"
+        (removeClicked)="removeSelectedUser()" />
     </form>
   </div>
 </div>   

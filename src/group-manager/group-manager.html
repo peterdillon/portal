@@ -105,12 +105,12 @@
     <div class="button-column">
       <div class="mat-button-wrapper">
         <button mat-fab color="primary" (click)="addUsersToGroup()" 
-                [disabled]="!store.selectedGroupId() || store.selectedUserIds().length === 0"
+                [disabled]="!store.canAddSelectedUsers()"
                 matTooltip="Add Selected to Group">
           <mat-icon>arrow_back</mat-icon>
         </button>
         <button mat-fab color="warn" (click)="removeUsersFromGroup()" 
-                [disabled]="!store.selectedGroupId() || store.selectedUserIds().length === 0"
+                [disabled]="!store.canRemoveSelectedUsers()"
                 matTooltip="Remove Selected from Group">
           <mat-icon>arrow_forward</mat-icon>
         </button>

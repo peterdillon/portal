@@ -200,6 +200,31 @@ withComputed((store) => {
 
   const hasChanges = computed(() => store.modifiedGroupIds().size > 0);
   const modifiedGroupCount = computed(() => store.modifiedGroupIds().size);
+  const canAddSelectedUsers = computed(() => {
+    const groupId = store.selectedGroupId();
+    if (groupId == null) {
+      return false;
+    }
+
+    const selectedIds = store.selectedUserIds();
+    return selectedIds.some((userId) => {
+      const user = store.allUsers().find((candidate) => candidate.id === userId);
+      return !!user && Number(user.groupId) !== groupId;
+    });
+  });
+
+  const canRemoveSelectedUsers = computed(() => {
+    const groupId = store.selectedGroupId();
+    if (groupId == null) {
+      return false;
+    }
+
+    const selectedIds = store.selectedUserIds();
+    return selectedIds.some((userId) => {
+      const user = store.allUsers().find((candidate) => candidate.id === userId);
+      return !!user && Number(user.groupId) === groupId;
+    });
+  });
 
   const areAllGroupUsersSelected = computed(() => {
     const gu = groupUsers();
@@ -213,6 +238,8 @@ withComputed((store) => {
     availableUsers,
     hasChanges,
     modifiedGroupCount,
+    canAddSelectedUsers,
+    canRemoveSelectedUsers,
     areAllGroupUsersSelected,
   };
 }),   

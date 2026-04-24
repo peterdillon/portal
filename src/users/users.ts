@@ -1,14 +1,14 @@
 // users.ts
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatSelectionList, MatListOption, MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormField, FormRoot, email, form, minLength, required, SchemaPathTree } from '@angular/forms/signals';
-import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { ThemeService } from '@core/theme/theme.service';
 import { getFormFieldError } from '@shared/form-field-error/form-field-error';
+import { SaveCancelActionsComponent } from '@shared/save-cancel-actions/save-cancel-actions';
 import { User } from '@users/user.model';
 import { UsersStore } from '@users/users.store';
 
@@ -26,7 +26,7 @@ interface UserFormValue {
 @Component({
   selector: 'app-users',
   imports: [ MatSelectionList, MatListOption, MatFormField, MatLabel, MatInput,
-    FormField, FormRoot, MatListModule, MatButtonModule, MatSelectModule, MatOptionModule
+    FormField, FormRoot, MatListModule, MatSelectModule, MatOptionModule, SaveCancelActionsComponent
   ],
   templateUrl: './users.html',
   styleUrl: './users.scss',
@@ -38,6 +38,8 @@ export class Users implements OnInit {
   store = inject(UsersStore);
   themeService = inject(ThemeService);
   selectedUserId = signal<string | null>(null);
+  readonly isEditMode = computed(() => this.selectedUserId() !== null);
+  readonly submitLabel = computed(() => this.isEditMode() ? 'Save User' : 'Add User');
   readonly availablePermissions = [
     'site.read',
     'site.write',
@@ -92,13 +94,19 @@ export class Users implements OnInit {
     this.store.loadUsers();
   }
 
-  isEditMode() {
-    return this.selectedUserId() !== null;
-  }
-
   cancelEdit() {
     this.selectedUserId.set(null);
     this.userForm().reset(this.createEmptyUserFormValue());
+  }
+
+  removeSelectedUser() {
+    const userId = this.selectedUserId();
+    if (!userId) {
+      return;
+    }
+
+    this.store.removeUser(userId);
+    this.cancelEdit();
   }
 
   onUserSelected(event: MatSelectionListChange) {

@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { signalStore, withState, withMethods, type, patchState } from '@ngrx/signals';
-import { withEntities, addEntities, prependEntity, updateEntity } from '@ngrx/signals/entities';
+import { withEntities, addEntities, prependEntity, removeEntity, updateEntity } from '@ngrx/signals/entities';
 import { withDevtools, withGlitchTracking } from '@angular-architects/ngrx-toolkit';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap } from 'rxjs';
@@ -23,6 +23,10 @@ export const UsersStore = signalStore(
     // Update a user (e.g., change groupId)
     updateUser: (user: User) => {
       patchState(store, updateEntity({ id: user.id, changes: user }, userEntityConfig));
+    },
+
+    removeUser: (userId: string) => {
+      patchState(store, removeEntity(userId, userEntityConfig));
     },
 
     loadUsers: rxMethod<void>(
