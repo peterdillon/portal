@@ -29,10 +29,11 @@ export class SidenavMode {
 
   private navigationItems: NavigationItem[] = [
     { name: 'Login', path: '/login', subTitle: 'Login Page' },
-    { name: 'Products', path: '/products', subTitle: 'Electronic Gaming Machines' },
-    { name: 'Group Manager', path: '/group-manager', subTitle: 'Group Management', requiredPermission: 'site.write' },
-    { name: 'Users', path: '/users', subTitle: 'Users & Permission Management', requiredPermission: 'user.write' },
+    { name: 'User Manager', path: '/users', subTitle: 'User & Permission Management', requiredPermission: 'user.write' },
+    { name: 'Site Manager', path: '/site-manager', subTitle: 'Site Management', requiredPermission: 'site.write' },
+    { name: 'Site User Manager', path: '/site-user-manager', subTitle: 'Site User Management', requiredPermission: 'site.write' },
     { name: 'Table', path: '/page-two', subTitle: 'An example table' },
+    { name: 'Products', path: '/products', subTitle: 'Electronic Gaming Machines' },
     { name: 'Dialog', path: '/dialog-example', subTitle: 'An example dialog' },
   ];
 

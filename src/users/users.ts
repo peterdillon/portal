@@ -19,7 +19,7 @@ interface UserFormValue {
   phone: string;
   employeeName: string;
   employeeNumber: string;
-  groupId: string;
+  siteId: string;
   permissions: string[];
 }
 
@@ -61,7 +61,7 @@ export class Users implements OnInit {
     required(fieldPath.phone, { message: 'Phone is required' });
     required(fieldPath.employeeName, { message: 'Employee name is required' });
     required(fieldPath.employeeNumber, { message: 'Employee number is required' });
-    required(fieldPath.groupId, { message: 'Group ID is required' });
+    required(fieldPath.siteId, { message: 'Site ID is required' });
     minLength(fieldPath.permissions, 1, { message: 'Select at least one permission' });
   }, {
     submission: {
@@ -76,7 +76,7 @@ export class Users implements OnInit {
           employeeName: formValue.employeeName,
           employeeNumber: formValue.employeeNumber,
           permissions: formValue.permissions,
-          groupId: formValue.groupId,
+          siteId: formValue.siteId,
         };
 
         if (this.isEditMode()) {
@@ -91,7 +91,7 @@ export class Users implements OnInit {
   });
 
   ngOnInit(): void {
-    this.store.loadUsers();
+    this.store.ensureUsersLoaded();
   }
 
   cancelEdit() {
@@ -138,7 +138,7 @@ export class Users implements OnInit {
       phone: '',
       employeeName: '',
       employeeNumber: '',
-      groupId: '',
+      siteId: '',
       permissions: []
     };
   }
@@ -151,7 +151,7 @@ export class Users implements OnInit {
       phone: user.phone,
       employeeName: user.employeeName,
       employeeNumber: user.employeeNumber,
-      groupId: user.groupId,
+      siteId: user.siteId,
       permissions: [...user.permissions]
     };
   }

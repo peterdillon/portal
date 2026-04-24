@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { signalStore, withState, withMethods, type, patchState } from '@ngrx/signals';
-import { withEntities, addEntities, prependEntity, removeEntity, updateEntity } from '@ngrx/signals/entities';
+import { withEntities, prependEntity, removeEntity, setAllEntities, updateEntity } from '@ngrx/signals/entities';
 import { withDevtools, withGlitchTracking } from '@angular-architects/ngrx-toolkit';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap } from 'rxjs';
@@ -14,13 +14,23 @@ export const UsersStore = signalStore(
   { providedIn: 'root' },
   withDevtools('users-store', withGlitchTracking()),
   withEntities(userEntityConfig),
-  withState({}),
+  withState({ hasLoaded: false }),
   withMethods((store, usersService = inject(UsersService)) => ({
+    ensureUsersLoaded: () => {
+      if (!store.hasLoaded()) {
+        (store as unknown as { loadUsers: () => void }).loadUsers();
+      }
+    },
+
+    reloadUsers: () => {
+      (store as unknown as { loadUsers: () => void }).loadUsers();
+    },
+
     addUser: (user: User) => {
       patchState(store, prependEntity(user, userEntityConfig));
     },
 
-    // Update a user (e.g., change groupId)
+    // Update a user (e.g., change siteId)
     updateUser: (user: User) => {
       patchState(store, updateEntity({ id: user.id, changes: user }, userEntityConfig));
     },
@@ -33,7 +43,7 @@ export const UsersStore = signalStore(
       pipe(
         switchMap(() => usersService.getUsers()),
         tapResponse({
-          next: (users) => patchState(store, addEntities(users, userEntityConfig)),
+          next: (users) => patchState(store, setAllEntities(users, userEntityConfig), { hasLoaded: true }),
           error: (err) => console.error('Failed to load users', err),
           finalize: () => console.log('User loading complete')
         })

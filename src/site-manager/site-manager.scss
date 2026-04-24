@@ -1,0 +1,37 @@
+h6 {
+  font-size: 1rem;
+}
+
+.two-column-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.form-grid-full {
+  grid-column: 1 / -1;
+}
+
+.scrollable-list {
+  flex: 1;
+  min-height: 0;
+  height: 35rem;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.site-option-selected {
+  background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
+}
+
+.empty-state {
+  margin: 1rem;
+}

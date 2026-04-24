@@ -7,8 +7,8 @@
     "phone": "+1-212-555-0198",
     "employeeName": "Alice Johnson",
     "employeeNumber": "EMP-2023-001",
-    "permissions": ["site.read", "site.write", "user.read", "config.read", "config.write"],
-    "groupId": 1
+    "permissions": ["site.read", "site.write", "site.delete", "user.read", "user.write", "user.delete", "config.read", "config.write", "audit.read", "billing.read"],
+    "siteId": 1
   },
   {
     "id": "usr-1002",
@@ -19,7 +19,7 @@
     "employeeName": "Bob Smith",
     "employeeNumber": "EMP-2023-002",
     "permissions": ["site.read", "user.read"],
-    "groupId": 1
+    "siteId": 1
   },
   {
     "id": "usr-1003",
@@ -30,7 +30,7 @@
     "employeeName": "Carol Williams",
     "employeeNumber": "EMP-2023-003",
     "permissions": ["site.read", "site.write"],
-    "groupId": 2
+    "siteId": 2
   },
   {
     "id": "usr-1004",
@@ -41,7 +41,7 @@
     "employeeName": "David Brown",
     "employeeNumber": "EMP-2023-004",
     "permissions": ["site.read"],
-    "groupId": 2
+    "siteId": 2
   },
   {
     "id": "usr-1005",
@@ -52,7 +52,7 @@
     "employeeName": "Emma Davis",
     "employeeNumber": "EMP-2023-005",
     "permissions": ["site.read", "site.write", "user.read", "user.write"],
-    "groupId": 3
+    "siteId": 3
   },
   {
     "id": "usr-1006",
@@ -63,7 +63,7 @@
     "employeeName": "Frank Miller",
     "employeeNumber": "EMP-2023-006",
     "permissions": ["site.read"],
-    "groupId": 3
+    "siteId": 3
   },
   {
     "id": "usr-1007",
@@ -74,7 +74,7 @@
     "employeeName": "Grace Wilson",
     "employeeNumber": "EMP-2023-007",
     "permissions": ["site.read", "site.write"],
-    "groupId": 4
+    "siteId": 4
   },
   {
     "id": "usr-1008",
@@ -85,7 +85,7 @@
     "employeeName": "Henry Moore",
     "employeeNumber": "EMP-2023-008",
     "permissions": ["site.read"],
-    "groupId": 5
+    "siteId": 5
   },
   {
     "id": "usr-1009",
@@ -96,7 +96,7 @@
     "employeeName": "Iris Taylor",
     "employeeNumber": "EMP-2023-009",
     "permissions": ["site.read", "site.write", "user.read"],
-    "groupId": 0
+    "siteId": 0
   },
   {
     "id": "usr-1010",
@@ -107,6 +107,6 @@
     "employeeName": "Jack Anderson",
     "employeeNumber": "EMP-2023-010",
     "permissions": ["site.read"],
-    "groupId": 6
+    "siteId": 6
   }
 ]

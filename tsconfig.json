@@ -18,9 +18,10 @@
       "@app/*": ["./src/app/*"],
       "@core/*": ["./src/app/core/*"],
       "@features/*": ["./src/*"],
-      "@group-manager/*": ["./src/group-manager/*"],
       "@products/*": ["./src/products/*"],
       "@shared/*": ["./src/app/shared/*"],
+      "@site-manager/*": ["./src/site-manager/*"],
+      "@site-user-manager/*": ["./src/site-user-manager/*"],
       "@users/*": ["./src/users/*"],
       "@styles/*": ["./src/app/core/theme/*"]
     }

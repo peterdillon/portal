@@ -1,0 +1,59 @@
+<div class="two-column-layout mat-typography">
+  <div class="column">
+    <h6>All Sites</h6>
+    <mat-selection-list class="scrollable-list problem" [multiple]="false" (selectionChange)="onSiteSelected($event)">
+      @for (site of store.sites(); track site.id) {
+        <mat-list-option
+          [value]="site.id"
+          [selected]="selectedSiteId() === site.id"
+          [class.site-option-selected]="selectedSiteId() === site.id">
+          <span matListItemTitle>{{ site.name }} (ID: {{ site.id }}, Users: {{ siteUserCount(site.id) }})</span>
+          <span matListItemLine>{{ site.address }}</span>
+          <span matListItemLine>{{ site.email }}</span>
+        </mat-list-option>
+      } @empty {
+        <p class="empty-state">No sites found.</p>
+      }
+    </mat-selection-list>
+  </div>
+
+  <div class="column">
+    <h6>{{ isEditMode() ? 'Edit Site' : 'Create New Site' }}</h6>
+    <form [formRoot]="siteForm">
+      <div class="form-grid">
+        <mat-form-field>
+          <mat-label>Site Name</mat-label>
+          <input matInput [formField]="siteForm.name" placeholder="Site name">
+          @if (getFormFieldError(siteForm.name); as errorMessage) {
+            <mat-error>{{ errorMessage }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput [formField]="siteForm.email" type="email" placeholder="Email">
+          @if (getFormFieldError(siteForm.email); as errorMessage) {
+            <mat-error>{{ errorMessage }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field class="form-grid-full">
+          <mat-label>Address</mat-label>
+          <input matInput [formField]="siteForm.address" placeholder="Address">
+          @if (getFormFieldError(siteForm.address); as errorMessage) {
+            <mat-error>{{ errorMessage }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <app-save-cancel-actions
+        [submitLabel]="submitLabel()"
+        [submitDisabled]="siteForm().invalid()"
+        [showCancel]="isEditMode()"
+        [showRemove]="isEditMode()"
+        [removeLabel]="'Remove Site'"
+        (cancelClicked)="cancelEdit()"
+        (removeClicked)="removeSelectedSite()" />
+    </form>
+  </div>
+</div>

@@ -1,0 +1,131 @@
+<div class="iam-container mat-typography">
+
+  <mat-toolbar>
+    <span [style.color]="themeService.getOnSurfaceColor()">Site Users Management</span>
+    <span class="example-spacer"></span>
+    <button mat-button matButton="filled"
+      class="custom-button"
+      (click)="saveChanges()"
+      [disabled]="!store.hasChanges() || store.isSaving()">
+      <span class="button-content">
+        @if (store.isSaving()) {
+          <spinner class="modified-indicator loading-spinner"></spinner>
+        } @else {
+          <mat-icon class="modified-indicator">save</mat-icon>
+        }
+        Save Changes
+        @if (store.hasChanges()) {
+          <span class="change-count">({{ store.modifiedSiteCount() }})</span>
+        }
+      </span>
+    </button>
+    <button mat-raised-button (click)="discardChanges()" [disabled]="!store.hasChanges()">
+      <mat-icon>close</mat-icon>
+      Discard
+    </button>
+  </mat-toolbar>
+
+  @if (store.error()) {
+    <div class="error-message">
+      <mat-icon>error</mat-icon>
+      {{ store.error() }}
+      <button mat-icon-button (click)="store.clearError()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  }
+
+  <div class="four-column-layout iam-content">
+    <div class="column groups-section">
+      <h6>Select a site to manage users</h6>
+      <mat-selection-list
+        class="scrollable-list problem"
+        [multiple]="false"
+        (selectionChange)="onSiteSelected($event.options[0]?.value)">
+        @for (site of store.sites(); track site.id) {
+          <mat-list-option [value]="site.id" [selected]="store.selectedSiteId() === site.id">
+            @if (!store.modifiedSiteIds().has(site.id)) {
+              <mat-icon matListItemIcon class="has-edits" [class.hidden]="!store.modifiedSiteIds().has(site.id)">edit</mat-icon>
+            } @else {
+              <mat-icon matListItemIcon class="has-edits" title="Unsaved changes">edit</mat-icon>
+            }
+            <span matListItemTitle>{{ site.name }} (siteId:{{ site.id }}, Users: {{ siteUserCount(site.id) }})</span>
+            <span matListItemLine>{{ site.address }}</span>
+          </mat-list-option>
+        } @empty {
+          <p class="empty-state">No sites found.</p>
+        }
+      </mat-selection-list>
+    </div>
+
+    <div class="column">
+      <h6>
+        <mat-checkbox class="custom-chk"
+          [disabled]="!store.selectedSiteId()"
+          [checked]="store.areAllSiteUsersSelected()"
+          [indeterminate]="store.selectedUserIds().length > 0 && !store.areAllSiteUsersSelected()"
+          (change)="toggleSelectAll($event)"
+          [matTooltip]="store.areAllSiteUsersSelected() ? 'Deselect all' : 'Select all'">
+        </mat-checkbox>
+        Users in: {{ store.selectedSite() ? store.selectedSite()!.name : '...' }}
+      </h6>
+
+      <div class="scrollable-list">
+        @if (store.selectedSiteId()) {
+          @for (user of store.siteUsers(); track user.id) {
+            <mat-list>
+              <mat-list-item lines="2">
+                <mat-checkbox
+                  [checked]="store.selectedUserIds().includes(user.id)"
+                  (change)="onUserToggled(user.id)">
+                  <span matListItemTitle>{{ user.displayName }} ({{ user.siteId }})</span>
+                  <span matListItemLine>{{ user.id }}</span>
+                </mat-checkbox>
+              </mat-list-item>
+            </mat-list>
+          } @empty {
+            <div class="flex-ct">
+              <div class="flex-item">
+                <p>No users in site</p>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="button-column">
+      <div class="mat-button-wrapper">
+        <button mat-fab color="primary" (click)="addUsersToSite()"
+                [disabled]="!store.canAddSelectedUsers()"
+                matTooltip="Add Selected to Site">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <button mat-fab color="warn" (click)="removeUsersFromSite()"
+                [disabled]="!store.canRemoveSelectedUsers()"
+                matTooltip="Remove Selected from Site">
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="available-users">
+      <h6>Available Users</h6>
+      <div class="scrollable-list">
+        <mat-list>
+          @for (user of store.availableUsers(); track user.id) {
+            <mat-list-item lines="2">
+              <mat-checkbox [checked]="store.selectedUserIds().includes(user.id)"
+                            (change)="onUserToggled(user.id)">
+                <span matListItemTitle>{{ user.displayName }} ({{ siteName(user.siteId) }} - siteId:{{ user.siteId }})</span>
+                <span matListItemLine>{{ user.id }}</span>
+              </mat-checkbox>
+            </mat-list-item>
+          } @empty {
+            <p class="empty-state">All users assigned</p>
+          }
+        </mat-list>
+      </div>
+    </div>
+  </div>
+</div>

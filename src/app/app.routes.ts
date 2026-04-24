@@ -26,8 +26,16 @@ export const routes: Routes = [
   { path: 'products/:id', 
     loadComponent: () => import('@products/product-detail').then((m) => m.ProductDetail)
   },
-  { path: 'group-manager', 
-    loadComponent: () => import('@group-manager/group-manager').then((m) => m.GroupManager),
+  { path: 'group-manager',
+    pathMatch: 'full',
+    redirectTo: 'site-user-manager'
+  },
+  { path: 'site-user-manager', 
+    loadComponent: () => import('@site-user-manager/site-user-manager').then((m) => m.SiteUserManager),
+    canActivate: [authGuard, requirePermission('site.write')]
+  },
+  { path: 'site-manager',
+    loadComponent: () => import('@site-manager/site-manager').then((m) => m.SiteManager),
     canActivate: [authGuard, requirePermission('site.write')]
   },
   { path: 'users', 
