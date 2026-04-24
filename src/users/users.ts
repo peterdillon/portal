@@ -91,7 +91,7 @@ export class Users implements OnInit {
   });
 
   ngOnInit(): void {
-    this.store.ensureUsersLoaded();
+    this.store.initialLoadUsers();
   }
 
   cancelEdit() {

@@ -92,7 +92,7 @@ export class SiteManager {
   });
 
   ngOnInit(): void {
-    this.usersStore.ensureUsersLoaded();
+    this.usersStore.initialLoadUsers();
   }
 
   onSiteSelected(event: MatSelectionListChange) {

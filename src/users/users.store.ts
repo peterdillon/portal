@@ -14,40 +14,44 @@ export const UsersStore = signalStore(
   { providedIn: 'root' },
   withDevtools('users-store', withGlitchTracking()),
   withEntities(userEntityConfig),
-  withState({ hasLoaded: false }),
-  withMethods((store, usersService = inject(UsersService)) => ({
-    ensureUsersLoaded: () => {
-      if (!store.hasLoaded()) {
-        (store as unknown as { loadUsers: () => void }).loadUsers();
-      }
-    },
-
-    reloadUsers: () => {
-      (store as unknown as { loadUsers: () => void }).loadUsers();
-    },
-
-    addUser: (user: User) => {
-      patchState(store, prependEntity(user, userEntityConfig));
-    },
-
-    // Update a user (e.g., change siteId)
-    updateUser: (user: User) => {
-      patchState(store, updateEntity({ id: user.id, changes: user }, userEntityConfig));
-    },
-
-    removeUser: (userId: string) => {
-      patchState(store, removeEntity(userId, userEntityConfig));
-    },
-
-    loadUsers: rxMethod<void>(
+  withState({ sessionStoreUsersLoaded: false }),
+  withMethods((store, usersService = inject(UsersService)) => {
+    const loadUsers = rxMethod<void>(
       pipe(
         switchMap(() => usersService.getUsers()),
         tapResponse({
-          next: (users) => patchState(store, setAllEntities(users, userEntityConfig), { hasLoaded: true }),
+          next: (users) => patchState(store, setAllEntities(users, userEntityConfig), { sessionStoreUsersLoaded: true }),
           error: (err) => console.error('Failed to load users', err),
           finalize: () => console.log('User loading complete')
         })
       )
-    )
-  }))
+    );
+
+    return {
+      initialLoadUsers: () => {
+        if (!store.sessionStoreUsersLoaded()) {
+          loadUsers();
+        }
+      },
+
+      reloadUsersFromSource: () => {
+        loadUsers();
+      },
+
+      addUser: (user: User) => {
+        patchState(store, prependEntity(user, userEntityConfig));
+      },
+
+      // Update a user (e.g., change siteId)
+      updateUser: (user: User) => {
+        patchState(store, updateEntity({ id: user.id, changes: user }, userEntityConfig));
+      },
+
+      removeUser: (userId: string) => {
+        patchState(store, removeEntity(userId, userEntityConfig));
+      },
+
+      loadUsers,
+    };
+  })
 );

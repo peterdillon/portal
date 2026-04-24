@@ -126,7 +126,7 @@ export const SiteUserManagerStore = signalStore(
           selectedUserIds: [],
           selectedSiteId: null,
         });
-        usersStore.reloadUsers();
+        usersStore.reloadUsersFromSource();
       },
 
       clearError: () => {
@@ -205,7 +205,7 @@ export const SiteUserManagerStore = signalStore(
   withHooks({
     onInit() {
       const usersStore = inject(UsersStore);
-      usersStore.ensureUsersLoaded();
+      usersStore.initialLoadUsers();
     },
   })
 );
