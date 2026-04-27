@@ -1,7 +1,7 @@
 <div class="two-column-layout mat-typography">
-  <div class="column">
+  <div>
     <h6>All Users</h6>
-    <mat-selection-list class="scrollable-list problem" [multiple]="false" (selectionChange)="onUserSelected($event)">
+    <mat-selection-list class="scrollable-list" [multiple]="false" (selectionChange)="onUserSelected($event)">
       @for (user of store['userEntities'](); track user.id) {
         <mat-list-option
           [value]="user.id"
@@ -11,11 +11,11 @@
           <span matListItemLine><span [style.color]="themeService.getSecondaryColor()">Permissions:</span> {{ user.permissions.join(', ')  }}</span>
         </mat-list-option>
       } @empty {
-        <p class="empty-state">No users found.</p>
+        <p>No users found.</p>
       }
     </mat-selection-list>
   </div>
-  <div class="column">
+  <div>
     <h6>{{ isEditMode() ? 'Edit User' : 'Create New User' }}</h6>
     <form [formRoot]="userForm" (submit)="onSubmitAttempt()">
         <div class="form-grid">
@@ -70,13 +70,17 @@
       </mat-form-field>
       <mat-form-field floatLabel="always">
         <mat-label>Permissions</mat-label>
-        <mat-select [formField]="userForm.permissions" panelClass="permissions-select-panel" multiple (selectionChange)="onPermissionsSelectionChange($event)">
-          <mat-option class="select-all-permissions-option" [value]="selectAllPermissionsValue">
-            <mat-pseudo-checkbox class="select-all-permissions-indicator" [state]="permissionsSelectionState()" appearance="full"></mat-pseudo-checkbox>
-            {{ allPermissionsSelected() ? 'Clear all permissions' : 'Select all permissions' }}
-          </mat-option>
-          @for (permission of availablePermissions; track permission) {
-            <mat-option [value]="permission">{{ permission }}</mat-option>
+        <mat-select [formField]="userForm.permissions" [placeholder]="permissionsTriggerLabel()" panelClass="permissions-select-panel" multiple>
+          <mat-select-trigger class="trigger-text-smaller">{{ permissionsTriggerLabel() }}</mat-select-trigger>
+          @for (group of permissionGroups(); track group.permissionId) {
+            <div class="permission-group-option" (click)="togglePermissionGroup(group)">
+              <mat-pseudo-checkbox class="permission-group-indicator" [state]="groupSelectionState(group)" appearance="full"></mat-pseudo-checkbox>
+              <span class="permission-group-name">{{ group.name }}</span>
+              <span class="permission-group-count">{{ groupPermissionsSelectedCount(group) }}/{{ group.permissions.length }}</span>
+            </div>
+            @for (permission of group.permissions; track permission) {
+              <mat-option class="permission-item-option" [value]="permission">{{ permission }}</mat-option>
+            }
           }
         </mat-select>
         @if (showFieldError(userForm.permissions); as errorMessage) {

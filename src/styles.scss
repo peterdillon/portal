@@ -204,11 +204,39 @@ html, body {
   margin-left: 0.5rem;
 }
 
-.permissions-select-panel .select-all-permissions-option .mat-pseudo-checkbox {
+.permissions-select-panel .permission-group-option .mat-pseudo-checkbox {
   display: none;
 }
 
-.permissions-select-panel .select-all-permissions-option .select-all-permissions-indicator {
+.permissions-select-panel .permission-group-option .permission-group-indicator {
   display: inline-flex;
   margin-right: 0.75rem;
+}
+
+.permissions-select-panel .permission-group-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+}
+
+.permissions-select-panel .permission-group-name {
+  flex: 1;
+}
+
+.permissions-select-panel .permission-group-count {
+  color: var(--on-surface-variant, var(--mat-sys-on-surface-variant));
+  font-size: 0.85rem;
+}
+
+.permissions-select-panel .permission-item-option {
+  padding-left: 2.5rem;
+}
+
+.mat-mdc-select-placeholder,
+.trigger-text-smaller {
+  font-size: 88%;
+  font-weight: 100;
 }

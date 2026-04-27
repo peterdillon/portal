@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } 
 import { MatListModule, MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 import { FormField, FormRoot, email, form, required, SchemaPathTree } from '@angular/forms/signals';
 import { SitesStore } from '@site-manager/sites.store';
 import { Site } from '@site-manager/site.model';
@@ -13,6 +15,7 @@ interface SiteFormValue {
   name: string;
   address: string;
   email: string;
+  siteGroup: string;
 }
 
 @Component({
@@ -24,6 +27,8 @@ interface SiteFormValue {
     MatError,
     MatLabel,
     MatInput,
+    MatSelectModule,
+    MatOptionModule,
     FormField,
     FormRoot,
     MatListModule,
@@ -38,8 +43,19 @@ export class SiteManager {
   readonly store: InstanceType<typeof SitesStore> = inject(SitesStore);
   readonly usersStore = inject(UsersStore);
   readonly selectedSiteId = signal<number | null>(null);
+  readonly selectedSiteGroupFilter = signal('');
+  readonly siteGroups = ['1', '2', '3'];
   readonly isEditMode = computed(() => this.selectedSiteId() !== null);
   readonly submitLabel = computed(() => this.isEditMode() ? 'Save Site' : 'Add Site');
+  readonly filteredSites = computed(() => {
+    const selectedGroup = this.selectedSiteGroupFilter();
+
+    if (!selectedGroup) {
+      return this.store.sites();
+    }
+
+    return this.store.sites().filter((site) => site.siteGroup === selectedGroup);
+  });
   readonly siteUserCounts = computed(() => {
     const counts = new Map<number, number>();
 
@@ -78,6 +94,7 @@ export class SiteManager {
           name: formValue.name,
           address: formValue.address,
           email: formValue.email,
+          siteGroup: formValue.siteGroup,
         };
 
         if (this.isEditMode()) {
@@ -93,6 +110,10 @@ export class SiteManager {
 
   ngOnInit(): void {
     this.usersStore.initialLoadUsers();
+  }
+
+  setSiteGroupFilter(siteGroup: string) {
+    this.selectedSiteGroupFilter.set(siteGroup);
   }
 
   onSiteSelected(event: MatSelectionListChange) {
@@ -147,6 +168,7 @@ export class SiteManager {
       name: '',
       address: '',
       email: '',
+      siteGroup: '',
     };
   }
 
@@ -155,6 +177,7 @@ export class SiteManager {
       name: site.name,
       address: site.address,
       email: site.email,
+      siteGroup: site.siteGroup ?? '',
     };
   }
 }

@@ -1,14 +1,6 @@
 h6 {
   font-size: 1rem;
-  margin: 0;
-}
-
-.list-header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
+  margin: 0 0 0.75rem;
 }
 
 .two-column-layout {
@@ -24,20 +16,6 @@ h6 {
   gap: 16px;
 }
 
-.form-grid-25 {
-  display: flex;
-   width: 100%; /* or a specific pixel value */
-  gap: 10px;
-}
-
-.form-grid-25 > *:first-child {
-  flex: 0 0 25%;
-}
-
-.form-grid-25 > *:last-child {
-  flex: 0 0 75%;
-}
-
 .scrollable-list {
   flex: 1;
   min-height: 0;
@@ -47,6 +25,11 @@ h6 {
   border-radius: 4px;
 }
 
-.site-option-selected {
+.permission-option-selected {
   background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
+}
+
+.store-error {
+  margin: 0 0 1rem;
+  color: var(--on-error-container, var(--mat-sys-on-error-container));
 }

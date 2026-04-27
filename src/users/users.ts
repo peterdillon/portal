@@ -4,13 +4,15 @@ import { MatSelectionList, MatListOption, MatListModule, MatSelectionListChange 
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormField, FormRoot, email, form, minLength, required, SchemaPathTree } from '@angular/forms/signals';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule, MatPseudoCheckboxModule } from '@angular/material/core';
 import { ThemeService } from '@core/theme/theme.service';
 import { getFormFieldError } from '@shared/form-field-error/form-field-error';
+import { PermissionGroup } from '@users/permission-group.model';
 import { SaveCancelActionsComponent } from '@shared/save-cancel-actions/save-cancel-actions';
 import { User } from '@users/user.model';
 import { UsersStore } from '@users/users.store';
+import { PermissionsStore } from '@features/permissions-manager/permissions.store';
 
 interface UserFormValue {
   name: string;
@@ -22,8 +24,6 @@ interface UserFormValue {
   siteId: string;
   permissions: string[];
 }
-
-const SELECT_ALL_PERMISSIONS_VALUE = '__select-all-permissions__';
 
 @Component({
   selector: 'app-users',
@@ -39,23 +39,12 @@ export class Users implements OnInit {
   protected readonly getFormFieldError = getFormFieldError;
   store = inject(UsersStore);
   themeService = inject(ThemeService);
+  permissionsStore = inject(PermissionsStore);
   selectedUserId = signal<string | null>(null);
   submitAttempted = signal(false);
   readonly isEditMode = computed(() => this.selectedUserId() !== null);
   readonly submitLabel = computed(() => this.isEditMode() ? 'Save User' : 'Add User');
-  readonly selectAllPermissionsValue = SELECT_ALL_PERMISSIONS_VALUE;
-  readonly availablePermissions = [
-    'site.read',
-    'site.write',
-    'site.delete',
-    'user.read',
-    'user.write',
-    'user.delete',
-    'config.read',
-    'config.write',
-    'audit.read',
-    'billing.read'
-  ];
+  readonly permissionGroups = this.permissionsStore.permissionGroups;
   userModel = signal<UserFormValue>(this.createEmptyUserFormValue());
   userForm = form(this.userModel, (fieldPath: SchemaPathTree<UserFormValue>) => {
     required(fieldPath.name, { message: 'Name is required' });
@@ -96,6 +85,7 @@ export class Users implements OnInit {
 
   ngOnInit(): void {
     this.store.initialLoadUsers();
+    this.permissionsStore.initialLoadPermissions();
   }
 
   showFieldError(field: () => { invalid(): boolean; touched(): boolean; errors(): Array<{ message?: string }> }) {
@@ -112,44 +102,47 @@ export class Users implements OnInit {
     this.submitAttempted.set(true);
   }
 
-  onPermissionsSelectionChange(event: MatSelectChange) {
-    const selectedPermissions = event.value as string[];
-
-    if (!selectedPermissions.includes(this.selectAllPermissionsValue)) {
-      return;
-    }
-
-    const allPermissionsSelected = this.availablePermissions.every((permission) =>
-      selectedPermissions.includes(permission)
-    );
+  togglePermissionGroup(group: PermissionGroup) {
+    const selectedPermissions = this.userForm().value().permissions;
+    const groupFullySelected = this.groupPermissionsSelectedCount(group) === group.permissions.length;
+    const nextPermissions = groupFullySelected
+      ? selectedPermissions.filter((permission) => !group.permissions.includes(permission))
+      : [...new Set([...selectedPermissions, ...group.permissions])];
 
     const currentFormValue = this.userForm().value();
     this.userForm().reset({
       ...currentFormValue,
-      permissions: allPermissionsSelected ? [] : [...this.availablePermissions],
+      permissions: nextPermissions,
     });
   }
 
-  allPermissionsSelected() {
+  groupPermissionsSelectedCount(group: PermissionGroup) {
     const selectedPermissions = this.userForm().value().permissions;
-    return this.availablePermissions.every((permission) => selectedPermissions.includes(permission));
+    return group.permissions.filter((permission) => selectedPermissions.includes(permission)).length;
   }
 
-  somePermissionsSelected() {
-    const selectedPermissions = this.userForm().value().permissions;
-    return selectedPermissions.length > 0 && !this.allPermissionsSelected();
-  }
+  groupSelectionState(group: PermissionGroup): 'checked' | 'indeterminate' | 'unchecked' {
+    const selectedCount = this.groupPermissionsSelectedCount(group);
 
-  permissionsSelectionState(): 'checked' | 'indeterminate' | 'unchecked' {
-    if (this.allPermissionsSelected()) {
+    if (selectedCount === group.permissions.length && group.permissions.length > 0) {
       return 'checked';
     }
 
-    if (this.somePermissionsSelected()) {
+    if (selectedCount > 0) {
       return 'indeterminate';
     }
 
     return 'unchecked';
+  }
+
+  permissionsTriggerLabel() {
+    if (!this.permissionsStore.hasLoadedCatalog()) {
+      return 'Loading permissions...';
+    }
+
+    return this.permissionGroups()
+      .map((group) => `${group.name} ${this.groupPermissionsSelectedCount(group)}/${group.permissions.length}`)
+      .join(' - ');
   }
 
   cancelEdit() {

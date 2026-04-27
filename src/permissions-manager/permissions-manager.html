@@ -1,0 +1,58 @@
+<div class="two-column-layout mat-typography">
+  <div>
+    <h6>All Permissions</h6>
+    <mat-selection-list class="scrollable-list" [multiple]="false" (selectionChange)="onPermissionSelected($event)">
+      @for (permission of store.permissionEntries(); track permission.name) {
+        <mat-list-option
+          [value]="permission.name"
+          [selected]="selectedPermissionName() === permission.name"
+          [class.permission-option-selected]="selectedPermissionName() === permission.name">
+          <span matListItemTitle>{{ permission.name }}</span>
+          <span matListItemLine>Category: {{ permission.groupName }}</span>
+        </mat-list-option>
+      } @empty {
+        <p>No permissions found.</p>
+      }
+    </mat-selection-list>
+  </div>
+
+  <div>
+    <h6>{{ isEditMode() ? 'Edit Permission' : 'Create New Permission' }}</h6>
+    <form [formRoot]="permissionForm">
+      <div class="form-grid">
+        <mat-form-field floatLabel="always">
+          <mat-label>Category</mat-label>
+          <mat-select [formField]="permissionForm.groupName">
+            @for (categoryName of store.categoryNames(); track categoryName) {
+              <mat-option [value]="categoryName">{{ categoryName }}</mat-option>
+            }
+          </mat-select>
+          @if (getFormFieldError(permissionForm.groupName); as errorMessage) {
+            <mat-error>{{ errorMessage }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field floatLabel="always">
+          <mat-label>Permission</mat-label>
+          <input matInput [formField]="permissionForm.permissionName">
+          @if (permissionNameError(); as errorMessage) {
+            <mat-error>{{ errorMessage }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      @if (store.error(); as errorMessage) {
+        <p class="store-error">{{ errorMessage }}</p>
+      }
+
+      <app-save-cancel-actions
+        [submitLabel]="submitLabel()"
+        [submitDisabled]="submitDisabled()"
+        [showCancel]="isEditMode()"
+        [showRemove]="isEditMode()"
+        [removeLabel]="'Remove Permission'"
+        (cancelClicked)="cancelEdit()"
+        (removeClicked)="removeSelectedPermission()" />
+    </form>
+  </div>
+</div>

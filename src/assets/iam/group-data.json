@@ -3,48 +3,56 @@
     "id": 1,
     "name": "Caesars Palace",
     "address": "3570 S Las Vegas Blvd, Las Vegas, NV 89109",
-    "email": "caesars.palace@example.com"
+    "email": "caesars.palace@example.com",
+    "siteGroup": "2"
   },
   {
     "id": 2,
     "name": "The Venetian",
     "address": "3355 S Las Vegas Blvd, Las Vegas, NV 89109",
-    "email": "venetian@example.com"
+    "email": "venetian@example.com",
+    "siteGroup": "1"
   },
   {
     "id": 3,
     "name": "Bellagio",
     "address": "3600 S Las Vegas Blvd, Las Vegas, NV 89109",
-    "email": "bellagio@example.com"
+    "email": "bellagio@example.com",
+    "siteGroup": "3"
   },
   {
     "id": 4,
     "name": "The Mirage",
     "address": "3400 S Las Vegas Blvd, Las Vegas, NV 89109",
-    "email": "mirage@example.com"
+    "email": "mirage@example.com",
+    "siteGroup": "2"
   },
   {
     "id": 5,
     "name": "Mandalay Bay",
     "address": "3950 S Las Vegas Blvd, Las Vegas, NV 89119",
-    "email": "mandalay-bay@example.com"
+    "email": "mandalay-bay@example.com",
+    "siteGroup": "1"
   },
   {
     "id": 6,
     "name": "Luxor",
     "address": "3900 S Las Vegas Blvd, Las Vegas, NV 89109",
-    "email": "luxor@example.com"
+    "email": "luxor@example.com",
+    "siteGroup": "3"
   },
   {
     "id": 7,
     "name": "Excalibur",
     "address": "3850 S Las Vegas Blvd, Las Vegas, NV 89109",
-    "email": "excalibur@example.com"
+    "email": "excalibur@example.com",
+    "siteGroup": "1"
   },
   {
     "id": 8,
     "name": "New York-New York",
     "address": "3790 S Las Vegas Blvd, Las Vegas, NV 89109",
-    "email": "ny-ny@example.com"
+    "email": "ny-ny@example.com",
+    "siteGroup": "2"
   }
 ]

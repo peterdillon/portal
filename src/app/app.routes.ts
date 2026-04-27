@@ -42,6 +42,10 @@ export const routes: Routes = [
     loadComponent: () => import('@users/users').then((m) => m.Users),
     canActivate: [authGuard, requirePermission('user.write')]
   },
+  { path: 'permissions',
+    loadComponent: () => import('@features/permissions-manager/permissions-manager').then((m) => m.PermissionsManager),
+    canActivate: [authGuard, requirePermission('config.write')]
+  },
   {
     path: 'dialog-example',
     loadComponent: () => import('@features/dialog/dialog').then((m) => m.DialogOverviewExample)

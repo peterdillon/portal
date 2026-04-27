@@ -1,17 +1,22 @@
 [
   {
-    "name": "Site Manager",
-    "permissions": ["site.read", "site.write", "site.delete", "user.read", "config.read"],
+    "name": "Site",
+    "permissions": ["site.read", "site.write", "site.delete"],
     "permissionId": 1
   },
   {
-    "name": "User Admin",
-    "permissions": ["user.read", "user.write", "user.delete", "config.write", "audit.read"],
+    "name": "User",
+    "permissions": ["user.read", "user.write", "user.delete"],
     "permissionId": 2
   },
   {
-    "name": "Auditor",
-    "permissions": ["site.read", "user.read", "audit.read", "billing.read"],
+    "name": "Config",
+    "permissions": ["config.read", "config.write"],
     "permissionId": 3
+  },
+  {
+    "name": "Audit/Billing",
+    "permissions": ["audit.read", "billing.read"],
+    "permissionId": 4
   } 
 ]

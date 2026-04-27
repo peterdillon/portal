@@ -1,13 +1,23 @@
 <div class="two-column-layout mat-typography">
   <div class="column">
-    <h6>All Sites</h6>
+    <div class="list-header-row">
+      <h6>All Sites</h6>
+      <mat-form-field class="site-group-filter" subscriptSizing="dynamic" floatLabel="always">
+        <mat-label>Filter by group</mat-label>
+        <mat-select [value]="selectedSiteGroupFilter()" (selectionChange)="setSiteGroupFilter($event.value)">
+          @for (siteGroup of siteGroups; track siteGroup) {
+            <mat-option [value]="siteGroup">Group {{ siteGroup }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
     <mat-selection-list class="scrollable-list problem" [multiple]="false" (selectionChange)="onSiteSelected($event)">
-      @for (site of store.sites(); track site.id) {
+      @for (site of filteredSites(); track site.id) {
         <mat-list-option
           [value]="site.id"
           [selected]="selectedSiteId() === site.id"
           [class.site-option-selected]="selectedSiteId() === site.id">
-          <span matListItemTitle>{{ site.name }} (ID: {{ site.id }}, Users: {{ siteUserCount(site.id) }})</span>
+          <span matListItemTitle>{{ site.name }} (ID: {{ site.id }}, Users: {{ siteUserCount(site.id) }}, Group: {{ site.siteGroup }})</span>
           <span matListItemLine>{{ site.address }}</span>
           <span matListItemLine>{{ site.email }}</span>
         </mat-list-option>
@@ -20,31 +30,42 @@
   <div class="column">
     <h6>{{ isEditMode() ? 'Edit Site' : 'Create New Site' }}</h6>
     <form [formRoot]="siteForm">
+
       <div class="form-grid">
-        <mat-form-field>
+        <mat-form-field floatLabel="always">
           <mat-label>Site Name</mat-label>
-          <input matInput [formField]="siteForm.name" placeholder="Site name">
+          <input matInput [formField]="siteForm.name">
           @if (getFormFieldError(siteForm.name); as errorMessage) {
             <mat-error>{{ errorMessage }}</mat-error>
           }
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field floatLabel="always">
           <mat-label>Email</mat-label>
-          <input matInput [formField]="siteForm.email" type="email" placeholder="Email">
+          <input matInput [formField]="siteForm.email" type="email">
           @if (getFormFieldError(siteForm.email); as errorMessage) {
             <mat-error>{{ errorMessage }}</mat-error>
           }
         </mat-form-field>
+      </div>
 
-        <mat-form-field class="form-grid-full">
+      <div class="form-grid-25">
+        <mat-form-field floatLabel="always">
+          <mat-label>Site Group</mat-label>
+          <input matInput [formField]="siteForm.siteGroup">
+        </mat-form-field>
+
+        <mat-form-field floatLabel="always">
           <mat-label>Address</mat-label>
-          <input matInput [formField]="siteForm.address" placeholder="Address">
+          <input matInput [formField]="siteForm.address">
           @if (getFormFieldError(siteForm.address); as errorMessage) {
             <mat-error>{{ errorMessage }}</mat-error>
           }
         </mat-form-field>
       </div>
+
+      
+     
 
       <app-save-cancel-actions
         [submitLabel]="submitLabel()"

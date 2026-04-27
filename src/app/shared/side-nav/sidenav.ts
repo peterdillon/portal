@@ -30,6 +30,7 @@ export class SidenavMode {
   private navigationItems: NavigationItem[] = [
     { name: 'Login', path: '/login', subTitle: 'Login Page' },
     { name: 'User Manager', path: '/users', subTitle: 'User & Permission Management', requiredPermission: 'user.write' },
+    { name: 'Permissions Manager', path: '/permissions', subTitle: 'Permission Catalog Management', requiredPermission: 'config.write' },
     { name: 'Site Manager', path: '/site-manager', subTitle: 'Site Management', requiredPermission: 'site.write' },
     { name: 'Site User Manager', path: '/site-user-manager', subTitle: 'Site User Management', requiredPermission: 'site.write' },
     { name: 'Table', path: '/page-two', subTitle: 'An example table' },

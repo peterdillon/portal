@@ -3,6 +3,7 @@ export interface Site {
   name: string;
   address: string;
   email: string;
+  siteGroup?: string;
 }
 
 export interface SitesState {
