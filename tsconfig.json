@@ -18,7 +18,7 @@
       "@app/*": ["./src/app/*"],
       "@core/*": ["./src/app/core/*"],
       "@features/*": ["./src/*"],
-      "@products/*": ["./src/products/*"],
+      "@egms/*": ["./src/egms/*"],
       "@shared/*": ["./src/app/shared/*"],
       "@site-manager/*": ["./src/site-manager/*"],
       "@site-user-manager/*": ["./src/site-user-manager/*"],

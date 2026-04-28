@@ -204,6 +204,10 @@ html, body {
   margin-left: 0.5rem;
 }
 
+.mat-mdc-select-panel.permissions-select-panel {
+  max-height: calc(100vh - 12rem) !important;
+}
+
 .permissions-select-panel .permission-group-option .mat-pseudo-checkbox {
   display: none;
 }
@@ -217,18 +221,13 @@ html, body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-weight: 600;
+  font-weight: 300;
   cursor: pointer;
   padding: 0.75rem 1rem;
 }
 
 .permissions-select-panel .permission-group-name {
   flex: 1;
-}
-
-.permissions-select-panel .permission-group-count {
-  color: var(--on-surface-variant, var(--mat-sys-on-surface-variant));
-  font-size: 0.85rem;
 }
 
 .permissions-select-panel .permission-item-option {
@@ -239,4 +238,37 @@ html, body {
 .trigger-text-smaller {
   font-size: 88%;
   font-weight: 100;
+}
+
+.egm-delete-dialog-panel .mat-mdc-dialog-container {
+  background: transparent !important;
+}
+
+.egm-delete-dialog-panel .mat-mdc-dialog-surface {
+  border: 2px solid color-mix(in srgb, var(--mat-sys-outline, var(--outline-color)) 80%, white 20%);
+  border-radius: 1rem;
+  background-color: var(--mat-sys-surface-container, var(--surface-color)) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+.egm-delete-dialog-panel .mat-mdc-dialog-title {
+  padding: .5rem 2rem 0.5rem 2rem;
+}
+
+.egm-delete-dialog-panel .mat-mdc-dialog-content {
+  padding: 0 2rem 1.5rem 2rem !important;
+}
+
+.egm-delete-dialog-panel .mat-mdc-dialog-actions {
+  padding: 0 1.5rem 2.25rem;
+}
+
+.remove-action {
+  background-color: var(--error-container, var(--mat-sys-error-container, #ffdad6)) !important;
+  color: var(--on-error-container, var(--mat-sys-on-error-container, #410002)) !important;
+}
+
+.remove-action[disabled] {
+  background-color: color-mix(in srgb, var(--error-container, var(--mat-sys-error-container, #ffdad6)) 38%, transparent) !important;
+  color: color-mix(in srgb, var(--on-error-container, var(--mat-sys-on-error-container, #410002)) 38%, transparent) !important;
 }

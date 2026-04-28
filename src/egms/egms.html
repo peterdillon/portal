@@ -1,0 +1,40 @@
+<div class="egms-container mat-typography">
+  <h6>EGMs</h6>
+
+  @if (store.isLoading()) {
+    <div class="loading">
+      <p>Loading EGMs...</p>
+    </div>
+  } @else if (store.error()) {
+    <div class="error">
+      <p>Error loading EGMs: {{ store.error() }}</p>
+    </div>
+  } @else {
+    <div class="card-ct">
+      @for (egm of store.egms(); track egm.id) {
+        <mat-card class="card">
+          <mat-card-header>
+            <mat-card-title>{{ egm.manufacturer }}: {{ egm.model }} - ({{ egm.styleName }})</mat-card-title>
+            <mat-card-subtitle><p class="egm-comment">{{ egm.comment || 'No comments recorded.' }}</p></mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="egm-meta-grid small-copy">
+              <div class="egm-meta-item"><span class="egm-meta-label">Fixed Asset</span><span class="egm-meta-value">{{ egm.fixedAssetNumber }}</span></div>
+              <div class="egm-meta-item"><span class="egm-meta-label">Serial</span><span class="egm-meta-value">{{ egm.serialNumber }}</span></div>
+              <div class="egm-meta-item"><span class="egm-meta-label">Warehouse</span><span class="egm-meta-value">{{ egm.warehouse }}</span></div>
+              <div class="egm-meta-item"><span class="egm-meta-label">Item Location</span><span class="egm-meta-value">{{ egm.itemLocation }}</span></div>
+              <div class="egm-meta-item"><span class="egm-meta-label">In Service Date</span><span class="egm-meta-value">{{ egm.inServiceDate || 'Not set' }}</span></div>
+              <div class="egm-meta-item"><span class="egm-meta-label">Location</span><span class="egm-meta-value">{{ egm.location }}</span></div>
+              <div class="egm-meta-item"><span class="egm-meta-label">Assigned Site</span><span class="egm-meta-value">{{ egm.assignedSiteName || 'Unassigned' }}</span></div>
+              <div class="egm-meta-item"><span class="egm-meta-label">Site Code</span><span class="egm-meta-value">{{ egm.assignedSiteCode || 0 }}</span></div>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button matButton="filled" type="button" class="remove-action" (click)="deleteEgm(egm)">Delete</button>
+            <button mat-button matButton="filled" type="button" [routerLink]="['/egms', egm.id]">Edit Details</button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

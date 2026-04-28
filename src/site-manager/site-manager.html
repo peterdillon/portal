@@ -5,8 +5,8 @@
       <mat-form-field class="site-group-filter" subscriptSizing="dynamic" floatLabel="always">
         <mat-label>Filter by group</mat-label>
         <mat-select [value]="selectedSiteGroupFilter()" (selectionChange)="setSiteGroupFilter($event.value)">
-          @for (siteGroup of siteGroups; track siteGroup) {
-            <mat-option [value]="siteGroup">Group {{ siteGroup }}</mat-option>
+          @for (siteGroup of siteGroups(); track siteGroup.id) {
+            <mat-option [value]="siteGroup.id">{{ siteGroup.id }}</mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -17,7 +17,7 @@
           [value]="site.id"
           [selected]="selectedSiteId() === site.id"
           [class.site-option-selected]="selectedSiteId() === site.id">
-          <span matListItemTitle>{{ site.name }} (ID: {{ site.id }}, Users: {{ siteUserCount(site.id) }}, Group: {{ site.siteGroup }})</span>
+          <span matListItemTitle>{{ site.name }} (ID: {{ site.id }}, Users: {{ siteUserCount(site.id) }}, Group: {{ displaySiteGroup(site.siteGroup) }})</span>
           <span matListItemLine>{{ site.address }}</span>
           <span matListItemLine>{{ site.email }}</span>
         </mat-list-option>
@@ -52,7 +52,11 @@
       <div class="form-grid-25">
         <mat-form-field floatLabel="always">
           <mat-label>Site Group</mat-label>
-          <input matInput [formField]="siteForm.siteGroup">
+          <mat-select [formField]="siteForm.siteGroup">
+            @for (siteGroup of siteGroups(); track siteGroup.id) {
+              <mat-option [value]="siteGroup.id">{{ siteGroup.id }}</mat-option>
+            }
+          </mat-select>
         </mat-form-field>
 
         <mat-form-field floatLabel="always">
@@ -68,6 +72,7 @@
      
 
       <app-save-cancel-actions
+        [actionLayout]="'split'"
         [submitLabel]="submitLabel()"
         [submitDisabled]="siteForm().invalid()"
         [showCancel]="isEditMode()"

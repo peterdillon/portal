@@ -55,7 +55,7 @@ export class AuthService {
     );
 
     this.setToken(response.token);
-    await this.router.navigate(['/products']);
+    await this.router.navigate(['/egms']);
   }
 
   logout() {

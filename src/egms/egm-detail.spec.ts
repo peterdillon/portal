@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProductDetail } from './product-detail';
+import { EgmDetailComponent } from './egm-detail';
 
-describe('ProductDetail', () => {
-  let component: ProductDetail;
-  let fixture: ComponentFixture<ProductDetail>;
+describe('EgmDetailComponent', () => {
+  let component: EgmDetailComponent;
+  let fixture: ComponentFixture<EgmDetailComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProductDetail],
+      imports: [EgmDetailComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ProductDetail);
+    fixture = TestBed.createComponent(EgmDetailComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

@@ -1,11 +1,11 @@
 import { computed, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { signalStore, withComputed, withHooks, withMethods, withState, patchState } from '@ngrx/signals';
 import { withDevtools, withGlitchTracking } from '@angular-architects/ngrx-toolkit';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
 import { pipe, switchMap, tap } from 'rxjs';
 import { Site, SitesState } from '@site-manager/site.model';
+import { SitesService } from '@app/core/services/sites.service';
 
 const initialState: SitesState = {
   sites: [],
@@ -19,11 +19,11 @@ export const SitesStore = signalStore(
   { providedIn: 'root' },
   withDevtools('sites-store', withGlitchTracking()),
   withState(initialState),
-  withMethods((store, http = inject(HttpClient)) => ({
+  withMethods((store, sitesService = inject(SitesService)) => ({
     loadSites: rxMethod<void>(
       pipe(
         tap(() => patchState(store, { isLoading: true, error: null })),
-        switchMap(() => http.get<Site[]>('assets/iam/group-data.json')),
+        switchMap(() => sitesService.getSites()),
         tapResponse({
           next: (sites) => {
             patchState(store, {
@@ -40,36 +40,83 @@ export const SitesStore = signalStore(
       )
     ),
 
-    addSite: (site: Site) => {
-      patchState(store, {
-        sites: [site, ...store.sites()],
-        modifiedSiteIds: new Set([...store.modifiedSiteIds(), site.id]),
-      });
-    },
+    addSite: rxMethod<Site>(
+      pipe(
+        tap((site) => patchState(store, {
+          isSaving: true,
+          error: null,
+          modifiedSiteIds: new Set([...store.modifiedSiteIds(), site.id]),
+        })),
+        switchMap((site) => sitesService.addSite(site)),
+        tapResponse({
+          next: (sites) => {
+            patchState(store, {
+              sites,
+              isSaving: false,
+            });
+          },
+          error: (err) => {
+            const message = err instanceof Error ? err.message : 'Failed to add site';
+            patchState(store, { error: message, isSaving: false });
+          },
+        })
+      )
+    ),
 
-    updateSite: (site: Site) => {
-      patchState(store, {
-        sites: store.sites().map((candidate) => candidate.id === site.id ? site : candidate),
-        modifiedSiteIds: new Set([...store.modifiedSiteIds(), site.id]),
-      });
-    },
+    updateSite: rxMethod<Site>(
+      pipe(
+        tap((site) => patchState(store, {
+          isSaving: true,
+          error: null,
+          modifiedSiteIds: new Set([...store.modifiedSiteIds(), site.id]),
+        })),
+        switchMap((site) => sitesService.updateSite(site)),
+        tapResponse({
+          next: (sites) => {
+            patchState(store, {
+              sites,
+              isSaving: false,
+            });
+          },
+          error: (err) => {
+            const message = err instanceof Error ? err.message : 'Failed to update site';
+            patchState(store, { error: message, isSaving: false });
+          },
+        })
+      )
+    ),
 
-    removeSite: (siteId: number) => {
-      patchState(store, {
-        sites: store.sites().filter((site) => site.id !== siteId),
-        modifiedSiteIds: new Set([...store.modifiedSiteIds(), siteId]),
-      });
-    },
+    removeSite: rxMethod<number>(
+      pipe(
+        tap((siteId) => patchState(store, {
+          isSaving: true,
+          error: null,
+          modifiedSiteIds: new Set([...store.modifiedSiteIds(), siteId]),
+        })),
+        switchMap((siteId) => sitesService.removeSite(siteId)),
+        tapResponse({
+          next: (sites) => {
+            patchState(store, {
+              sites,
+              isSaving: false,
+            });
+          },
+          error: (err) => {
+            const message = err instanceof Error ? err.message : 'Failed to remove site';
+            patchState(store, { error: message, isSaving: false });
+          },
+        })
+      )
+    ),
 
     saveChanges: rxMethod<void>(
       pipe(
         tap(() => patchState(store, { isSaving: true, error: null })),
-        switchMap(() => new Promise<void>((resolve) => {
-          setTimeout(() => resolve(), 300);
-        })),
+        switchMap(() => sitesService.saveChanges()),
         tapResponse({
-          next: () => {
+          next: (sites) => {
             patchState(store, { isSaving: false, modifiedSiteIds: new Set<number>() });
+            patchState(store, { sites });
           },
           error: (err) => {
             const message = err instanceof Error ? err.message : 'Failed to save sites';
@@ -79,10 +126,25 @@ export const SitesStore = signalStore(
       )
     ),
 
-    discardChanges: () => {
-      patchState(store, { error: null, modifiedSiteIds: new Set<number>() });
-      (store as unknown as { loadSites: () => void }).loadSites();
-    },
+    discardChanges: rxMethod<void>(
+      pipe(
+        tap(() => patchState(store, { isLoading: true, error: null })),
+        switchMap(() => sitesService.discardChanges()),
+        tapResponse({
+          next: (sites) => {
+            patchState(store, {
+              sites,
+              isLoading: false,
+              modifiedSiteIds: new Set<number>(),
+            });
+          },
+          error: (err) => {
+            const message = err instanceof Error ? err.message : 'Failed to discard site changes';
+            patchState(store, { error: message, isLoading: false });
+          },
+        })
+      )
+    ),
 
     clearError: () => {
       patchState(store, { error: null });

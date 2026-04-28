@@ -19,12 +19,12 @@ export const routes: Routes = [
     loadComponent: () => import('@app/login/login').then((m) => m.LoginComponent)
   },
   {
-    path: 'products', 
-    loadComponent: () => import('@products/products').then((m) => m.ProductListComponent),
+    path: 'egms', 
+    loadComponent: () => import('@egms/egms').then((m) => m.EgmsComponent),
     canActivate: [authGuard] 
   },
-  { path: 'products/:id', 
-    loadComponent: () => import('@products/product-detail').then((m) => m.ProductDetail)
+  { path: 'egms/:id', 
+    loadComponent: () => import('@egms/egm-detail').then((m) => m.EgmDetailComponent)
   },
   { path: 'group-manager',
     pathMatch: 'full',

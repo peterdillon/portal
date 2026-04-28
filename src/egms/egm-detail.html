@@ -1,0 +1,114 @@
+<div class="product-detail-container mat-typography">
+  <div class="detail-header">
+    <button mat-icon-button class="back-button" (click)="goBack()" title="Back to EGMs">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h5 class="page-title">EGM Details</h5>
+    <div class="spacer"></div>
+  </div>
+
+  @if (store.selectedEgmLoading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading EGM...</p>
+    </div>
+  } @else if (store.selectedEgm()) {
+    <div class="product-content">
+      <form [formRoot]="egmForm" (submit)="saveEgm($event)">
+        <mat-card class="detail-card">
+          <div class="detail-title-block">
+            <h6>{{ egmForm().value().manufacturer }}: {{ egmForm().value().model }} - ({{ egmForm().value().styleName }})</h6>
+            <p class="egm-comment">{{ egmForm().value().comment || 'No comments recorded.' }}</p>
+          </div>
+          <mat-card-content>
+            <div class="detail-top-grid">
+              <mat-form-field floatLabel="always">
+                <mat-label>Manufacturer</mat-label>
+                <input matInput [formField]="egmForm.manufacturer">
+              </mat-form-field>
+              <mat-form-field floatLabel="always">
+                <mat-label>Model</mat-label>
+                <input matInput [formField]="egmForm.model">
+              </mat-form-field>
+              <mat-form-field floatLabel="always">
+                <mat-label>Style Name</mat-label>
+                <input matInput [formField]="egmForm.styleName">
+              </mat-form-field>
+            </div>
+
+            <mat-form-field floatLabel="always" class="full-width-field">
+              <mat-label>Comment</mat-label>
+              <textarea matInput rows="3" [formField]="egmForm.comment"></textarea>
+            </mat-form-field>
+
+            <div class="egm-meta-grid small-copy editable-grid">
+              <mat-form-field floatLabel="always">
+                <mat-label>Fixed Asset</mat-label>
+                <input matInput [formField]="egmForm.fixedAssetNumber">
+              </mat-form-field>
+              <mat-form-field floatLabel="always">
+                <mat-label>Serial</mat-label>
+                <input matInput [formField]="egmForm.serialNumber">
+              </mat-form-field>
+              <mat-form-field floatLabel="always">
+                <mat-label>Warehouse</mat-label>
+                <input matInput [formField]="egmForm.warehouse">
+              </mat-form-field>
+              <mat-form-field floatLabel="always">
+                <mat-label>Item Location</mat-label>
+                <input matInput [formField]="egmForm.itemLocation">
+              </mat-form-field>
+              <mat-form-field floatLabel="always">
+                <mat-label>In Service Date</mat-label>
+                <input matInput type="date" [formField]="egmForm.inServiceDate">
+              </mat-form-field>
+              <mat-form-field floatLabel="always">
+                <mat-label>Location</mat-label>
+                <input matInput [formField]="egmForm.location">
+              </mat-form-field>
+              <mat-form-field floatLabel="always">
+                <mat-label>Assigned Site</mat-label>
+                <input matInput [formField]="egmForm.assignedSiteName">
+              </mat-form-field>
+              <mat-form-field floatLabel="always">
+                <mat-label>Site Code</mat-label>
+                <input matInput type="number" [formField]="egmForm.assignedSiteCode">
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button mat-button matButton="tonal" type="button" (click)="goBack()">
+              <mat-icon>arrow_back</mat-icon>
+              Back
+            </button>
+            <div class="detail-primary-actions">
+              @if (hasUnsavedChanges()) {
+                <button mat-button matButton="tonal" type="button" (click)="discardChanges()">
+                  Discard {{ changedFieldCount() }} {{ changedFieldCount() === 1 ? 'Change' : 'Changes' }}
+                </button>
+              }
+              <button mat-button matButton="filled" type="submit">Save</button>
+            </div>
+          </mat-card-actions>
+        </mat-card>
+      </form>
+    </div>
+  } @else {
+     <div class="product-content">
+      <mat-card class="detail-card">
+        <div>
+          <h6>EGM Not Found</h6>
+          <div>The EGM you're looking for doesn't exist.</div>
+          <hr />
+        </div>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            Back to EGMs
+        </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  }
+</div>

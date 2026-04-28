@@ -33,8 +33,8 @@ export class SidenavMode {
     { name: 'Permissions Manager', path: '/permissions', subTitle: 'Permission Catalog Management', requiredPermission: 'config.write' },
     { name: 'Site Manager', path: '/site-manager', subTitle: 'Site Management', requiredPermission: 'site.write' },
     { name: 'Site User Manager', path: '/site-user-manager', subTitle: 'Site User Management', requiredPermission: 'site.write' },
+    { name: 'EGMs', path: '/egms', subTitle: 'Electronic Gaming Machines' },
     { name: 'Table', path: '/page-two', subTitle: 'An example table' },
-    { name: 'Products', path: '/products', subTitle: 'Electronic Gaming Machines' },
     { name: 'Dialog', path: '/dialog-example', subTitle: 'An example dialog' },
   ];
 

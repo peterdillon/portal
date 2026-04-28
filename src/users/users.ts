@@ -42,9 +42,11 @@ export class Users implements OnInit {
   permissionsStore = inject(PermissionsStore);
   selectedUserId = signal<string | null>(null);
   submitAttempted = signal(false);
+
   readonly isEditMode = computed(() => this.selectedUserId() !== null);
   readonly submitLabel = computed(() => this.isEditMode() ? 'Save User' : 'Add User');
   readonly permissionGroups = this.permissionsStore.permissionGroups;
+  
   userModel = signal<UserFormValue>(this.createEmptyUserFormValue());
   userForm = form(this.userModel, (fieldPath: SchemaPathTree<UserFormValue>) => {
     required(fieldPath.name, { message: 'Name is required' });
