@@ -46,6 +46,10 @@ h6 {
   }
 }
 
+mat-list-option  {
+  height: 5rem !important;
+}
+
 .scrollable-list {
   flex: 1;
   min-height: 0;
@@ -74,4 +78,16 @@ h6 {
     width: 100%;
     text-align: center;
   }
+}
+
+.site-association-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.field-note {
+  margin-top: -0.25rem;
+  font-size: 0.82rem;
+  color: var(--on-surface-variant, var(--mat-sys-on-surface-variant));
 }

@@ -7,8 +7,13 @@
           [value]="user.id"
           [selected]="selectedUserId() === user.id"
           [class.user-option-selected]="selectedUserId() === user.id">
-          <span matListItemTitle>{{ user.displayName }}, {{ user.email }}, {{ user.siteId }}, {{ user.employeeNumber }}</span>
-          <span matListItemLine><span [style.color]="themeService.getSecondaryColor()">Permissions:</span> {{ user.permissions.join(', ')  }}</span>
+          <div matListItemTitle>{{ user.displayName }} - {{ user.email }}
+            <br><span [style.color]="themeService.getSecondaryColor()">Employee#:</span> {{ user.employeeNumber }}
+          </div>
+          <div matListItemLine>
+            <span [style.color]="themeService.getSecondaryColor()">Permissions:</span> 
+              {{ user.permissions.join(', ')  }}
+          </div>
         </mat-list-option>
       } @empty {
         <p>No users found.</p>
@@ -61,13 +66,7 @@
           <mat-error>{{ errorMessage }}</mat-error>
         }
       </mat-form-field>
-      <mat-form-field floatLabel="always">
-        <mat-label>Site ID</mat-label>
-        <input matInput [formField]="userForm.siteId">
-        @if (showFieldError(userForm.siteId); as errorMessage) {
-          <mat-error>{{ errorMessage }}</mat-error>
-        }
-      </mat-form-field>
+
       <mat-form-field floatLabel="always">
         <mat-label>Permissions</mat-label>
         <mat-select [formField]="userForm.permissions" [placeholder]="permissionsTriggerLabel()" panelClass="permissions-select-panel" multiple>
@@ -87,15 +86,27 @@
           <mat-error>{{ errorMessage }}</mat-error>
         }
       </mat-form-field>
+
+      @if (isEditMode()) {
+        <div class="site-association-field">
+          <mat-form-field floatLabel="always">
+            <mat-label>In Site (Edit this association in the Site User Manager)</mat-label>
+            <input matInput [value]="currentUserSiteId()" disabled>
+          </mat-form-field>
         </div>
+      }  
+    </div>
 
       <app-save-cancel-actions
+        [actionLayout]="'split'"
         [submitLabel]="submitLabel()"
         [submitDisabled]="false"
-        [showCancel]="isEditMode()"
+        [showCancel]="false"
+        [showDiscard]="hasUnsavedChanges()"
+        [discardLabel]="discardLabel()"
         [showRemove]="isEditMode()"
         [removeLabel]="'Remove User'"
-        (cancelClicked)="cancelEdit()"
+        (discardClicked)="discardChanges()"
         (removeClicked)="removeSelectedUser()" />
     </form>
   </div>

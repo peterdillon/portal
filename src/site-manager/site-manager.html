@@ -75,10 +75,12 @@
         [actionLayout]="'split'"
         [submitLabel]="submitLabel()"
         [submitDisabled]="siteForm().invalid()"
-        [showCancel]="isEditMode()"
+        [showCancel]="false"
+        [showDiscard]="hasUnsavedChanges()"
+        [discardLabel]="discardLabel()"
         [showRemove]="isEditMode()"
         [removeLabel]="'Remove Site'"
-        (cancelClicked)="cancelEdit()"
+        (discardClicked)="discardChanges()"
         (removeClicked)="removeSelectedSite()" />
     </form>
   </div>

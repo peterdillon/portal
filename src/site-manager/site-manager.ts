@@ -65,6 +65,16 @@ export class SiteManager {
   readonly siteGroups = toSignal(this.sitesService.getSiteGroups(), { initialValue: [] as SiteGroupRecord[] });
   readonly isEditMode = computed(() => this.selectedSiteId() !== null);
   readonly submitLabel = computed(() => this.isEditMode() ? 'Save Site' : 'Add Site');
+  readonly changedFieldCount = computed(() => {
+    const baselineValue = this.getSiteFormBaseline();
+    const currentValue = this.siteForm().value();
+
+    return (Object.keys(baselineValue) as Array<keyof SiteFormValue>).reduce((count, key) => {
+      return count + (baselineValue[key] !== currentValue[key] ? 1 : 0);
+    }, 0);
+  });
+  readonly hasUnsavedChanges = computed(() => this.changedFieldCount() > 0);
+  readonly discardLabel = computed(() => `Discard ${this.changedFieldCount()} ${this.changedFieldCount() === 1 ? 'Change' : 'Changes'}`);
   readonly filteredSites = computed(() => {
     const selectedGroup = this.selectedSiteGroupFilter();
 
@@ -163,6 +173,10 @@ export class SiteManager {
     this.siteForm().reset(this.createEmptySiteFormValue());
   }
 
+  discardChanges() {
+    this.siteForm().reset(this.getSiteFormBaseline());
+  }
+
   removeSelectedSite() {
     const siteId = this.selectedSiteId();
     if (siteId == null) {
@@ -217,6 +231,17 @@ export class SiteManager {
     };
   }
 
+  private getSiteFormBaseline(): SiteFormValue {
+    const selectedSiteId = this.selectedSiteId();
+
+    if (selectedSiteId == null) {
+      return this.createEmptySiteFormValue();
+    }
+
+    const site = this.store.sites().find((candidate) => candidate.id === selectedSiteId);
+    return site ? this.toFormValue(site) : this.createEmptySiteFormValue();
+  }
+
   private normalizeSiteGroup(siteGroup: string | undefined): string {
     if (!siteGroup) {
       return '';
@@ -246,10 +271,10 @@ export class SiteManager {
       @if (data.assignedUserCount > 0) {
         <div>
           This site still has {{ data.assignedUserCount }} assigned user{{ data.assignedUserCount === 1 ? '' : 's' }}.
-          Removing it will unassign those users.
+          Removing it will unassign those users and permanently remove the site.
         </div>
       } @else {
-        <div>This will remove the site from the current in-memory session.</div>
+        <div>This will permanently remove the site.</div>
       }
     </mat-dialog-content>
     <mat-dialog-actions align="end">

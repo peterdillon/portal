@@ -28,6 +28,12 @@ type ActionLayout = 'default' | 'split';
             </button>
           }
 
+          @if (showDiscard()) {
+            <button mat-button matButton="tonal" type="button" [disabled]="discardDisabled()" (click)="discardClicked.emit()">
+              {{ discardLabel() }}
+            </button>
+          }
+
           <button mat-button matButton="filled" type="submit" [disabled]="submitDisabled()">
             {{ submitLabel() }}
           </button>
@@ -42,6 +48,12 @@ type ActionLayout = 'default' | 'split';
             @if (showCancel()) {
               <button mat-button matButton="tonal" type="button" [disabled]="cancelDisabled()" (click)="cancelClicked.emit()">
                 {{ cancelLabel() }}
+              </button>
+            }
+
+            @if (showDiscard()) {
+              <button mat-button matButton="tonal" type="button" [disabled]="discardDisabled()" (click)="discardClicked.emit()">
+                {{ discardLabel() }}
               </button>
             }
 
@@ -68,15 +80,19 @@ export class SaveCancelActionsComponent {
   actionLayout = input<ActionLayout>('default');
   submitLabel = input('Save');
   cancelLabel = input('Cancel');
+  discardLabel = input('Discard Changes');
   removeLabel = input('Remove');
   submitDisabled = input(false);
   cancelDisabled = input(false);
+  discardDisabled = input(false);
   removeDisabled = input(false);
   showCancel = input(true);
+  showDiscard = input(false);
   showRemove = input(false);
 
   cancelClicked = output<void>();
+  discardClicked = output<void>();
   removeClicked = output<void>();
 
-  protected readonly hasSecondaryActions = computed(() => this.showCancel() || this.showRemove());
+  protected readonly hasSecondaryActions = computed(() => this.showCancel() || this.showDiscard() || this.showRemove());
 }

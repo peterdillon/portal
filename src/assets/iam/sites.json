@@ -1,44 +1,44 @@
 [
   {
-    "id": "NYC-HQ",
+    "id": "001",
     "name": "New York Headquarters",
     "displayName": "NYC HQ",
     "location": "100 Broadway, New York, NY 10005",
-    "siteGroups": ["Northeast Operations"]
+    "siteGroups": ["site-group-001"]
   },
   {
-    "id": "BOS-MAIN",
+    "id": "002",
     "name": "Boston Office",
     "displayName": "Boston Office",
     "location": "500 Atlantic Ave, Boston, MA 02110",
-    "siteGroups": ["Northeast Operations"]
+    "siteGroups": ["site-group-001"]
   },
   {
-    "id": "PHL-DC",
+    "id": "003",
     "name": "Philadelphia Data Center",
     "displayName": "Philly DC",
     "location": "2000 Market St, Philadelphia, PA 19103",
-    "siteGroups": ["Northeast Operations", "Core Infrastructure"]
+    "siteGroups": ["site-group-001", "site-group-002"]
   },
   {
-    "id": "ASH-DC",
+    "id": "004",
     "name": "Ashburn Data Center",
     "displayName": "Ashburn DC",
     "location": "440 Terry Ave N, Ashburn, VA 20147",
-    "siteGroups": ["Core Infrastructure"]
+    "siteGroups": ["site-group-002"]
   },
   {
-    "id": "DAL-DC",
+    "id": "005",
     "name": "Dallas Data Center",
     "displayName": "Dallas DC",
     "location": "1950 N Stemmons Fwy, Dallas, TX 75207",
-    "siteGroups": ["Core Infrastructure"]
+    "siteGroups": ["site-group-002"]
   },
   {
-    "id": "CHI-OLD",
+    "id": "006",
     "name": "Chicago Legacy Office",
     "displayName": "Chicago Old Office",
     "location": "300 W Adams St, Chicago, IL 60606",
-    "siteGroups": ["Decommissioning"]
+    "siteGroups": ["site-group-003"]
   }
 ]   

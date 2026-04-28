@@ -45,6 +45,24 @@ export class Users implements OnInit {
 
   readonly isEditMode = computed(() => this.selectedUserId() !== null);
   readonly submitLabel = computed(() => this.isEditMode() ? 'Save User' : 'Add User');
+  readonly changedFieldCount = computed(() => {
+    const baselineValue = this.getUserFormBaseline();
+    const currentValue = this.userForm().value();
+
+    return (Object.keys(baselineValue) as Array<keyof UserFormValue>).reduce((count, key) => {
+      if (key === 'permissions') {
+        const baselinePermissions = [...baselineValue.permissions].sort();
+        const currentPermissions = [...currentValue.permissions].sort();
+
+        return count + (JSON.stringify(baselinePermissions) !== JSON.stringify(currentPermissions) ? 1 : 0);
+      }
+
+      return count + (baselineValue[key] !== currentValue[key] ? 1 : 0);
+    }, 0);
+  });
+  readonly hasUnsavedChanges = computed(() => this.changedFieldCount() > 0);
+  readonly discardLabel = computed(() => `Discard ${this.changedFieldCount()} ${this.changedFieldCount() === 1 ? 'Change' : 'Changes'}`);
+  readonly currentUserSiteId = computed(() => this.userForm().value().siteId);
   readonly permissionGroups = this.permissionsStore.permissionGroups;
   
   userModel = signal<UserFormValue>(this.createEmptyUserFormValue());
@@ -56,12 +74,14 @@ export class Users implements OnInit {
     required(fieldPath.phone, { message: 'Phone is required' });
     required(fieldPath.employeeName, { message: 'Employee name is required' });
     required(fieldPath.employeeNumber, { message: 'Employee number is required' });
-    required(fieldPath.siteId, { message: 'Site ID is required' });
     minLength(fieldPath.permissions, 1, { message: 'Select at least one permission' });
   }, {
     submission: {
       action: async (form) => {
         const formValue = form().value();
+        const existingUser = this.selectedUserId()
+          ? this.store['userEntities']().find((user) => user.id === this.selectedUserId())
+          : null;
         const user: User = {
           id: this.selectedUserId() ?? `usr-${Date.now()}`,
           name: formValue.name,
@@ -71,7 +91,7 @@ export class Users implements OnInit {
           employeeName: formValue.employeeName,
           employeeNumber: formValue.employeeNumber,
           permissions: formValue.permissions,
-          siteId: formValue.siteId,
+          siteId: existingUser?.siteId ?? '0',
         };
 
         if (this.isEditMode()) {
@@ -153,6 +173,11 @@ export class Users implements OnInit {
     this.userForm().reset(this.createEmptyUserFormValue());
   }
 
+  discardChanges() {
+    this.submitAttempted.set(false);
+    this.userForm().reset(this.getUserFormBaseline());
+  }
+
   removeSelectedUser() {
     const userId = this.selectedUserId();
     if (!userId) {
@@ -209,5 +234,16 @@ export class Users implements OnInit {
       siteId: user.siteId,
       permissions: [...user.permissions]
     };
+  }
+
+  private getUserFormBaseline(): UserFormValue {
+    const selectedUserId = this.selectedUserId();
+
+    if (!selectedUserId) {
+      return this.createEmptyUserFormValue();
+    }
+
+    const selectedUser = this.store['userEntities']().find((user) => user.id === selectedUserId);
+    return selectedUser ? this.toFormValue(selectedUser) : this.createEmptyUserFormValue();
   }
 }   
