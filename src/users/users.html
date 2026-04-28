@@ -7,9 +7,8 @@
           [value]="user.id"
           [selected]="selectedUserId() === user.id"
           [class.user-option-selected]="selectedUserId() === user.id">
-          <div matListItemTitle>{{ user.displayName }} - {{ user.email }}
-            <br><span [style.color]="themeService.getSecondaryColor()">Employee#:</span> {{ user.employeeNumber }}
-          </div>
+          <div matListItemTitle>{{ user.displayName }} - {{ user.email }}</div>
+          <div matListItemLine><span [style.color]="themeService.getSecondaryColor()">Employee#:</span> {{ user.employeeNumber }}</div>
           <div matListItemLine>
             <span [style.color]="themeService.getSecondaryColor()">Permissions:</span> 
               {{ user.permissions.join(', ')  }}
