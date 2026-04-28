@@ -47,11 +47,16 @@
 
       <app-save-cancel-actions
         [submitLabel]="submitLabel()"
+        [submitIcon]="'check'"
         [submitDisabled]="submitDisabled()"
-        [showCancel]="isEditMode()"
+        [showSubmitSpinner]="isSaving()"
+        [showDiscard]="hasUnsavedChanges()"
+        [discardLabel]="discardLabel()"
+        [discardDisabled]="isSaving()"
         [showRemove]="isEditMode()"
+        [removeDisabled]="isSaving()"
         [removeLabel]="'Remove Permission'"
-        (cancelClicked)="cancelEdit()"
+        (discardClicked)="discardChanges()"
         (removeClicked)="removeSelectedPermission()" />
     </form>
   </div>

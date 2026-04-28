@@ -4,15 +4,33 @@ import { MatSelectionList, MatListOption, MatListModule, MatSelectionListChange 
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormField, FormRoot, email, form, minLength, required, SchemaPathTree } from '@angular/forms/signals';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule, MatPseudoCheckboxModule } from '@angular/material/core';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 import { ThemeService } from '@core/theme/theme.service';
+import { runWithDemoSaveDelay, waitForDemoSaveDelay } from '../app/shared/demo-save-delay';
 import { getFormFieldError } from '@shared/form-field-error/form-field-error';
 import { PermissionGroup } from '@users/permission-group.model';
 import { SaveCancelActionsComponent } from '@shared/save-cancel-actions/save-cancel-actions';
+import { Spinner } from '@shared/spinner/spinner';
 import { User } from '@users/user.model';
 import { UsersStore } from '@users/users.store';
 import { PermissionsStore } from '@features/permissions-manager/permissions.store';
+
+interface RemoveUserDialogData {
+  displayName: string;
+  email: string;
+}
 
 interface UserFormValue {
   name: string;
@@ -40,11 +58,14 @@ export class Users implements OnInit {
   store = inject(UsersStore);
   themeService = inject(ThemeService);
   permissionsStore = inject(PermissionsStore);
+  private readonly dialog = inject(MatDialog);
+  isSaving = signal(false);
   selectedUserId = signal<string | null>(null);
   submitAttempted = signal(false);
 
   readonly isEditMode = computed(() => this.selectedUserId() !== null);
   readonly submitLabel = computed(() => this.isEditMode() ? 'Save User' : 'Add User');
+  readonly submitDisabled = computed(() => this.isSaving());
   readonly changedFieldCount = computed(() => {
     const baselineValue = this.getUserFormBaseline();
     const currentValue = this.userForm().value();
@@ -78,29 +99,31 @@ export class Users implements OnInit {
   }, {
     submission: {
       action: async (form) => {
-        const formValue = form().value();
-        const existingUser = this.selectedUserId()
-          ? this.store['userEntities']().find((user) => user.id === this.selectedUserId())
-          : null;
-        const user: User = {
-          id: this.selectedUserId() ?? `usr-${Date.now()}`,
-          name: formValue.name,
-          displayName: formValue.displayName,
-          email: formValue.email,
-          phone: formValue.phone,
-          employeeName: formValue.employeeName,
-          employeeNumber: formValue.employeeNumber,
-          permissions: formValue.permissions,
-          siteId: existingUser?.siteId ?? '0',
-        };
+        await this.runWithSaveSpinner(async () => {
+          const formValue = form().value();
+          const existingUser = this.selectedUserId()
+            ? this.store['userEntities']().find((user) => user.id === this.selectedUserId())
+            : null;
+          const user: User = {
+            id: this.selectedUserId() ?? `usr-${Date.now()}`,
+            name: formValue.name,
+            displayName: formValue.displayName,
+            email: formValue.email,
+            phone: formValue.phone,
+            employeeName: formValue.employeeName,
+            employeeNumber: formValue.employeeNumber,
+            permissions: formValue.permissions,
+            siteId: existingUser?.siteId ?? '0',
+          };
 
-        if (this.isEditMode()) {
-          this.store.updateUser(user);
-        } else {
-          this.store.addUser(user);
-        }
+          if (this.isEditMode()) {
+            this.store.updateUser(user);
+          } else {
+            this.store.addUser(user);
+          }
 
-        this.cancelEdit();
+          this.cancelEdit();
+        });
       }
     }
   });
@@ -184,8 +207,29 @@ export class Users implements OnInit {
       return;
     }
 
-    this.store.removeUser(userId);
-    this.cancelEdit();
+    const selectedUser = this.store['userEntities']().find((user) => user.id === userId);
+    if (!selectedUser) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open(RemoveUserDialogComponent, {
+      data: {
+        displayName: selectedUser.displayName,
+        email: selectedUser.email,
+      },
+      width: '380px',
+      maxWidth: '92vw',
+      panelClass: 'egm-delete-dialog-panel',
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean | undefined) => {
+      if (!confirmed) {
+        return;
+      }
+
+      this.store.removeUser(userId);
+      this.cancelEdit();
+    });
   }
 
   onUserSelected(event: MatSelectionListChange) {
@@ -246,4 +290,61 @@ export class Users implements OnInit {
     const selectedUser = this.store['userEntities']().find((user) => user.id === selectedUserId);
     return selectedUser ? this.toFormValue(selectedUser) : this.createEmptyUserFormValue();
   }
-}   
+
+  private async runWithSaveSpinner(action: () => void | Promise<void>) {
+    this.isSaving.set(true);
+
+    try {
+      await runWithDemoSaveDelay(action);
+    } finally {
+      this.isSaving.set(false);
+    }
+  }
+}
+
+@Component({
+  selector: 'app-remove-user-dialog',
+  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule, MatIconModule, Spinner],
+  template: `
+    <h2 mat-dialog-title>Remove User?</h2>
+    <mat-dialog-content>
+      <div>{{ data.displayName }}</div>
+      <div>{{ data.email }}</div>
+      <div>This will permanently remove the user.</div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button matButton="filled" type="button" mat-dialog-close [disabled]="isDeleting()">Cancel</button>
+      <button mat-button matButton="filled" type="button" class="remove-action" [disabled]="isDeleting()" (click)="confirmRemove()">
+        <span class="dialog-action-content">
+          @if (isDeleting()) {
+            <spinner class="dialog-action-indicator"></spinner>
+          } @else {
+            <mat-icon class="dialog-action-indicator">close</mat-icon>
+          }
+          <span>{{ isDeleting() ? 'Removing...' : 'Remove User' }}</span>
+        </span>
+      </button>
+    </mat-dialog-actions>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class RemoveUserDialogComponent {
+  readonly data = inject<RemoveUserDialogData>(MAT_DIALOG_DATA);
+  readonly isDeleting = signal(false);
+  private readonly dialogRef = inject(MatDialogRef<RemoveUserDialogComponent>);
+
+  async confirmRemove(): Promise<void> {
+    if (this.isDeleting()) {
+      return;
+    }
+
+    this.isDeleting.set(true);
+
+    try {
+      await waitForDemoSaveDelay();
+      this.dialogRef.close(true);
+    } finally {
+      this.isDeleting.set(false);
+    }
+  }
+}

@@ -272,3 +272,15 @@ html, body {
   background-color: color-mix(in srgb, var(--error-container, var(--mat-sys-error-container, #ffdad6)) 38%, transparent) !important;
   color: color-mix(in srgb, var(--on-error-container, var(--mat-sys-on-error-container, #410002)) 38%, transparent) !important;
 }
+
+.dialog-action-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dialog-action-indicator {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}

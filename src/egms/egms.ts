@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -10,8 +10,11 @@ import {
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
+  MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
+import { Spinner } from '@shared/spinner/spinner';
+import { waitForDemoSaveDelay } from '../app/shared/demo-save-delay';
 import { EgmsStore } from '@egms/egms.store';
 import { Egm } from '@egms/egm.model';
 
@@ -44,7 +47,7 @@ export class EgmsComponent {
 
 @Component({
   selector: 'app-delete-egm-dialog',
-  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule],
+  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule, MatIconModule, Spinner],
   styleUrls: ['./egms.scss'],
   template: `
     <h2 mat-dialog-title>Delete EGM?</h2>
@@ -53,12 +56,38 @@ export class EgmsComponent {
       Fixed Asset Number: {{ data.fixedAssetNumber }}
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button matButton="filled" type="button" mat-dialog-close>Cancel</button>
-      <button mat-button matButton="filled" type="button" class="remove-action" [mat-dialog-close]="true">Delete</button>
+      <button mat-button matButton="filled" type="button" mat-dialog-close [disabled]="isDeleting()">Cancel</button>
+      <button mat-button matButton="filled" type="button" class="remove-action" [disabled]="isDeleting()" (click)="confirmDelete()">
+        <span class="dialog-action-content">
+          @if (isDeleting()) {
+            <spinner class="dialog-action-indicator"></spinner>
+          } @else {
+            <mat-icon class="dialog-action-indicator">close</mat-icon>
+          }
+          <span>{{ isDeleting() ? 'Deleting...' : 'Delete' }}</span>
+        </span>
+      </button>
     </mat-dialog-actions>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteEgmDialogComponent {
   readonly data = inject<Egm>(MAT_DIALOG_DATA);
+  readonly isDeleting = signal(false);
+  private readonly dialogRef = inject(MatDialogRef<DeleteEgmDialogComponent>);
+
+  async confirmDelete(): Promise<void> {
+    if (this.isDeleting()) {
+      return;
+    }
+
+    this.isDeleting.set(true);
+
+    try {
+      await waitForDemoSaveDelay();
+      this.dialogRef.close(true);
+    } finally {
+      this.isDeleting.set(false);
+    }
+  }
 }

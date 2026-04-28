@@ -6,6 +6,7 @@ import { tapResponse } from '@ngrx/operators';
 import { pipe, switchMap, tap } from 'rxjs';
 import { SitesStore } from '@site-manager/sites.store';
 import { Site } from '@site-manager/site.model';
+import { waitForDemoSaveDelay } from '../app/shared/demo-save-delay';
 import { UsersStore } from '@users/users.store';
 import { User } from '@users/user.model';
 
@@ -122,9 +123,7 @@ export const SiteUserManagerStore = signalStore(
       saveChanges: rxMethod<void>(
         pipe(
           tap(() => patchState(store, { isSaving: true, error: null })),
-          switchMap(() => new Promise<void>((resolve) => {
-            setTimeout(() => resolve(), 500);
-          })),
+          switchMap(() => waitForDemoSaveDelay()),
           tapResponse({
             next: () => {
               patchState(store, { modifiedSiteIds: new Set<number>(), isSaving: false });

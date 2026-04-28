@@ -97,13 +97,15 @@
     </div>
 
       <app-save-cancel-actions
-        [actionLayout]="'split'"
         [submitLabel]="submitLabel()"
-        [submitDisabled]="false"
-        [showCancel]="false"
+        [submitIcon]="'check'"
+        [submitDisabled]="submitDisabled()"
+        [showSubmitSpinner]="isSaving()"
         [showDiscard]="hasUnsavedChanges()"
         [discardLabel]="discardLabel()"
+        [discardDisabled]="isSaving()"
         [showRemove]="isEditMode()"
+        [removeDisabled]="isSaving()"
         [removeLabel]="'Remove User'"
         (discardClicked)="discardChanges()"
         (removeClicked)="removeSelectedUser()" />

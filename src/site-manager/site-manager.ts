@@ -11,14 +11,18 @@ import {
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
+  MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { FormField, FormRoot, email, form, required, SchemaPathTree } from '@angular/forms/signals';
 import { SitesStore } from '@site-manager/sites.store';
 import { Site } from '@site-manager/site.model';
 import { getFormFieldError } from '@shared/form-field-error/form-field-error';
+import { runWithDemoSaveDelay, waitForDemoSaveDelay } from '../app/shared/demo-save-delay';
 import { SaveCancelActionsComponent } from '@shared/save-cancel-actions/save-cancel-actions';
+import { Spinner } from '@shared/spinner/spinner';
 import { UsersStore } from '@users/users.store';
 import { SiteGroupRecord, SitesService } from '@app/core/services/sites.service';
 
@@ -58,6 +62,7 @@ export class SiteManager {
   protected readonly getFormFieldError = getFormFieldError;
   readonly store: InstanceType<typeof SitesStore> = inject(SitesStore);
   readonly usersStore = inject(UsersStore);
+  readonly isSaving = signal(false);
   private readonly sitesService = inject(SitesService);
   private readonly dialog = inject(MatDialog);
   readonly selectedSiteId = signal<number | null>(null);
@@ -120,22 +125,24 @@ export class SiteManager {
   }, {
     submission: {
       action: async (form) => {
-        const formValue = form().value();
-        const site: Site = {
-          id: this.selectedSiteId() ?? this.store.nextSiteId(),
-          name: formValue.name,
-          address: formValue.address,
-          email: formValue.email,
-          siteGroup: formValue.siteGroup,
-        };
+        await this.runWithSaveSpinner(async () => {
+          const formValue = form().value();
+          const site: Site = {
+            id: this.selectedSiteId() ?? this.store.nextSiteId(),
+            name: formValue.name,
+            address: formValue.address,
+            email: formValue.email,
+            siteGroup: formValue.siteGroup,
+          };
 
-        if (this.isEditMode()) {
-          this.store.updateSite(site);
-        } else {
-          this.store.addSite(site);
-        }
+          if (this.isEditMode()) {
+            this.store.updateSite(site);
+          } else {
+            this.store.addSite(site);
+          }
 
-        this.cancelEdit();
+          this.cancelEdit();
+        });
       },
     },
   });
@@ -259,11 +266,21 @@ export class SiteManager {
 
     return siteGroup;
   }
+
+  private async runWithSaveSpinner(action: () => void | Promise<void>) {
+    this.isSaving.set(true);
+
+    try {
+      await runWithDemoSaveDelay(action);
+    } finally {
+      this.isSaving.set(false);
+    }
+  }
 }
 
 @Component({
   selector: 'app-remove-site-dialog',
-  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule],
+  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule, MatIconModule, Spinner],
   template: `
     <h2 mat-dialog-title>Remove Site?</h2>
     <mat-dialog-content>
@@ -278,12 +295,38 @@ export class SiteManager {
       }
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button matButton="filled" type="button" mat-dialog-close>Cancel</button>
-      <button mat-button matButton="filled" type="button" class="remove-action" [mat-dialog-close]="true">Remove Site</button>
+      <button mat-button matButton="filled" type="button" mat-dialog-close [disabled]="isDeleting()">Cancel</button>
+      <button mat-button matButton="filled" type="button" class="remove-action" [disabled]="isDeleting()" (click)="confirmRemove()">
+        <span class="dialog-action-content">
+          @if (isDeleting()) {
+            <spinner class="dialog-action-indicator"></spinner>
+          } @else {
+            <mat-icon class="dialog-action-indicator">close</mat-icon>
+          }
+          <span>{{ isDeleting() ? 'Removing...' : 'Remove Site' }}</span>
+        </span>
+      </button>
     </mat-dialog-actions>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RemoveSiteDialogComponent {
   readonly data = inject<RemoveSiteDialogData>(MAT_DIALOG_DATA);
+  readonly isDeleting = signal(false);
+  private readonly dialogRef = inject(MatDialogRef<RemoveSiteDialogComponent>);
+
+  async confirmRemove(): Promise<void> {
+    if (this.isDeleting()) {
+      return;
+    }
+
+    this.isDeleting.set(true);
+
+    try {
+      await waitForDemoSaveDelay();
+      this.dialogRef.close(true);
+    } finally {
+      this.isDeleting.set(false);
+    }
+  }
 }

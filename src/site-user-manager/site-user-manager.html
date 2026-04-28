@@ -3,26 +3,18 @@
   <mat-toolbar>
     <span [style.color]="themeService.getOnSurfaceColor()">Site Users Management</span>
     <span class="example-spacer"></span>
-    <button mat-button matButton="filled"
-      class="custom-button"
-      (click)="saveChanges()"
-      [disabled]="!store.hasChanges() || store.isSaving()">
-      <span class="button-content">
-        @if (store.isSaving()) {
-          <spinner class="modified-indicator loading-spinner"></spinner>
-        } @else {
-          <mat-icon class="modified-indicator">save</mat-icon>
-        }
-        Save Changes
-        @if (store.hasChanges()) {
-          <span class="change-count">({{ store.modifiedSiteCount() }})</span>
-        }
-      </span>
-    </button>
-    <button mat-raised-button (click)="discardChanges()" [disabled]="!store.hasChanges()">
-      <mat-icon>close</mat-icon>
-      Discard
-    </button>
+    <app-save-cancel-actions
+      class="header-actions"
+      [submitButtonType]="'button'"
+      [submitLabel]="'Save Changes'"
+      [submitIcon]="'check'"
+      [submitDisabled]="!store.hasChanges() || store.isSaving()"
+      [showSubmitSpinner]="store.isSaving()"
+      [showDiscard]="store.hasChanges()"
+      [discardLabel]="discardLabel()"
+      [discardDisabled]="store.isSaving()"
+      (submitClicked)="saveChanges()"
+      (discardClicked)="discardChanges()" />
   </mat-toolbar>
 
   @if (store.error()) {

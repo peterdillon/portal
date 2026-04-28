@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormField, FormRoot, form, SchemaPathTree } from '@angular/forms/signals';
+import { runWithDemoSaveDelay } from '../app/shared/demo-save-delay';
 import { EgmsStore } from '@egms/egms.store';
 import { Egm } from '@egms/egm.model';
 
@@ -49,6 +50,7 @@ export class EgmDetailComponent implements OnInit {
   store = inject(EgmsStore);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  readonly isSaving = signal(false);
   readonly egmModel = signal<EgmFormValue>(this.createEmptyEgmFormValue());
   readonly egmForm = form(this.egmModel, (_fieldPath: SchemaPathTree<EgmFormValue>) => {}, {});
   readonly changedFieldCount = computed(() => {
@@ -102,7 +104,7 @@ export class EgmDetailComponent implements OnInit {
     this.egmForm().reset(this.toFormValue(currentEgm));
   }
 
-  saveEgm(event: Event): void {
+  async saveEgm(event: Event): Promise<void> {
     event.preventDefault();
 
     const currentEgm = this.store.selectedEgm();
@@ -110,25 +112,33 @@ export class EgmDetailComponent implements OnInit {
       return;
     }
 
-    const formValue = this.egmForm().value();
-    const updatedEgm: Egm = {
-      id: formValue.id,
-      fixedAssetNumber: formValue.fixedAssetNumber,
-      model: formValue.model,
-      manufacturer: formValue.manufacturer,
-      serialNumber: formValue.serialNumber,
-      inServiceDate: formValue.inServiceDate || undefined,
-      warehouse: formValue.warehouse,
-      itemLocation: formValue.itemLocation,
-      location: formValue.location,
-      comment: formValue.comment,
-      styleName: formValue.styleName,
-      assignedSiteCode: formValue.assignedSiteCode,
-      assignedSiteName: formValue.assignedSiteName,
-    };
+    this.isSaving.set(true);
 
-    this.store.updateEgm(updatedEgm);
-    this.egmForm().reset(this.toFormValue(updatedEgm));
+    try {
+      await runWithDemoSaveDelay(async () => {
+        const formValue = this.egmForm().value();
+        const updatedEgm: Egm = {
+          id: formValue.id,
+          fixedAssetNumber: formValue.fixedAssetNumber,
+          model: formValue.model,
+          manufacturer: formValue.manufacturer,
+          serialNumber: formValue.serialNumber,
+          inServiceDate: formValue.inServiceDate || undefined,
+          warehouse: formValue.warehouse,
+          itemLocation: formValue.itemLocation,
+          location: formValue.location,
+          comment: formValue.comment,
+          styleName: formValue.styleName,
+          assignedSiteCode: formValue.assignedSiteCode,
+          assignedSiteName: formValue.assignedSiteName,
+        };
+
+        this.store.updateEgm(updatedEgm);
+        this.egmForm().reset(this.toFormValue(updatedEgm));
+      });
+    } finally {
+      this.isSaving.set(false);
+    }
   }
 
   private createEmptyEgmFormValue(): EgmFormValue {

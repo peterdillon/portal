@@ -68,17 +68,16 @@
         </mat-form-field>
       </div>
 
-      
-     
-
       <app-save-cancel-actions
-        [actionLayout]="'split'"
         [submitLabel]="submitLabel()"
-        [submitDisabled]="siteForm().invalid()"
-        [showCancel]="false"
+        [submitIcon]="'check'"
+        [submitDisabled]="isSaving() || siteForm().invalid()"
+        [showSubmitSpinner]="isSaving()"
         [showDiscard]="hasUnsavedChanges()"
         [discardLabel]="discardLabel()"
+        [discardDisabled]="isSaving()"
         [showRemove]="isEditMode()"
+        [removeDisabled]="isSaving()"
         [removeLabel]="'Remove Site'"
         (discardClicked)="discardChanges()"
         (removeClicked)="removeSelectedSite()" />

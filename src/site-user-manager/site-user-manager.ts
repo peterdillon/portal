@@ -8,8 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule, MatSelectionList } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltip } from '@angular/material/tooltip';
+import { SaveCancelActionsComponent } from '@shared/save-cancel-actions/save-cancel-actions';
 import { ThemeService } from '@core/theme/theme.service';
-import { Spinner } from '@shared/spinner/spinner';
 import { SiteUserManagerStore } from '@site-user-manager/site-user-manager.store';
 import { UsersStore } from '@users/users.store';
 
@@ -26,7 +26,7 @@ import { UsersStore } from '@users/users.store';
     MatDividerModule,
     MatTooltip,
     MatToolbarModule,
-    Spinner,
+    SaveCancelActionsComponent,
   ],
   templateUrl: './site-user-manager.html',
   styleUrl: './site-user-manager.scss',
@@ -36,6 +36,10 @@ export class SiteUserManager {
   themeService = inject(ThemeService);
   readonly store: InstanceType<typeof SiteUserManagerStore> = inject(SiteUserManagerStore);
   readonly usersStore = inject(UsersStore);
+  readonly discardLabel = computed(() => {
+    const modifiedSiteCount = this.store.modifiedSiteCount();
+    return `Discard ${modifiedSiteCount} ${modifiedSiteCount === 1 ? 'Change' : 'Changes'}`;
+  });
   readonly siteNames = computed(() => {
     const names = new Map<number, string>();
 
@@ -91,9 +95,7 @@ export class SiteUserManager {
   }
 
   discardChanges() {
-    if (confirm('Are you sure you want to discard all changes?')) {
-      this.store.discardChanges();
-    }
+    this.store.discardChanges();
   }
 
   toggleSelectAll(event: MatCheckboxChange) {

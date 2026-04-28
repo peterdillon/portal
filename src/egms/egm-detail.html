@@ -78,17 +78,26 @@
           </mat-card-content>
 
           <mat-card-actions>
-            <button mat-button matButton="tonal" type="button" (click)="goBack()">
+            <button mat-button matButton="tonal" type="button" (click)="goBack()" [disabled]="isSaving()">
               <mat-icon>arrow_back</mat-icon>
               Back
             </button>
             <div class="detail-primary-actions">
               @if (hasUnsavedChanges()) {
-                <button mat-button matButton="tonal" type="button" (click)="discardChanges()">
+                <button mat-button matButton="tonal" type="button" (click)="discardChanges()" [disabled]="isSaving()">
                   Discard {{ changedFieldCount() }} {{ changedFieldCount() === 1 ? 'Change' : 'Changes' }}
                 </button>
               }
-              <button mat-button matButton="filled" type="submit">Save</button>
+              <button mat-button matButton="filled" type="submit" [disabled]="isSaving()">
+                <span class="save-button-content">
+                  @if (isSaving()) {
+                    <mat-spinner class="save-spinner" diameter="20"></mat-spinner>
+                  } @else {
+                    <mat-icon>check</mat-icon>
+                  }
+                  <span>Save</span>
+                </span>
+              </button>
             </div>
           </mat-card-actions>
         </mat-card>
