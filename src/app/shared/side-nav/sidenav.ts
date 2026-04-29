@@ -35,7 +35,6 @@ export class SidenavMode {
     { name: 'Site User Manager', path: '/site-user-manager', subTitle: 'Site User Management', requiredPermission: 'site.write' },
     { name: 'EGMs', path: '/egms', subTitle: 'Electronic Gaming Machines' },
     { name: 'Table', path: '/page-two', subTitle: 'An example table' },
-    { name: 'Dialog', path: '/dialog-example', subTitle: 'An example dialog' },
   ];
 
   navigationData = computed(() => {

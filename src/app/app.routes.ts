@@ -47,10 +47,6 @@ export const routes: Routes = [
     canActivate: [authGuard, requirePermission('config.write')]
   },
   {
-    path: 'dialog-example',
-    loadComponent: () => import('@features/dialog/dialog').then((m) => m.DialogOverviewExample)
-  },
-  {
     path: '**',
     redirectTo: 'login'
   }
