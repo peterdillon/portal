@@ -273,15 +273,23 @@ html, body {
   color: color-mix(in srgb, var(--on-error-container, var(--mat-sys-on-error-container, #410002)) 38%, transparent) !important;
 }
 
-.dialog-action-content {
+.button-content-with-indicator {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  margin-top: 5px;
+  vertical-align: middle;
+  line-height: 1;
 }
 
-.dialog-action-indicator {
-  width: 20px;
-  height: 20px;
+.button-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
+  vertical-align: middle;
+  line-height: 1;
+  font-size: 20px;
 }

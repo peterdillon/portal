@@ -89,11 +89,11 @@
                 </button>
               }
               <button mat-button matButton="filled" type="submit" [disabled]="isSaving()">
-                <span class="save-button-content">
+                <span class="button-content-with-indicator">
                   @if (isSaving()) {
-                    <mat-spinner class="save-spinner" diameter="20"></mat-spinner>
+                    <mat-spinner class="button-indicator" diameter="20"></mat-spinner>
                   } @else {
-                    <mat-icon>check</mat-icon>
+                    <mat-icon class="button-indicator">check</mat-icon>
                   }
                   <span>Save</span>
                 </span>

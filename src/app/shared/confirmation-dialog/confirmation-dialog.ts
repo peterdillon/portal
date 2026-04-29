@@ -9,8 +9,8 @@ import {
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { waitForDemoSaveDelay } from '../demo-save-delay';
-import { Spinner } from '@shared/spinner/spinner';
 
 export interface ConfirmationDialogData {
   title: string;
@@ -23,7 +23,7 @@ export interface ConfirmationDialogData {
 
 @Component({
   selector: 'app-confirmation-dialog',
-  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule, MatIconModule, Spinner],
+  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
   template: `
     <h2 mat-dialog-title>{{ data.title }}</h2>
     <mat-dialog-content>
@@ -40,11 +40,11 @@ export interface ConfirmationDialogData {
         [class.remove-action]="data.destructive !== false"
         [disabled]="isPending()"
         (click)="confirm()">
-        <span class="dialog-action-content">
+        <span class="button-content-with-indicator">
           @if (isPending()) {
-            <spinner class="dialog-action-indicator"></spinner>
+            <mat-spinner class="button-indicator" diameter="20"></mat-spinner>
           } @else {
-            <mat-icon class="dialog-action-indicator">{{ data.confirmIcon ?? 'close' }}</mat-icon>
+            <mat-icon class="button-indicator">{{ data.confirmIcon ?? 'close' }}</mat-icon>
           }
           <span>{{ isPending() ? data.pendingLabel : data.confirmLabel }}</span>
         </span>

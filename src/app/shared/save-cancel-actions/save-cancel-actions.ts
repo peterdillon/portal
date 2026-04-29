@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Spinner } from '@shared/spinner/spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 type SubmitButtonType = 'submit' | 'button';
 
 @Component({
   selector: 'app-save-cancel-actions',
-  imports: [MatButtonModule, MatIconModule, Spinner],
+  imports: [MatButtonModule, MatIconModule, MatProgressSpinnerModule],
   template: `
     <div class="action-bar">
       @if (showRemove()) {
@@ -18,8 +18,10 @@ type SubmitButtonType = 'submit' | 'button';
           class="remove-action"
           [disabled]="removeDisabled()"
           (click)="removeClicked.emit()">
-          <mat-icon class="dialog-action-indicator">close</mat-icon>
-          {{ removeLabel() }}
+          <span class="button-content-with-indicator">
+            <mat-icon class="button-indicator">close</mat-icon>
+            <span>{{ removeLabel() }}</span>
+          </span>
         </button>
       }
 
@@ -36,11 +38,11 @@ type SubmitButtonType = 'submit' | 'button';
           [attr.type]="submitButtonType()"
           [disabled]="submitDisabled()"
           (click)="submitClicked.emit()">
-          <span class="submit-button-content">
+          <span class="button-content-with-indicator">
             @if (showSubmitSpinner()) {
-              <spinner class="submit-indicator"></spinner>
+              <mat-spinner class="button-indicator" diameter="20"></mat-spinner>
             } @else if (submitIcon()) {
-              <mat-icon class="submit-indicator">{{ submitIcon() }}</mat-icon>
+              <mat-icon class="button-indicator">{{ submitIcon() }}</mat-icon>
             }
             <span>{{ submitLabel() }}</span>
           </span>

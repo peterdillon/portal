@@ -23,13 +23,13 @@ export class EgmsComponent {
   deleteEgm(egm: Egm): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: 'Delete EGM?',
+        title: 'Remove EGM?',
         bodyLines: [
           `${egm.manufacturer}: ${egm.model}`,
           `Fixed Asset Number: ${egm.fixedAssetNumber}`,
         ],
-        confirmLabel: 'Delete',
-        pendingLabel: 'Deleting...',
+        confirmLabel: 'Remove EGM',
+        pendingLabel: 'Removing...',
       },
       width: '360px',
       maxWidth: '92vw',

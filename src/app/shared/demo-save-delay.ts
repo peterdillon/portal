@@ -1,6 +1,6 @@
 // Demo-only artificial latency for stakeholder walkthroughs.
 // Remove this helper once saves are backed by real API timing.
-export const DEMO_SAVE_DELAY_MS = 2000;
+export const DEMO_SAVE_DELAY_MS = 120000;
 
 export function waitForDemoSaveDelay(): Promise<void> {
   return new Promise((resolve) => {
