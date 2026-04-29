@@ -190,7 +190,16 @@ html, body {
   min-height: 100%;
   margin: 0;
   padding: 0;
-  color-scheme: light dark;
+}
+
+html:not(.dark-theme),
+html:not(.dark-theme) body {
+  color-scheme: light;
+}
+
+html.dark-theme,
+html.dark-theme body {
+  color-scheme: dark;
 }
 
 .centered {

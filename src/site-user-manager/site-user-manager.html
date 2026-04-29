@@ -29,7 +29,7 @@
 
   <div class="four-column-layout iam-content">
     <div class="column groups-section">
-      <h6>Select a site to manage users</h6>
+      <div class="section-header">Select a site to manage users</div>
       <mat-selection-list
         class="scrollable-list problem"
         [multiple]="false"
@@ -51,16 +51,16 @@
     </div>
 
     <div class="column">
-      <h6>
+      <div class="section-header">
         <mat-checkbox class="custom-chk"
           [disabled]="!store.hasSelectedSite()"
           [checked]="store.areAllSiteUsersSelected()"
           [indeterminate]="store.selectedUserIds().length > 0 && !store.areAllSiteUsersSelected()"
-          (change)="toggleSelectAll($event)"
-          [matTooltip]="store.areAllSiteUsersSelected() ? 'Deselect all' : 'Select all'">
+          (change)="toggleSelectAll($event)">
+          <!-- [matTooltip]="store.areAllSiteUsersSelected() ? 'Deselect all' : 'Select all'" -->
         </mat-checkbox>
-        Users in: {{ store.selectedSite() ? store.selectedSite()!.name : '...' }}
-      </h6>
+        Users in: {{ store.selectedSite()?.name || 'No site selected' }}
+      </div>
 
       <div class="scrollable-list">
         @if (store.hasSelectedSite()) {
@@ -102,7 +102,7 @@
     </div>
 
     <div class="available-users">
-      <h6>Available Users @if (!store.hasSelectedSite()) { <span class="empty-state">(select a site first)</span> }</h6>
+      <div class="section-header">Available Users @if (!store.hasSelectedSite()) { <span class="empty-state">(Select a site first)</span> }</div>
       <div class="scrollable-list">
         <mat-list>
           @for (user of store.availableUsers(); track user.id) {
