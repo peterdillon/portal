@@ -12,22 +12,6 @@ import { runWithDemoSaveDelay } from '../app/shared/demo-save-delay';
 import { EgmsStore } from '@egms/egms.store';
 import { Egm } from '@egms/egm.model';
 
-interface EgmFormValue {
-  id: number;
-  manufacturer: string;
-  model: string;
-  styleName: string;
-  comment: string;
-  fixedAssetNumber: string;
-  serialNumber: string;
-  warehouse: string;
-  itemLocation: string;
-  inServiceDate: string;
-  location: string;
-  assignedSiteName: string;
-  assignedSiteCode: number;
-}
-
 @Component({
   selector: 'app-egm-detail',
   standalone: true,
@@ -51,8 +35,8 @@ export class EgmDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   readonly isSaving = signal(false);
-  readonly egmModel = signal<EgmFormValue>(this.createEmptyEgmFormValue());
-  readonly egmForm = form(this.egmModel, (_fieldPath: SchemaPathTree<EgmFormValue>) => {}, {});
+  readonly egmModel = signal<Egm>(this.createEmptyEgm());
+  readonly egmForm = form(this.egmModel, (_fieldPath: SchemaPathTree<Egm>) => {}, {});
   readonly changedFieldCount = computed(() => {
     const egm = this.store.selectedEgm();
 
@@ -60,11 +44,10 @@ export class EgmDetailComponent implements OnInit {
       return 0;
     }
 
-    const savedValue = this.toFormValue(egm);
     const currentValue = this.egmForm().value();
 
-    return (Object.keys(savedValue) as Array<keyof EgmFormValue>).reduce((count, key) => {
-      return count + (savedValue[key] !== currentValue[key] ? 1 : 0);
+    return (Object.keys(egm) as Array<keyof Egm>).reduce((count, key) => {
+      return count + (egm[key] !== currentValue[key] ? 1 : 0);
     }, 0);
   });
   readonly hasUnsavedChanges = computed(() => this.changedFieldCount() > 0);
@@ -77,7 +60,7 @@ export class EgmDetailComponent implements OnInit {
         return;
       }
 
-      this.egmForm().reset(this.toFormValue(egm));
+      this.egmForm().reset(egm);
     });
   }
 
@@ -101,7 +84,7 @@ export class EgmDetailComponent implements OnInit {
       return;
     }
 
-    this.egmForm().reset(this.toFormValue(currentEgm));
+    this.egmForm().reset(currentEgm);
   }
 
   async saveEgm(event: Event): Promise<void> {
@@ -116,32 +99,17 @@ export class EgmDetailComponent implements OnInit {
 
     try {
       await runWithDemoSaveDelay(async () => {
-        const formValue = this.egmForm().value();
-        const updatedEgm: Egm = {
-          id: formValue.id,
-          fixedAssetNumber: formValue.fixedAssetNumber,
-          model: formValue.model,
-          manufacturer: formValue.manufacturer,
-          serialNumber: formValue.serialNumber,
-          inServiceDate: formValue.inServiceDate || undefined,
-          warehouse: formValue.warehouse,
-          itemLocation: formValue.itemLocation,
-          location: formValue.location,
-          comment: formValue.comment,
-          styleName: formValue.styleName,
-          assignedSiteCode: formValue.assignedSiteCode,
-          assignedSiteName: formValue.assignedSiteName,
-        };
+        const updatedEgm: Egm = this.egmForm().value();
 
         this.store.updateEgm(updatedEgm);
-        this.egmForm().reset(this.toFormValue(updatedEgm));
+        this.egmForm().reset(updatedEgm);
       });
     } finally {
       this.isSaving.set(false);
     }
   }
 
-  private createEmptyEgmFormValue(): EgmFormValue {
+  private createEmptyEgm(): Egm {
     return {
       id: 0,
       manufacturer: '',
@@ -156,24 +124,6 @@ export class EgmDetailComponent implements OnInit {
       location: '',
       assignedSiteName: '',
       assignedSiteCode: 0,
-    };
-  }
-
-  private toFormValue(egm: Egm): EgmFormValue {
-    return {
-      id: egm.id,
-      manufacturer: egm.manufacturer,
-      model: egm.model,
-      styleName: egm.styleName,
-      comment: egm.comment,
-      fixedAssetNumber: egm.fixedAssetNumber,
-      serialNumber: egm.serialNumber,
-      warehouse: egm.warehouse,
-      itemLocation: egm.itemLocation,
-      inServiceDate: egm.inServiceDate ?? '',
-      location: egm.location,
-      assignedSiteName: egm.assignedSiteName,
-      assignedSiteCode: egm.assignedSiteCode,
     };
   }
 }

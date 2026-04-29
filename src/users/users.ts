@@ -4,33 +4,18 @@ import { MatSelectionList, MatListOption, MatListModule, MatSelectionListChange 
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormField, FormRoot, email, form, minLength, required, SchemaPathTree } from '@angular/forms/signals';
-import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule, MatPseudoCheckboxModule } from '@angular/material/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { ThemeService } from '@core/theme/theme.service';
-import { runWithDemoSaveDelay, waitForDemoSaveDelay } from '../app/shared/demo-save-delay';
+import { ConfirmationDialogComponent } from '@shared/confirmation-dialog/confirmation-dialog';
+import { runWithDemoSaveDelay } from '../app/shared/demo-save-delay';
 import { getFormFieldError } from '@shared/form-field-error/form-field-error';
 import { PermissionGroup } from '@users/permission-group.model';
 import { SaveCancelActionsComponent } from '@shared/save-cancel-actions/save-cancel-actions';
-import { Spinner } from '@shared/spinner/spinner';
 import { User } from '@users/user.model';
 import { UsersStore } from '@users/users.store';
 import { PermissionsStore } from '@features/permissions-manager/permissions.store';
-
-interface RemoveUserDialogData {
-  displayName: string;
-  email: string;
-}
 
 interface UserFormValue {
   name: string;
@@ -212,10 +197,16 @@ export class Users implements OnInit {
       return;
     }
 
-    const dialogRef = this.dialog.open(RemoveUserDialogComponent, {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        displayName: selectedUser.displayName,
-        email: selectedUser.email,
+        title: 'Remove User?',
+        bodyLines: [
+          selectedUser.displayName,
+          selectedUser.email,
+          'This will permanently remove the user.',
+        ],
+        confirmLabel: 'Remove User',
+        pendingLabel: 'Removing...',
       },
       width: '380px',
       maxWidth: '92vw',
@@ -298,53 +289,6 @@ export class Users implements OnInit {
       await runWithDemoSaveDelay(action);
     } finally {
       this.isSaving.set(false);
-    }
-  }
-}
-
-@Component({
-  selector: 'app-remove-user-dialog',
-  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule, MatIconModule, Spinner],
-  template: `
-    <h2 mat-dialog-title>Remove User?</h2>
-    <mat-dialog-content>
-      <div>{{ data.displayName }}</div>
-      <div>{{ data.email }}</div>
-      <div>This will permanently remove the user.</div>
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button matButton="filled" type="button" mat-dialog-close [disabled]="isDeleting()">Cancel</button>
-      <button mat-button matButton="filled" type="button" class="remove-action" [disabled]="isDeleting()" (click)="confirmRemove()">
-        <span class="dialog-action-content">
-          @if (isDeleting()) {
-            <spinner class="dialog-action-indicator"></spinner>
-          } @else {
-            <mat-icon class="dialog-action-indicator">close</mat-icon>
-          }
-          <span>{{ isDeleting() ? 'Removing...' : 'Remove User' }}</span>
-        </span>
-      </button>
-    </mat-dialog-actions>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class RemoveUserDialogComponent {
-  readonly data = inject<RemoveUserDialogData>(MAT_DIALOG_DATA);
-  readonly isDeleting = signal(false);
-  private readonly dialogRef = inject(MatDialogRef<RemoveUserDialogComponent>);
-
-  async confirmRemove(): Promise<void> {
-    if (this.isDeleting()) {
-      return;
-    }
-
-    this.isDeleting.set(true);
-
-    try {
-      await waitForDemoSaveDelay();
-      this.dialogRef.close(true);
-    } finally {
-      this.isDeleting.set(false);
     }
   }
 }

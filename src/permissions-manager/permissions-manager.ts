@@ -4,7 +4,9 @@ import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDialog } from '@angular/material/dialog';
 import { FormField, FormRoot, form, required, SchemaPathTree } from '@angular/forms/signals';
+import { ConfirmationDialogComponent } from '@shared/confirmation-dialog/confirmation-dialog';
 import { getFormFieldError } from '@shared/form-field-error/form-field-error';
 import { runWithDemoSaveDelay } from '../app/shared/demo-save-delay';
 import { SaveCancelActionsComponent } from '@shared/save-cancel-actions/save-cancel-actions';
@@ -40,6 +42,7 @@ export class PermissionsManager {
   protected readonly getFormFieldError = getFormFieldError;
   readonly store = inject(PermissionsStore);
   readonly usersStore = inject(UsersStore);
+  private readonly dialog = inject(MatDialog);
   readonly isSaving = signal(false);
   readonly selectedPermissionName = signal<string | null>(null);
   readonly isEditMode = computed(() => this.selectedPermissionName() !== null);
@@ -162,19 +165,44 @@ export class PermissionsManager {
       return;
     }
 
-    this.usersStore['userEntities']().forEach((user) => {
-      if (!user.permissions.includes(permissionName)) {
+    const assignedUserCount = this.usersStore['userEntities']().filter((user) => user.permissions.includes(permissionName)).length;
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: 'Remove Permission?',
+        bodyLines: assignedUserCount > 0
+          ? [
+              permissionName,
+              `This permission is still assigned to ${assignedUserCount} user${assignedUserCount === 1 ? '' : 's'}.`,
+              'Removing it will also remove it from those users.',
+            ]
+          : [permissionName, 'This will permanently remove the permission.'],
+        confirmLabel: 'Remove Permission',
+        pendingLabel: 'Removing...',
+      },
+      width: '380px',
+      maxWidth: '92vw',
+      panelClass: 'egm-delete-dialog-panel',
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean | undefined) => {
+      if (!confirmed) {
         return;
       }
 
-      this.usersStore.updateUser({
-        ...user,
-        permissions: user.permissions.filter((permission) => permission !== permissionName),
-      });
-    });
+      this.usersStore['userEntities']().forEach((user) => {
+        if (!user.permissions.includes(permissionName)) {
+          return;
+        }
 
-    this.store.removePermission(permissionName);
-    this.cancelEdit();
+        this.usersStore.updateUser({
+          ...user,
+          permissions: user.permissions.filter((permission) => permission !== permissionName),
+        });
+      });
+
+      this.store.removePermission(permissionName);
+      this.cancelEdit();
+    });
   }
 
   private hasDuplicatePermission() {

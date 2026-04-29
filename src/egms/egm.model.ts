@@ -4,7 +4,7 @@ export interface Egm {
   model: string;
   manufacturer: string;
   serialNumber: string;
-  inServiceDate?: string;
+  inServiceDate: string;
   warehouse: string;
   itemLocation: string;
   location: string;

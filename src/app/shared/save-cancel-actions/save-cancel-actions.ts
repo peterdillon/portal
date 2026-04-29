@@ -18,6 +18,7 @@ type SubmitButtonType = 'submit' | 'button';
           class="remove-action"
           [disabled]="removeDisabled()"
           (click)="removeClicked.emit()">
+          <mat-icon class="dialog-action-indicator">close</mat-icon>
           {{ removeLabel() }}
         </button>
       }
@@ -41,7 +42,6 @@ type SubmitButtonType = 'submit' | 'button';
             } @else if (submitIcon()) {
               <mat-icon class="submit-indicator">{{ submitIcon() }}</mat-icon>
             }
-
             <span>{{ submitLabel() }}</span>
           </span>
         </button>
