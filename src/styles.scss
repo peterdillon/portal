@@ -227,12 +227,19 @@ html.dark-theme body {
 }
 
 .permissions-select-panel .permission-group-option {
+   appearance: none;
+  background: rgba(white, .07);
+  border: 0;
+  color: inherit;
+  font: inherit;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  font-weight: 300;
+  font-weight: 100;
+  font-size: inherit;
   cursor: pointer;
   padding: 0.75rem 1rem;
+  width: 100%;
+  text-align: left;
 }
 
 .permissions-select-panel .permission-group-name {
@@ -241,6 +248,10 @@ html.dark-theme body {
 
 .permissions-select-panel .permission-item-option {
   padding-left: 2.5rem;
+}
+
+.permissions-select-panel .permission-item-option.mat-mdc-option-active.mdc-list-item {
+  background-color: transparent;
 }
 
 .mat-mdc-select-placeholder,

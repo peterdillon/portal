@@ -69,12 +69,11 @@
       <mat-form-field floatLabel="always">
         <mat-label>Permissions</mat-label>
         <mat-select [formField]="userForm.permissions" [placeholder]="permissionsTriggerLabel()" panelClass="permissions-select-panel" multiple>
-          <mat-select-trigger class="trigger-text-smaller">{{ permissionsTriggerLabel() }}</mat-select-trigger>
+          <mat-select-trigger>{{ permissionsTriggerLabel() }}</mat-select-trigger>
           @for (group of permissionGroups(); track group.permissionId) {
             <button type="button" class="permission-group-option" (click)="togglePermissionGroup(group)">
               <mat-pseudo-checkbox class="permission-group-indicator" [state]="groupSelectionState(group)" appearance="full"></mat-pseudo-checkbox>
-              <span class="permission-group-name">{{ group.name }}</span>
-              <span class="permission-group-count">{{ groupPermissionsSelectedCount(group) }}/{{ group.permissions.length }}</span>
+              <span>{{ group.name }} {{ groupPermissionsSelectedCount(group) }}/{{ group.permissions.length }}</span>
             </button>
             @for (permission of group.permissions; track permission) {
               <mat-option class="permission-item-option" [value]="permission">{{ permission }}</mat-option>
