@@ -36,7 +36,7 @@ import { SiteGroupRecord, SitesService } from '@app/core/services/sites.service'
   styleUrl: './site-manager.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SiteManager {
+export class SiteManager implements OnInit {
   protected readonly getFormFieldError = getFormFieldError;
   readonly store: InstanceType<typeof SitesStore> = inject(SitesStore);
   readonly usersStore = inject(UsersStore);
@@ -52,7 +52,7 @@ export class SiteManager {
     const baselineValue = this.getSiteFormBaseline();
     const currentValue = this.siteForm().value();
 
-    return (Object.keys(baselineValue) as Array<keyof Site>).reduce((count, key) => {
+    return (Object.keys(baselineValue) as (keyof Site)[]).reduce((count, key) => {
       return count + (baselineValue[key] !== currentValue[key] ? 1 : 0);
     }, 0);
   });

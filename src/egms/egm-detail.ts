@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { FormField, FormRoot, form, SchemaPathTree } from '@angular/forms/signals';
+import { FormField, FormRoot, form } from '@angular/forms/signals';
 import { runWithDemoSaveDelay } from '../app/shared/demo-save-delay';
 import { EgmsStore } from '@egms/egms.store';
 import { Egm } from '@egms/egm.model';
@@ -36,7 +36,7 @@ export class EgmDetailComponent implements OnInit {
   private router = inject(Router);
   readonly isSaving = signal(false);
   readonly egmModel = signal<Egm>(this.createEmptyEgm());
-  readonly egmForm = form(this.egmModel, (_fieldPath: SchemaPathTree<Egm>) => {}, {});
+  readonly egmForm = form(this.egmModel, () => undefined, {});
   readonly changedFieldCount = computed(() => {
     const egm = this.store.selectedEgm();
 
@@ -46,7 +46,7 @@ export class EgmDetailComponent implements OnInit {
 
     const currentValue = this.egmForm().value();
 
-    return (Object.keys(egm) as Array<keyof Egm>).reduce((count, key) => {
+    return (Object.keys(egm) as (keyof Egm)[]).reduce((count, key) => {
       return count + (egm[key] !== currentValue[key] ? 1 : 0);
     }, 0);
   });

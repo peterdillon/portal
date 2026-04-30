@@ -55,7 +55,7 @@ export class Users implements OnInit {
     const baselineValue = this.getUserFormBaseline();
     const currentValue = this.userForm().value();
 
-    return (Object.keys(baselineValue) as Array<keyof UserFormValue>).reduce((count, key) => {
+    return (Object.keys(baselineValue) as (keyof UserFormValue)[]).reduce((count, key) => {
       if (key === 'permissions') {
         const baselinePermissions = [...baselineValue.permissions].sort();
         const currentPermissions = [...currentValue.permissions].sort();
@@ -118,7 +118,7 @@ export class Users implements OnInit {
     this.permissionsStore.initialLoadPermissions();
   }
 
-  showFieldError(field: () => { invalid(): boolean; touched(): boolean; errors(): Array<{ message?: string }> }) {
+  showFieldError(field: () => { invalid(): boolean; touched(): boolean; errors(): { message?: string }[] }) {
     const state = field();
 
     if (state.invalid() && (state.touched() || this.submitAttempted())) {

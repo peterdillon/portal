@@ -1,4 +1,4 @@
-import { Component, signal, effect, inject, viewChild } from '@angular/core';
+import { Component, effect, viewChild } from '@angular/core';
 
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSortModule, MatSort } from '@angular/material/sort';
@@ -18,13 +18,6 @@ export interface PeriodicElement {
   symbol: string;
   editing?: boolean;
 }
-
-const COLUMN_DEFS = [
-  { def: 'position', width: '10%' },
-  { def: 'name', width: '40%' },
-  { def: 'weight', width: '20%' },
-  { def: 'symbol', width: '30%' }
-];
 
 const ELEMENT_DATA: PeriodicElement[] = [
   { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
@@ -79,9 +72,12 @@ export class PageTwo {
   }
 
   masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.dataSource.data.forEach((row) => this.selection.select(row));
   }
    startEdit(row: PeriodicElement) {
     this.originalData = { ...row }; // Store original

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatListModule, MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -38,7 +38,7 @@ interface PermissionFormValue {
   styleUrl: './permissions-manager.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PermissionsManager {
+export class PermissionsManager implements OnInit {
   protected readonly getFormFieldError = getFormFieldError;
   readonly store = inject(PermissionsStore);
   readonly usersStore = inject(UsersStore);
@@ -52,7 +52,7 @@ export class PermissionsManager {
     const baselineValue = this.getPermissionFormBaseline();
     const currentValue = this.permissionForm().value();
 
-    return (Object.keys(baselineValue) as Array<keyof PermissionFormValue>).reduce((count, key) => {
+    return (Object.keys(baselineValue) as (keyof PermissionFormValue)[]).reduce((count, key) => {
       return count + (baselineValue[key] !== currentValue[key] ? 1 : 0);
     }, 0);
   });

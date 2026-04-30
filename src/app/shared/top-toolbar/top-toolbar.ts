@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatIcon } from "@angular/material/icon";
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -18,7 +18,7 @@ import { SidenavService } from '@shared/side-nav/sidenav.service';
   templateUrl: './top-toolbar.html',
   styleUrl: './top-toolbar.scss',
 })
-export class TopToolbar {
+export class TopToolbar implements OnInit {
 
   sidenavService = inject(SidenavService);
   authService = inject(AuthService);

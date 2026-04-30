@@ -1,12 +1,12 @@
-type FieldError = {
+interface FieldError {
   message?: string;
-};
+}
 
-type SignalFormFieldState = {
+interface SignalFormFieldState {
   invalid(): boolean;
   touched(): boolean;
   errors(): FieldError[];
-};
+}
 
 type SignalFormFieldAccessor = () => SignalFormFieldState;
 export function getFormFieldError(field: SignalFormFieldAccessor, overrideMessage?: string | null) {

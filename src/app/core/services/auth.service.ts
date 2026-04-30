@@ -7,7 +7,7 @@ import { firstValueFrom } from 'rxjs';
 
 export interface AuthState {
   token: string | null;
-  user: any; // Replace with your User interface
+  user: unknown;
   isAuthenticated: boolean;
 }
 

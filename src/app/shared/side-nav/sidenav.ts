@@ -16,7 +16,7 @@ interface NavigationItem {
 }
 
 @Component({
-  selector: 'sidenav-mode-example',
+  selector: 'app-sidenav',
   templateUrl: 'sidenav.html',
   styleUrl: 'sidenav.scss',
   imports: [MatListModule, RouterModule, MatSidenavModule, MatButtonModule, MatRadioModule, FormsModule, ReactiveFormsModule, RouterLink],

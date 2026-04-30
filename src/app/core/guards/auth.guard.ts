@@ -1,5 +1,5 @@
 // auth.guard.ts
-import { CanActivateFn, RedirectCommand, Router, UrlTree } from '@angular/router';
+import { CanActivateFn, RedirectCommand, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from '@core/services/auth.service';
 
@@ -41,6 +41,32 @@ export function requirePermission(requiredPermission: string): CanActivateFn {
     const router = inject(Router);
 
     if (authService.userPermissions().includes(requiredPermission)) {
+      return true;
+    }
+
+    return router.parseUrl('/unauthorized');
+  };
+}
+
+export function requireAnyPermission(requiredPermissions: string[]): CanActivateFn {
+  return () => {
+    const authService = inject(AuthService);
+    const router = inject(Router);
+
+    if (requiredPermissions.some((permission) => authService.userPermissions().includes(permission))) {
+      return true;
+    }
+
+    return router.parseUrl('/unauthorized');
+  };
+}
+
+export function requireAllPermissions(requiredPermissions: string[]): CanActivateFn {
+  return () => {
+    const authService = inject(AuthService);
+    const router = inject(Router);
+
+    if (requiredPermissions.every((permission) => authService.userPermissions().includes(permission))) {
       return true;
     }
 

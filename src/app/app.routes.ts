@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, requirePermission } from '@core/guards/auth.guard';
+import { authGuard, requireAnyPermission, requirePermission, requireAllPermissions } from '@core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -21,10 +21,11 @@ export const routes: Routes = [
   {
     path: 'egms', 
     loadComponent: () => import('@egms/egms').then((m) => m.EgmsComponent),
-    canActivate: [authGuard] 
+    canActivate: [authGuard, requireAnyPermission(['egms.read'])]
   },
   { path: 'egms/:id', 
-    loadComponent: () => import('@egms/egm-detail').then((m) => m.EgmDetailComponent)
+    loadComponent: () => import('@egms/egm-detail').then((m) => m.EgmDetailComponent),
+    canActivate: [authGuard, requireAllPermissions(['egms.read', 'egms.write', 'egms.delete'])]
   },
   { path: 'group-manager',
     pathMatch: 'full',

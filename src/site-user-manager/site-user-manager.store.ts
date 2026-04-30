@@ -5,7 +5,6 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
 import { pipe, switchMap, tap } from 'rxjs';
 import { SitesStore } from '@site-manager/sites.store';
-import { Site } from '@site-manager/site.model';
 import { waitForDemoSaveDelay } from '../app/shared/demo-save-delay';
 import { UsersStore } from '@users/users.store';
 import { User } from '@users/user.model';
