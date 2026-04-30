@@ -18,5 +18,15 @@
     "name": "Audit/Billing",
     "permissions": ["audit.read", "billing.read"],
     "permissionId": 4
-  } 
+  },
+  {
+    "name": "EGMs",
+    "permissions": ["egms.read", "egms.write", "egms.delete"],
+    "permissionId": 5 
+  },
+  {
+    "name": "Pay Tables",
+    "permissions": ["payTables.read", "payTables.write", "payTables.delete"],
+    "permissionId": 6
+  }
 ]

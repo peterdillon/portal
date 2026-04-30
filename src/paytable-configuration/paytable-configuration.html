@@ -1,0 +1,75 @@
+<div class="tb-ct">
+    <section class="paytable-configuration-page mat-typography">    
+
+        <h6>Paytable Configuration</h6>
+        <form class="entry-form" [formRoot]="form">
+            <mat-form-field floatLabel="always">
+                <mat-label>Game</mat-label>
+                <mat-select [formField]="form.gameName">
+                    @for (gameName of store.gameOptions(); track gameName) {
+                        <mat-option [value]="gameName">{{ gameName }}</mat-option>
+                    }
+                </mat-select>
+                @if (getFormFieldError(form.gameName); as errorMessage) {
+                    <mat-error>{{ errorMessage }}</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field floatLabel="always">
+                <mat-label>Pay table</mat-label>
+                <input matInput
+                    [formField]="form.payTable"
+                    (blur)="onPayTableBlur()"/>
+                <mat-hint>Five numbers followed by one letter.</mat-hint>
+                @if (payTableError(); as errorMessage) {
+                    <mat-error>{{ errorMessage }}</mat-error>
+                }
+            </mat-form-field>
+
+            <button
+                class="add-button"
+                mat-icon-button
+                color="primary"
+                type="submit"
+            [disabled]="submitDisabled()"
+                aria-label="Add paytable configuration"
+            >
+                <mat-icon>add</mat-icon>
+            </button>
+        </form>
+
+        @if (store.error(); as errorMessage) {
+            <p class="error-message">{{ errorMessage }}</p>
+        }
+
+        @if (store.isLoading()) {
+            <p class="status-message">Loading games...</p>
+        } @else if (store.paytableConfigurations().length === 0) {
+            <p class="status-message">No paytable configurations added yet.</p>
+        }
+
+        @if (store.paytableConfigurations().length > 0) {
+            <mat-card class="configurations-card">
+            <div class="configurations-head">
+                <span>Game</span>
+                <span>Pay table</span>
+                <span class="actions-column">Actions</span>
+            </div>
+
+            @for (configuration of store.paytableConfigurations(); track configuration.gameName + configuration.payTable + $index; let index = $index) {
+                <div class="configuration-row">
+                <span>{{ configuration.gameName }}</span>
+                <span class="paytable-code">{{ configuration.payTable }}</span>
+                <button
+                    mat-icon-button
+                    type="button"
+                    aria-label="Remove {{ configuration.gameName }} paytable configuration"
+                    (click)="removeConfiguration(index)">
+                    <mat-icon>close</mat-icon>
+                </button>
+                </div>
+            }
+            </mat-card>
+        }
+    </section>
+</div>

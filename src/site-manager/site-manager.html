@@ -12,7 +12,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <mat-selection-list class="scrollable-list problem" [multiple]="false" (selectionChange)="onSiteSelected($event)">
+    <mat-selection-list class="scrollable-list" [multiple]="false" (selectionChange)="onSiteSelected($event)">
       @for (site of filteredSites(); track site.id) {
         <mat-list-option
           [value]="site.id"

@@ -23,6 +23,11 @@ export const routes: Routes = [
     loadComponent: () => import('@egms/egms').then((m) => m.EgmsComponent),
     canActivate: [authGuard, requireAnyPermission(['egms.read'])]
   },
+  {
+    path: 'paytable-configuration',
+    loadComponent: () => import('@features/paytable-configuration/paytable-configuration').then((m) => m.PaytableConfigurationComponent),
+    canActivate: [authGuard, requirePermission('payTables.read')]
+  },
   { path: 'egms/:id', 
     loadComponent: () => import('@egms/egm-detail').then((m) => m.EgmDetailComponent),
     canActivate: [authGuard, requireAllPermissions(['egms.read', 'egms.write', 'egms.delete'])]

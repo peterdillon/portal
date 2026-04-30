@@ -31,7 +31,7 @@
     <div class="column groups-section">
       <div class="section-header">Select a site to manage users</div>
       <mat-selection-list
-        class="scrollable-list problem"
+        class="scrollable-list"
         [multiple]="false"
         (selectionChange)="onSiteSelected($event.options[0]?.value)">
         @for (site of store.sites(); track site.id) {

@@ -34,6 +34,7 @@ export class SidenavMode {
     { name: 'Site Manager', path: '/site-manager', subTitle: 'Site Management', requiredPermission: 'site.write' },
     { name: 'Site User Manager', path: '/site-user-manager', subTitle: 'Site User Management', requiredPermission: 'site.write' },
     { name: 'EGMs', path: '/egms', subTitle: 'Electronic Gaming Machines' },
+    { name: 'Paytable Configuration', path: '/paytable-configuration', subTitle: 'Game Paytable Setup', requiredPermission: 'payTables.read' },
     { name: 'Table', path: '/page-two', subTitle: 'An example table' },
   ];
 

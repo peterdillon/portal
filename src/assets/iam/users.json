@@ -7,7 +7,14 @@
     "phone": "+1-212-555-0198",
     "employeeName": "Alice Johnson",
     "employeeNumber": "EMP-2023-001",
-    "permissions": ["site.read", "site.write", "site.delete", "egms.read", "egms.write", "egms.delete", "user.read", "user.write", "user.delete", "config.read", "config.write", "audit.read", "billing.read"],
+    "permissions": [
+      "site.read", "site.write", "site.delete",
+      "egms.read", "egms.write", "egms.delete", 
+      "user.read", "user.write", "user.delete", 
+      "config.read", "config.write", 
+      "audit.read", "billing.read",
+      "payTables.read", "payTables.write", "payTables.delete"
+    ],
     "siteId": 1
   },
   {
